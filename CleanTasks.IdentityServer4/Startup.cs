@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using CleanTasks.Common.Classes;
 using CleanTasks.Common.Constants;
+using CleanTasks.CommonWeb.Classes;
 using CleanTasks.IdentityServer4.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -69,6 +69,13 @@ namespace CleanTasks.IdentityServer4
             {
                 options.AddPolicy("AdminPolicy", policy =>
                     policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
+                options.AddPolicy("UserPolicy", policy =>
+                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
+                options.AddPolicy("AllUserPolicy", policy =>
+                    policy.RequireAssertion(
+                        assert =>
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
             });
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

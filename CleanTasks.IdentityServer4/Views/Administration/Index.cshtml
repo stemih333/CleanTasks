@@ -18,16 +18,17 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="dropdown inline-block">
-                <button class="btn btn-default dropdown-toggle" type="button" id="permissionDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="permissionDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     Administer Permissions
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="permissionDropDown">
+                <ul class="dropdown-menu input-group-sm" aria-labelledby="permissionDropDown">
                     <li><a asp-action="Index" asp-route-Permission="@AuthConstants.UserPermission">User</a></li>
                     <li><a asp-action="Index" asp-route-Permission="@AuthConstants.UserAdminPermission">User Admin</a></li>
                 </ul>
             </div>
-            <button class="btn btn-default right"><i class="glyphicon glyphicon-filter"></i></button>
+            <a class="btn btn-primary btn-sm" asp-action="Register"><i class="glyphicon glyphicon-plus"></i></a>
+            <button class="btn btn-default btn-sm"><i class="glyphicon glyphicon-filter"></i></button>
         </div>
         <div class="panel-body table-wrapper">
 

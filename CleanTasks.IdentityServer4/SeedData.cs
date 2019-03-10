@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using CleanTasks.Common.Constants;
 using CleanTasks.IdentityServer4.Identity;
+using CleanTasks.Common.Constants;
 
 namespace CleanTasks.IdentityServer4
 {

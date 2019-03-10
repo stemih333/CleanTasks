@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Authentication;
 
 namespace CleanTasks.RazorGUI.Pages
 {
     [Authorize]
-    public class PrivacyModel : BaseModel
+    public class SignInModel : PageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            
+            return RedirectToPage("Index");
         }
     }
 }

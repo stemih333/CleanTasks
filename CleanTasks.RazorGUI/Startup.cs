@@ -1,5 +1,5 @@
-using CleanTasks.Common.Classes;
 using CleanTasks.Common.Constants;
+using CleanTasks.CommonWeb.Classes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI
 {
@@ -45,6 +46,15 @@ namespace CleanTasks.RazorGUI
                 options.Scope.Add("email");
                 options.Scope.Add(AuthConstants.PermissionType);
                 options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
+                options.Events.OnRemoteFailure = ctx =>
+                {
+                    if(!string.IsNullOrEmpty(ctx.Failure.Message) && ctx.Failure.Message.Contains("access_denied"))
+                    {
+                        ctx.Response.Redirect("/");
+                        ctx.HandleResponse();
+                    }
+                    return Task.CompletedTask;
+                };
             });
 
             services.Configure<CookiePolicyOptions>(options =>

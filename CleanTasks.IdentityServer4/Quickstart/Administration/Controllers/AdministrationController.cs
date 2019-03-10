@@ -1,5 +1,4 @@
-﻿using CleanTasks.Common.Constants;
-using CleanTasks.IdentityServer4;
+﻿using CleanTasks.IdentityServer4;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +9,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using IdentityModel;
+using CleanTasks.Common.Constants;
 
 namespace IdentityServer4.Quickstart.UI
 {
     [SecurityHeaders]
-    [Authorize(Policy = "AdminPolicy")]
+    [Authorize(Policy = "AllUserPolicy")]
     public class AdministrationController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -25,6 +26,12 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         [HttpGet]
+        public IActionResult EmailSuccess()
+        {
+            return View();
+        }
+
+        [HttpGet, Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Index(AdministrationInputModel inputModel)
         {
             var model = await GetViewModel(inputModel);
@@ -39,7 +46,41 @@ namespace IdentityServer4.Quickstart.UI
             return View("Password", userId);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail([Required]string token, [Required][EmailAddress]string email)
+        {
+            if (!ModelState.IsValid) return View("ViewModelError");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user == null)
+            {
+                ModelState.AddModelError("", $"Email address '{email}' is unknown.");
+                return View("ViewModelError");
+            }
+
+            if(await _userManager.IsEmailConfirmedAsync(user))
+            {
+                ModelState.AddModelError("", $"Email address '{email}' is already confirmed.");
+                return View("ViewModelError");
+            }
+
+            var confirmResult = await _userManager.ConfirmEmailAsync(user, token);
+            if(!confirmResult.Succeeded)
+            {
+                SetModelStateErrors(confirmResult.Errors);
+                return View("ViewModelError");
+            }
+
+            return View("EmailSuccess");
+        }
+
+        [HttpGet, Authorize(Policy = "AdminPolicy")]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpGet, Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Edit([Required]string userId)
         {
             if (!ModelState.IsValid) return View("ViewModelError");
@@ -51,7 +92,7 @@ namespace IdentityServer4.Quickstart.UI
                 return View("ViewModelError");
             }
 
-            var model = new ApplicationUserModel
+            var model = new EditViewModel
             {
                 Id = user.Id,
                 Email = user.Email,
@@ -64,7 +105,7 @@ namespace IdentityServer4.Quickstart.UI
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Policy = "AdminPolicy")]
         public IActionResult Delete([Required]string userId, [Required]string username)
         {
             if (!ModelState.IsValid) return View("ViewModelError");
@@ -81,9 +122,12 @@ namespace IdentityServer4.Quickstart.UI
         [HttpGet]
         public async Task<IActionResult> Details([Required]string userId)
         {
-            if (!ModelState.IsValid) return View("ViewModelError");
+            if (!ModelState.IsValid) {
+                return View("ViewModelError");
+            };
 
             var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) user = await _userManager.FindByNameAsync(userId);
             if (user == null)
             {
                 ModelState.AddModelError("", "Could not get user details for user with id: " + userId);
@@ -109,8 +153,60 @@ namespace IdentityServer4.Quickstart.UI
             return View("Details", model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(ApplicationUserModel model)
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    Email = model.Email,
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    CreatedBy = User.Identity.Name ?? "Unknown",
+                    UpdatedBy = User.Identity.Name ?? "Unknown"
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var claimResult =
+                        await _userManager.AddClaimsAsync(user, new List<Claim>
+                        {
+                            new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission),
+                            new Claim(JwtClaimTypes.Name, model.UserName),
+                            new Claim(JwtClaimTypes.GivenName, model.FirstName),
+                            new Claim(JwtClaimTypes.FamilyName, model.LastName),
+                            new Claim(JwtClaimTypes.Email, model.Email)
+                        });
+
+                    if (claimResult.Succeeded)
+                    {
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                        var restoreUrl = Url.Action("ConfirmEmail",
+                            ControllerContext.ActionDescriptor.ControllerName,
+                            new { token, email = user.Email },
+                            Request.Scheme);
+
+                        System.IO.File.WriteAllText("confirmMail.txt", restoreUrl);
+
+                        TempData["SuccessMessage"] = "Successfully added user. Email verification mail sent.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                        SetModelStateErrors(claimResult.Errors);
+                }
+                else
+                    SetModelStateErrors(result.Errors);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditInputModel model)
         {
             if (!ModelState.IsValid) {
                 return View(model);
@@ -134,18 +230,15 @@ namespace IdentityServer4.Quickstart.UI
 
             if (!result.Succeeded)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.Code, error.Description);
-                }
-                return View("Error");
+                SetModelStateErrors(result.Errors);
+                return View("ViewModelError");
             }
 
             TempData["SuccessMessage"] = "Successfully updated user";
             return RedirectToAction("Details", new { UserId = model.Id });
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Password(PasswordInputModel model)
         {
             if (!ModelState.IsValid) return View("password", model.UserId);
@@ -166,10 +259,7 @@ namespace IdentityServer4.Quickstart.UI
             var changePassword = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if(!changePassword.Succeeded)
             {
-                foreach (var error in changePassword.Errors)
-                {
-                    ModelState.AddModelError(error.Code, error.Description);
-                }
+                SetModelStateErrors(changePassword.Errors);
 
                 return View("Password", model.UserId);
             }
@@ -178,7 +268,7 @@ namespace IdentityServer4.Quickstart.UI
             return RedirectToAction("Details", new { model.UserId });
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser([Required]string userId, [Required]string username)
         {
             if (!ModelState.IsValid) return View("ViewModelError");
@@ -194,10 +284,7 @@ namespace IdentityServer4.Quickstart.UI
 
             if(!result.Succeeded)
             {
-                foreach(var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.Code, error.Description);
-                }
+                SetModelStateErrors(result.Errors);
                 return View("ViewModelError");
             }
 
@@ -205,7 +292,7 @@ namespace IdentityServer4.Quickstart.UI
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
         public IActionResult Filter(AdministrationInputModel inputModel)
         {
             inputModel.Page = 1;
@@ -266,6 +353,14 @@ namespace IdentityServer4.Quickstart.UI
                 UpdatedBy = inputModel.UpdatedBy,
                 UserName = inputModel.UserName
             };
+        }
+
+        private void SetModelStateErrors(IEnumerable<IdentityError> errors)
+        {
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError(error.Code, error.Description);
+            }
         }
 
         private IList<ApplicationUser> FilterUsers(IEnumerable<ApplicationUser> users, AdministrationInputModel model)

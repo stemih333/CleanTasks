@@ -2,11 +2,10 @@
 
 namespace CleanTasks.Application.Attachment.Commands.CreateAttachment
 {
-    public class CreateCommentValidation : AbstractValidator<CreateAttachmentCommand>
+    public class CreateAttachmentValidation : AbstractValidator<CreateAttachmentCommand>
     {
-        public CreateCommentValidation()
+        public CreateAttachmentValidation()
         {
-            RuleFor(_ => _.File).NotEmpty();
         }
     }
 }

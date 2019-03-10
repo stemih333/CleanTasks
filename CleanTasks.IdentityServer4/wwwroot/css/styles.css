@@ -68,3 +68,7 @@
 .table-wrapper > div {
     overflow: auto;
 }
+
+.right {
+    float: right;
+}

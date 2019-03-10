@@ -1,5 +1,9 @@
 ﻿@model UserDetailsViewModel
 
+@{
+    ViewData["Title"] = "Details " + Model.UserName;
+}
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-dismissable alert-success">

@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 
-namespace CleanTasks.Common.Classes
+namespace CleanTasks.CommonWeb.Classes
 {
     public class JsonKeyArrayClaimAction : ClaimAction
     {

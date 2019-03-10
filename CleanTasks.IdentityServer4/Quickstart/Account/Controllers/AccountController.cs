@@ -16,9 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using System.Collections.Generic;
-using CleanTasks.Common.Constants;
 using CleanTasks.IdentityServer4;
 
 namespace IdentityServer4.Quickstart.UI
@@ -48,13 +46,7 @@ namespace IdentityServer4.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
-        }
-
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        }  
 
         [HttpGet]
         public IActionResult Success()
@@ -66,45 +58,7 @@ namespace IdentityServer4.Quickstart.UI
         public IActionResult ForgotPassword()
         {                     
             return View();
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if(ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    Email = model.Email,
-                    UserName = model.UserName
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if(result.Succeeded)
-                {
-                    var claimResult = 
-                        await _userManager.AddClaimsAsync(user, new List<Claim>
-                        {
-                            new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission),
-                            new Claim(JwtClaimTypes.Name, model.UserName),
-                            new Claim(JwtClaimTypes.GivenName, model.FirstName),
-                            new Claim(JwtClaimTypes.FamilyName, model.LastName),
-                            new Claim(JwtClaimTypes.Email, model.Email)
-                        });
-
-                    if(claimResult.Succeeded)
-                    {
-                        return View("Login");
-                    }
-                    else
-                        SetModelStateErrors(claimResult.Errors);
-                }
-                else 
-                    SetModelStateErrors(result.Errors);
-            }
-
-            return View(model);
-        }
+        }       
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -124,7 +78,7 @@ namespace IdentityServer4.Quickstart.UI
 
                     System.IO.File.WriteAllText("resetText.txt", restoreUrl);
 
-                    return View("Success", "Reset password link sent to mail.");
+                    return RedirectToAction("Success", "Reset password link sent to mail.");
                 }
                 ModelState.AddModelError("Unknown E-mail address", $"E-mail address '{model.Email}' is an unknown e-mail address.");
             }
