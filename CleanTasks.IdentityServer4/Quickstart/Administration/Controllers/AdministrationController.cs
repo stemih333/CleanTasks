@@ -11,6 +11,8 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using IdentityModel;
 using CleanTasks.Common.Constants;
+using System.Net.Http;
+using CleanTasks.Application.TodoArea.Models;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -19,10 +21,12 @@ namespace IdentityServer4.Quickstart.UI
     public class AdministrationController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AdministrationController(UserManager<ApplicationUser> userManager)
+        public AdministrationController(UserManager<ApplicationUser> userManager, IHttpClientFactory clientFactory)
         {
             _userManager = userManager;
+            _httpClientFactory = clientFactory;
         }
 
         [HttpGet]
@@ -80,6 +84,22 @@ namespace IdentityServer4.Quickstart.UI
             return View();
         }
 
+        private async Task<List<TodoAreaDto>> GetTodoAreas(List<int> permissions = null)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            "api/todoarea");
+
+            var client = _httpClientFactory.CreateClient("todoapi");
+
+            var res = await client.SendAsync(request);
+
+            if(res.IsSuccessStatusCode)
+            {
+                return await res.Content.ReadAsAsync<List<TodoAreaDto>>();
+            }
+            return null;
+        }
+
         [HttpGet, Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Edit([Required]string userId)
         {
@@ -92,6 +112,11 @@ namespace IdentityServer4.Quickstart.UI
                 return View("ViewModelError");
             }
 
+            var todoAreaPermissions = 
+                User.Claims.Where(_ => _.Type.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => int.Parse(_.Value));
+
+            var allAreas = _httpClientFactory.CreateClient();
+
             var model = new EditViewModel
             {
                 Id = user.Id,
@@ -103,6 +128,40 @@ namespace IdentityServer4.Quickstart.UI
                 UpdatedBy = user.UpdatedBy
             };
             return View(model);
+        }
+
+        [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Could not find user with id: " + model.Id);
+                return View("ViewModelError");
+            }
+
+            user.Updated = DateTime.Now;
+            user.UpdatedBy = User.Identity.Name ?? "Unknown";
+            user.Email = model.Email;
+            user.LastName = model.LastName;
+            user.FirstName = model.FirstName;
+            user.UserName = model.UserName;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                SetModelStateErrors(result.Errors);
+                return View("ViewModelError");
+            }
+
+            TempData["SuccessMessage"] = "Successfully updated user";
+            return RedirectToAction("Details", new { UserId = model.Id });
         }
 
         [HttpGet, Authorize(Policy = "AdminPolicy")]
@@ -203,39 +262,6 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return View(model);
-        }
-
-        [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditInputModel model)
-        {
-            if (!ModelState.IsValid) {
-                return View(model);
-            }
-
-            var user = await _userManager.FindByIdAsync(model.Id);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Could not find user with id: " + model.Id);
-                return View("ViewModelError");
-            }
-
-            user.Updated = DateTime.Now;
-            user.UpdatedBy = User.Identity.Name ?? "Unknown";
-            user.Email = model.Email;
-            user.LastName = model.LastName;
-            user.FirstName = model.FirstName;
-            user.UserName = model.UserName;
-            
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                SetModelStateErrors(result.Errors);
-                return View("ViewModelError");
-            }
-
-            TempData["SuccessMessage"] = "Successfully updated user";
-            return RedirectToAction("Details", new { UserId = model.Id });
         }
 
         [HttpPost, ValidateAntiForgeryToken]

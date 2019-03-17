@@ -14,7 +14,7 @@ namespace CleanTasks.WebAPI.Controllers
 {
     public class TodoAreaController : TodoControllerBase
     {
-        readonly ILogger log;
+        private readonly ILogger log;
 
         public TodoAreaController(ILogger log)
         {
@@ -29,17 +29,20 @@ namespace CleanTasks.WebAPI.Controllers
                 .Select(_ => int.Parse(_.Value))
                 .ToList();
 
-            await Mediator.Send(new TodoAreaQuery { UserAreas = allowedAreas });
-            return Ok();
+            var areas = await Mediator.Send(new TodoAreaQuery { UserAreas = allowedAreas });
+            return Ok(areas);
         }
+
+        [HttpGet("all")]
+        public async Task<List<TodoAreaDto>> GetAll() => await Mediator.Send(new TodoAreaAllQuery());
 
         [HttpPut, ValidateViewModel]
         public async Task<int> Put([FromBody] IdValueInputModel model)
-        => await Mediator.Send(new CreateTodoAreaCommand { Name = model.Value, UserName = "TestCreate" });
+        => await Mediator.Send(new CreateTodoAreaCommand { Name = model.Value, UserName = model.Username });
                
         [HttpPost, ValidateViewModel]
         public async Task Post([FromBody] IdValueInputModel model)
-        => await Mediator.Send(new UpdateTodoAreaCommand { Name = model.Value, TodoAreaId = model.Id, UserName = "TestUpdate" });
+        => await Mediator.Send(new UpdateTodoAreaCommand { Name = model.Value, TodoAreaId = model.Id, UserName = model.Username });
 
         [HttpDelete("{id}")]
         public async Task Delete(int? id)

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CleanTasks.Application\CleanTasks.Application.csproj" />
     <ProjectReference Include="..\CleanTasks.CommonWeb\CleanTasks.CommonWeb.csproj" />
     <ProjectReference Include="..\CleanTasks.Common\CleanTasks.Common.csproj" />
   </ItemGroup>

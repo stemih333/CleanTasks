@@ -1,0 +1,20 @@
+﻿@if (!ViewContext.ModelState.IsValid)
+{
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div asp-validation-summary="All" class="danger"></div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    @ViewData["ErrorMessage"]
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+

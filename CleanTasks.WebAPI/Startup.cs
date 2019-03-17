@@ -13,6 +13,7 @@ using CleanTasks.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using CleanTasks.WebAPI.Extensions;
+using CleanTasks.Common.Constants;
 
 namespace CleanTasks.WebAPI
 {
@@ -56,6 +57,19 @@ namespace CleanTasks.WebAPI
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy =>
+                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
+                options.AddPolicy("UserPolicy", policy =>
+                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
+                options.AddPolicy("AllUserPolicy", policy =>
+                    policy.RequireAssertion(
+                        assert =>
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
             });
         }
 

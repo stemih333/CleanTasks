@@ -3,8 +3,20 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<section class="container">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div>
+            Welcome user @Model.Username
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h1 class="display-4">Welcome</h1>
+            <p><a asp-page="/SignIn">Sign in</a> to create new or handle existing tasks and bugs.</p>
+        </div>
+    }
+</section>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+

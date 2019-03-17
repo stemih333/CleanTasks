@@ -1,12 +1,17 @@
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Classes;
+using CleanTasks.RazorGUI.Interfaces;
+using CleanTasks.RazorGUI.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI
@@ -25,6 +30,18 @@ namespace CleanTasks.RazorGUI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddHttpContextAccessor();
+
+            services.AddHttpClient<ITodoApiClient, TodoApiClient>(async (c) =>
+            {
+                var serviceProvider = services.BuildServiceProvider();
+                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+                
+                c.BaseAddress = new Uri("https://localhost:5004/");
+                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            });
 
             services.AddAuthentication(options =>
             {

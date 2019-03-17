@@ -71,12 +71,15 @@ namespace IdentityServer4.Quickstart.UI
                 {
                     var token =await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                    var restoreUrl = Url.Action("RestorePassword",
-                        ControllerContext.ActionDescriptor.ControllerName,
-                        new { token, email = user.Email },
-                        Request.Scheme);
+                    var controllerName = ControllerContext.ActionDescriptor.ControllerName;
+                    var scheme = Request.Scheme;
 
-                    System.IO.File.WriteAllText("resetText.txt", restoreUrl);
+                    var restoreUrl = Url.Action("RestorePassword",
+                        controllerName,
+                        new { token, email = user.Email },
+                        scheme);
+
+                    //System.IO.File.WriteAllText("resetText.txt", restoreUrl);
 
                     return RedirectToAction("Success", "Reset password link sent to mail.");
                 }
@@ -187,6 +190,15 @@ namespace IdentityServer4.Quickstart.UI
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Username);
+                    if(!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "Email not confirmed."));
+                        ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                        
+                        await _signInManager.SignOutAsync();
+
+                        return View(await BuildLoginViewModelAsync(model));
+                    } 
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
 
                     if (context != null)
