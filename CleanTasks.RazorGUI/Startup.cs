@@ -27,7 +27,19 @@ namespace CleanTasks.RazorGUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTransient<IAppSessionHandler, AppSessionHandler>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
@@ -43,12 +55,38 @@ namespace CleanTasks.RazorGUI
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
+            services.AddHttpClient<IUserApiService, UserApiService>(async (c) =>
+            {
+                var serviceProvider = services.BuildServiceProvider();
+                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+                c.BaseAddress = new Uri("https://localhost:5000/");
+                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            });
+
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.Admin, policy =>
+                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
+                options.AddPolicy(Policies.User, policy =>
+                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
+                options.AddPolicy(Policies.All, policy =>
+                    policy.RequireAssertion(
+                        assert =>
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
+                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookie";
                 options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("Cookie")
+            .AddCookie("Cookie", opts => {
+                opts.ExpireTimeSpan = TimeSpan.FromHours(1);
+            })
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookie";
@@ -61,8 +99,12 @@ namespace CleanTasks.RazorGUI
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
+                options.Scope.Add("WebAPI");
+                options.Scope.Add("offline_access");
                 options.Scope.Add(AuthConstants.PermissionType);
+                options.Scope.Add(PermissionTypes.TodoAreaPermission);
                 options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
+                options.ClaimActions.Add(new JsonKeyArrayClaimAction(PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission));
                 options.Events.OnRemoteFailure = ctx =>
                 {
                     if(!string.IsNullOrEmpty(ctx.Failure.Message) && ctx.Failure.Message.Contains("access_denied"))
@@ -73,14 +115,6 @@ namespace CleanTasks.RazorGUI
                     return Task.CompletedTask;
                 };
             });
-
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -88,6 +122,7 @@ namespace CleanTasks.RazorGUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -98,6 +133,7 @@ namespace CleanTasks.RazorGUI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseMvc();
         }

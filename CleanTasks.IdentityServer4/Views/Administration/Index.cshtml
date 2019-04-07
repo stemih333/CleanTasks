@@ -55,15 +55,15 @@
                             </th>
                             <th class="one-liner fit">
                                 <partial name="_SortColumn" model="@("Created date", "Created", Model);">
-                                    <input asp-for="@Model.Created" type="date" class="form-control input-sm width-150" />
+                                    <input asp-for="@Model.Created" type="text" class="form-control input-sm width-150" />
                             </th>
                             <th class="one-liner fit">
                                 <partial name="_SortColumn" model="@("Created by", "CreatedBy", Model);">
-                                    <input asp-for="@Model.CreatedBy" class="form-control input-sm width-150" />
+                                    <input asp-for="@Model.CreatedBy" type="text" class="form-control input-sm width-150" />
                             </th>
                             <th class="one-liner fit">
                                 <partial name="_SortColumn" model="@("Updated date", "Updated", Model);">
-                                    <input asp-for="@Model.Updated" type="date" class="form-control input-sm width-150" />
+                                    <input asp-for="@Model.Updated" type="text" class="form-control input-sm width-150" />
                             </th>
                             <th class="one-liner fit">
                                 <partial name="_SortColumn" model="@("Updated by", "UpdatedBy", Model);">

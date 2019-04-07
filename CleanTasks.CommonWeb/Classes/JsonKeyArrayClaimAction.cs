@@ -25,7 +25,12 @@ namespace CleanTasks.CommonWeb.Classes
         public override void Run(JObject userData, ClaimsIdentity identity, string issuer)
         {
             var values = userData?[JsonKey];
-            if (!(values is JArray)) return;
+            if (values == null) return;
+                 
+            if (!(values is JArray)) {
+                identity.AddClaim(new Claim(ClaimType, values.ToString(), ValueType, issuer));
+                return;
+            }
 
             foreach (var value in values)
             {

@@ -5,7 +5,7 @@ body, html {
     height: 100%;
 }
 
-a.navbar-brand {
+.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
@@ -25,13 +25,21 @@ a.navbar-brand {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-button.accept-policy {
+.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
 
+.message-container {
+    position: fixed; 
+    top: 4rem;
+    right: 1rem;
+    left: 1rem;
+    z-index: 9999;
+}
+
 .main-container {
-    padding-top: 57px;
+    padding-top: 3.5rem;
     height: 100%;
     position: relative;
 }
@@ -41,14 +49,43 @@ button.accept-policy {
     overflow-x:hidden;
 }
 
-.task-area-list-item {
+.task-area-list-item {   
+    position: relative;
+}
+
+    .task-area-list-item:hover > .task-area-list-item-icons {
+        display: inline-block;
+    }
+
+.task-area-list-item-link, .todo-area-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.todo-area-title {
+    max-width: 15rem;
+}
+
+.task-area-list-item-icons {
+    position: absolute;
+    right: 0;
+    display: none;
+}
+
+    .task-area-list-item-icons span {
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        cursor: pointer;
+    }
+
+    .task-area-list-item-icons span:hover {
+        color: blue;
+    }
 
 .task-container {
     height: 100%;
     align-items: stretch;
     align-content: stretch;
 }
+

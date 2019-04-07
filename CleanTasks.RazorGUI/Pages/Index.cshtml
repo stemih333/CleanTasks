@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<section class="container">
+<section class="container-fluid main-container">
     @if (User.Identity.IsAuthenticated)
     {
         <div>
@@ -18,5 +18,4 @@
         </div>
     }
 </section>
-
 

@@ -5,14 +5,18 @@
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Classes;
 using CleanTasks.IdentityServer4.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Reflection;
 
 namespace CleanTasks.IdentityServer4
@@ -31,20 +35,38 @@ namespace CleanTasks.IdentityServer4
         public void ConfigureServices(IServiceCollection services)
         {
             var assembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            //services.AddTransient<IUserService, UserService>();
+
+            //services.AddMediatR(typeof(CreateAttachmentHandler).Assembly);
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("IdentityDbContext"),
                     opts => opts.MigrationsAssembly(assembly)));
 
+            services.AddHttpContextAccessor();
+
+            services.AddHttpClient("todoapi", async (c) =>
+            {
+                var serviceProvider = services.BuildServiceProvider();
+                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("Cookie", "access_token");
+
+                c.BaseAddress = new Uri(Configuration["apiUrl"]);
+                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            });
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddClaimsPrincipalFactory<CustomUserClaimsPrincipalFactory>();
 
-            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(opts => opts.Authentication.CookieLifetime = TimeSpan.FromHours(1))
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
@@ -78,14 +100,16 @@ namespace CleanTasks.IdentityServer4
                             assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
             });
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = "Cookie";
                 options.DefaultChallengeScheme = "oidc";
             })
-            .AddCookie("Cookie")
+            .AddCookie("Cookie", opts =>
+            {
+                opts.ExpireTimeSpan = TimeSpan.FromHours(1);
+            })
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookie";
@@ -98,10 +122,27 @@ namespace CleanTasks.IdentityServer4
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
+                options.Scope.Add("WebAPI");
+                options.Scope.Add("offline_access");
                 options.Scope.Add(AuthConstants.PermissionType);
                 options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
             });
 
+            services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = "https://localhost:5000";
+                options.RequireHttpsMetadata = true;
+                options.Audience = "WebAPI";
+            });
+
+
+            // Customise default API behavour
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+                
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;

@@ -1,0 +1,24 @@
+﻿@page
+@model CleanTasks.RazorGUI.Pages.Tasks.AddAreaModel
+@{
+    ViewData["Title"] = "Add new area";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 400px;" method="post">
+        <section class="card-header">
+            Add new area
+        </section>
+        <section class="card-body">
+            <div class="form-group">
+                <label asp-for="@Model.AreaName"></label>
+                <input asp-for="@Model.AreaName" class="form-control" />
+                <span asp-validation-for="@Model.AreaName" class="form-text text-danger small"></span>
+            </div>
+        </section>
+        <section class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a class="btn btn-secondary" asp-page="/Tasks/Workspace">Cancel</a>
+        </section>
+    </form>
+</main>

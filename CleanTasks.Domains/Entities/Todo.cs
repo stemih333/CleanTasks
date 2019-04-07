@@ -9,6 +9,7 @@ namespace CleanTasks.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public string AssignedTo { get; set; }
+        public string AssignedToName { get; set; }
 
         public ICollection<TodoComment> Comments { get; set; } = new List<TodoComment>();
         public ICollection<TodoTag> Tags { get; set; } = new List<TodoTag>();
@@ -23,5 +24,8 @@ namespace CleanTasks.Domain.Entities
         public ICollection<Todo> LinkedTodos { get; set; } = new List<Todo>();
 
         public byte[] Rowversion { get; set; }
+
+        public int? TodoAreaId { get; set; }
+        public TodoArea TodoArea { get; set; }
     }
 }

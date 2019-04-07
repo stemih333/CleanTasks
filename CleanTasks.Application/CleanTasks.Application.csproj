@@ -12,9 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Todo\Models\" />
-    <Folder Include="Todo\Commands\" />
     <Folder Include="Todo\Queries\" />
   </ItemGroup>
 

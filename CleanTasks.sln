@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8491C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{833A8725-17F1-46F6-AB63-42271CEEF821}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{ACEE3C42-7A93-4A5C-A7EF-17D502D1D177}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{ACEE3C42-7A93-4A5C-A7EF-17D502D1D177}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B02E7BDB-2256-4804-9469-E607555E822E}"
 EndProject
@@ -31,7 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F5D926C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanTasks.IdentityServer4.Tests", "CleanTasks.IdentityServer4.Tests\CleanTasks.IdentityServer4.Tests.csproj", "{C0855E12-286E-4C5C-A40A-CC8A360F5560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanTasks.CommonWeb", "CleanTasks.CommonWeb\CleanTasks.CommonWeb.csproj", "{3443B33A-B782-4DEC-B485-4FF674A8515F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanTasks.CommonWeb", "CleanTasks.CommonWeb\CleanTasks.CommonWeb.csproj", "{3443B33A-B782-4DEC-B485-4FF674A8515F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{97FCE07E-7A98-4B16-8BAD-A3537FB349B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

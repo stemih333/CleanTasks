@@ -6,7 +6,7 @@ namespace CleanTasks.Application.TodoArea.Commands
     {
         public CreateTodoAreaValidation()
         {
-            RuleFor(_ => _.Name).NotEmpty().MaximumLength(50);
+            RuleFor(_ => _.Name).NotEmpty().MaximumLength(50).MinimumLength(2);
         }
     }
 }

@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using CleanTasks.IdentityServer4;
+using CleanTasks.Domain.Entities;
+using CleanTasks.IdentityServer4.Identity;
 
 namespace IdentityServer4.Quickstart.UI
 {

@@ -1,5 +1,4 @@
-﻿using CleanTasks.IdentityServer4;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -13,6 +12,9 @@ using IdentityModel;
 using CleanTasks.Common.Constants;
 using System.Net.Http;
 using CleanTasks.Application.TodoArea.Models;
+using System.Text;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using CleanTasks.IdentityServer4.Identity;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -84,20 +86,59 @@ namespace IdentityServer4.Quickstart.UI
             return View();
         }
 
-        private async Task<List<TodoAreaDto>> GetTodoAreas(List<int> permissions = null)
+        [HttpGet, Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> TodoAreaPermissions([Required]string userId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get,
-            "api/todoarea");
+            if (!ModelState.IsValid) return View("ViewModelError");
 
-            var client = _httpClientFactory.CreateClient("todoapi");
-
-            var res = await client.SendAsync(request);
-
-            if(res.IsSuccessStatusCode)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                return await res.Content.ReadAsAsync<List<TodoAreaDto>>();
+                ModelState.AddModelError("", "Could not find user with id: " + userId);
+                return View("ViewModelError");
             }
-            return null;
+
+            var claims = await _userManager.GetClaimsAsync(user);
+            var areaPermissions = claims.Where(_ => _.Type.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => _.Value);        
+            var availableAreas = (await GetAllTodoAreas())?.Select(_ => new IdName { Id = _.TodoAreaId.Value.ToString(), Name = _.Name })?.ToList();
+            var userAreas = (await GetTodoAreas(areaPermissions.ToList()))?.Select(_ => new IdName { Id = _.TodoAreaId.Value.ToString(), Name = _.Name })?.ToList();
+            if (userAreas != null && availableAreas != null) availableAreas = availableAreas.Except(userAreas, new IdNameComparer()).ToList();
+
+            var vm = new TodoAreaPermissionsViewModel
+            {
+                UserTodoAreas = userAreas,
+                AvailableTodoAreas = new SelectList(availableAreas, "Id", "Name"),
+                UserId = userId,
+                Username = user.UserName
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> TodoAreaPermissions(TodoAreaPermissionsInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Could not find user with id: " + model.UserId);
+                return View("ViewModelError");
+            }
+
+            var result = await _userManager.AddClaimAsync(user, new Claim(PermissionTypes.TodoAreaPermission, model.PermissionToAdd));
+
+            if (!result.Succeeded)
+            {
+                SetModelStateErrors(result.Errors);
+                return View("ViewModelError");
+            }
+
+            return RedirectToAction("TodoAreaPermissions", new { model.UserId });
         }
 
         [HttpGet, Authorize(Policy = "AdminPolicy")]
@@ -112,11 +153,6 @@ namespace IdentityServer4.Quickstart.UI
                 return View("ViewModelError");
             }
 
-            var todoAreaPermissions = 
-                User.Claims.Where(_ => _.Type.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => int.Parse(_.Value));
-
-            var allAreas = _httpClientFactory.CreateClient();
-
             var model = new EditViewModel
             {
                 Id = user.Id,
@@ -125,10 +161,11 @@ namespace IdentityServer4.Quickstart.UI
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Updated = user.Updated,
-                UpdatedBy = user.UpdatedBy
+                UpdatedBy = user.UpdatedBy,
             };
             return View(model);
         }
+
 
         [HttpPost, Authorize(Policy = "AdminPolicy"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditInputModel model)
@@ -194,7 +231,7 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             var claims = await _userManager.GetClaimsAsync(user);
-
+            var areas = await GetTodoAreas(claims?.Where(_ => _.Type.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => _.Value).ToList());
             var model = new UserDetailsViewModel
             {
                 Id = user.Id,
@@ -206,7 +243,8 @@ namespace IdentityServer4.Quickstart.UI
                 CreatedBy = user.CreatedBy,
                 Updated = user.Updated,
                 UpdatedBy = user.UpdatedBy,
-                Permissions = claims.Where(_ => _.Type.Equals(AuthConstants.PermissionType)).Select(_ => _.Value)
+                Permissions = claims?.Where(_ => _.Type.Equals(AuthConstants.PermissionType)).Select(_ => _.Value),
+                Areas = areas?.Select(_ => _.Name)
             };
 
             return View("Details", model);
@@ -400,9 +438,54 @@ namespace IdentityServer4.Quickstart.UI
             if(!string.IsNullOrEmpty(model.CreatedBy)) users = users.Where(_ => _.CreatedBy.StartsWith(model.CreatedBy));
             if(!string.IsNullOrEmpty(model.UpdatedBy)) users = users.Where(_ => _.UpdatedBy.StartsWith(model.UpdatedBy));
             if(model.Updated.HasValue) users = users.Where(_ => _.Updated.HasValue && _.Updated.Value.Date == model.Updated.Value);
-            if(model.Created.HasValue) users = users.Where(_ => _.Created.HasValue && _.Created.Value.Date == model.Updated.Value);
+            if(model.Created.HasValue) users = users.Where(_ => _.Created.HasValue && _.Created.Value.Date == model.Created.Value);
             
             return users.ToList();
+        }
+
+        private async Task<List<TodoAreaDto>> GetTodoAreas(List<string> allowedAreas)
+        {
+            if (!allowedAreas.Any()) return null;
+
+            var queryString = TodoAreasQueryString(allowedAreas);
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/todoarea" + queryString);
+
+            var client = _httpClientFactory.CreateClient("todoapi");
+
+            var res = await client.SendAsync(request);
+
+            if (res.IsSuccessStatusCode)
+            {
+                return await res.Content.ReadAsAsync<List<TodoAreaDto>>();
+            }
+            return null;
+        }
+
+        private async Task<List<TodoAreaDto>> GetAllTodoAreas()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "api/todoarea/all");
+
+            var client = _httpClientFactory.CreateClient("todoapi");
+
+            var res = await client.SendAsync(request);
+
+            if (res.IsSuccessStatusCode)
+            {
+                return await res.Content.ReadAsAsync<List<TodoAreaDto>>();
+            }
+            return null;
+        }
+
+        private string TodoAreasQueryString(List<string> allowedAreas)
+        {
+            var builder = new StringBuilder("?");
+            for (var i = 0; i < allowedAreas.Count; i++)
+            {
+                builder.Append($"allowedAreas[{i}]={allowedAreas[i]}");
+                if ((i + 1) < allowedAreas.Count) builder.Append("&");
+            }
+
+            return builder.ToString();
         }
     }
 }

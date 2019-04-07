@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CleanTasks.IdentityServer4
+namespace CleanTasks.IdentityServer4.Identity
 {
     public class ApplicationUser : IdentityUser
     {
@@ -18,6 +18,5 @@ namespace CleanTasks.IdentityServer4
         public string UpdatedBy { get; set; }
         [Required, StringLength(50)]
         public string CreatedBy { get; set; }
-
     }
 }

@@ -1,0 +1,29 @@
+﻿@page "{id:int?}"
+@model CleanTasks.RazorGUI.Pages.WorkspaceModel
+@{
+    ViewData["Title"] = "Workspace";
+}
+<main class="container-fluid main-container">
+    <partial name="_Errors" />
+    <div class="row task-container">
+        <section class="col-xl-2 col-lg-3 border-right task-area-list">
+            @if (Model.IsAdmin)
+            {
+                <div class="text-center">
+                    <a class="btn btn-primary mt-2 mb-2" asp-page="/Tasks/AddArea"><span class="oi oi-plus"></span></a>
+                </div>
+            }
+            
+            <vc:todo-areas-list areas="@Model.Areas"></vc:todo-areas-list>           
+
+        </section>
+        <section class="col-xl-10 col-lg-9" style="padding: 0">
+            @if (Model.CurrentArea.HasValue)
+            {
+                <vc:todo-list area-id="@Model.CurrentArea.Value" area-name="@Model.CurrentAreaName" todos="null"></vc:todo-list>
+            }
+
+        </section>
+    </div>
+
+</main>

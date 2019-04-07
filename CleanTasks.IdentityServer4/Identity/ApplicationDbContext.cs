@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using CleanTasks.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTasks.IdentityServer4
+namespace CleanTasks.IdentityServer4.Identity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

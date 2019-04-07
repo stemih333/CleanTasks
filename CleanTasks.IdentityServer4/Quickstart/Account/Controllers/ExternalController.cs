@@ -1,4 +1,6 @@
+using CleanTasks.Domain.Entities;
 using CleanTasks.IdentityServer4;
+using CleanTasks.IdentityServer4.Identity;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Quickstart.UI;

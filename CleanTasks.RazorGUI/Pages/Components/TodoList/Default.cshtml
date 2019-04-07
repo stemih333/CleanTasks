@@ -1,0 +1,13 @@
+﻿@using CleanTasks.RazorGUI.Models
+@model TodoListComponentModel
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light ">
+    <b class="navbar-brand todo-area-title" title="@Model.TodoAreaName">@Model.TodoAreaName</b>
+    <div class="navbar-text ml-auto">
+        <a class="btn btn-secondary mr-2 btn-sm text-white" asp-route-id="@Model.TodoAreaId" asp-route-refresh="true" title="Reload page"><span class="oi oi-reload"></span></a>
+        <a class="btn btn-secondary btn-sm text-white" asp-page="/Tasks/CreateTodo" asp-route-id="@Model.TodoAreaId" title="Create new todo"><span class="oi oi-plus"></span></a>
+    </div>
+</nav>
+<section class="container-fluid">
+
+</section>

@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using CleanTasks.WebAPI.Extensions;
 using CleanTasks.Common.Constants;
+using System;
 
 namespace CleanTasks.WebAPI
 {
@@ -59,18 +60,16 @@ namespace CleanTasks.WebAPI
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("AdminPolicy", policy =>
-                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
-                options.AddPolicy("UserPolicy", policy =>
-                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
-                options.AddPolicy("AllUserPolicy", policy =>
-                    policy.RequireAssertion(
-                        assert =>
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
-            });
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:5000";
+                    options.RequireHttpsMetadata = true;
+                    options.Audience = "WebAPI";
+                });
+
+
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +80,7 @@ namespace CleanTasks.WebAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

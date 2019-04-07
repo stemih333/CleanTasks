@@ -2,9 +2,9 @@
 
 namespace CleanTasks.Application.TodoArea.Queries
 {
-    public class TodoAreaValidation : AbstractValidator<TodoAreaQuery>
+    public class GetUsersByAreaValidation : AbstractValidator<TodoAreaQuery>
     {
-        public TodoAreaValidation()
+        public GetUsersByAreaValidation()
         {
             RuleFor(_ => _.UserAreas)
                 .Must(_ => _ != null && _.Count > 0)

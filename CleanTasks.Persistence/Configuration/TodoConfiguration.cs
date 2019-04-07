@@ -26,6 +26,9 @@ namespace CleanTasks.Persistence.Configuration
             builder.Property(_ => _.AssignedTo)
                 .HasMaxLength(25);
 
+            builder.Property(_ => _.AssignedToName)
+                .HasMaxLength(100);
+
             builder.Property(_ => _.Status)
                 .IsRequired()
                 .HasConversion(new EnumToStringConverter<TodoStatuses>());

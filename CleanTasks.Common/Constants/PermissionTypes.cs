@@ -2,6 +2,6 @@
 {
     public static class PermissionTypes
     {
-        public static string TodoAreaPermission = "TodoAreaPermission";
+        public static string TodoAreaPermission = "todoareapermission";
     }
 }

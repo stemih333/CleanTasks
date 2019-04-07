@@ -1,0 +1,46 @@
+﻿@model TodoAreaPermissionsViewModel
+@{
+    ViewData["Title"] = "Manage Todo Area Permissions";
+}
+
+<partial name="_validationSummary">
+
+<form class="panel width-400  panel-default" asp-action="TodoAreaPermission" method="post">
+    <div class="panel-heading">
+        <h4>Manage Todo Area Permissions - @Model.Username</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-group form-group-sm">
+            <label>User permissions</label>
+            <ul>
+                @if (Model.UserTodoAreas != null)
+                {
+                    @foreach (var area in Model.UserTodoAreas)
+                    {
+                        <li>@area.Name</li>
+                    }
+                }
+                else
+                {
+                    <li>No areas permissions set</li>
+                }
+            </ul>
+        </div>
+        <div class="form-group form-group-sm">
+            <label>Available permissions</label>
+            @if (Model.AvailableTodoAreas != null && Model.AvailableTodoAreas.Any())
+            {
+                <select name="PermissionToAdd" asp-items="@Model.AvailableTodoAreas" class="form-control input-sm"></select>
+            }
+            else
+            {
+                <p>User has permission to all areas</p>
+            }
+        </div>
+        <input asp-for="@Model.UserId" />
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-sm btn-primary" type="submit">Save</button>
+        <a asp-action="Details" asp-route-userId="@Model.UserId" class="btn btn-sm btn-default">Back</a>
+    </div>
+</form>
