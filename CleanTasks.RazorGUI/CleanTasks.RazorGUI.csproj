@@ -16,13 +16,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CleanTasks.Application\CleanTasks.Application.csproj" />
-    <ProjectReference Include="..\CleanTasks.CommonWeb\CleanTasks.CommonWeb.csproj" />
-    <ProjectReference Include="..\CleanTasks.Common\CleanTasks.Common.csproj" />
   </ItemGroup>
 
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Reference Include="CleanTasks.Common">
+      <HintPath>..\..\IdentityServer4App\CleanTasks.Common\bin\Debug\netcoreapp2.2\CleanTasks.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CleanTasks.CommonWeb">
+      <HintPath>..\..\IdentityServer4App\CleanTasks.CommonWeb\bin\Debug\netcoreapp2.2\CleanTasks.CommonWeb.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

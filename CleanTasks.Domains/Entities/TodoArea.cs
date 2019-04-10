@@ -8,5 +8,6 @@ namespace CleanTasks.Domain.Entities
         public string Name { get; set; }
 
         public ICollection<Todo> Todos { get; set; }
+        public ICollection<TodoAreaPermission> Permissions { get; set; }
     }
 }

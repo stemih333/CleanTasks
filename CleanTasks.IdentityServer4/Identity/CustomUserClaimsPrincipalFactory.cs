@@ -1,5 +1,4 @@
-﻿using CleanTasks.Domain.Entities;
-using IdentityModel;
+﻿using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;

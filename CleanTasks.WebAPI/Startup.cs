@@ -13,8 +13,6 @@ using CleanTasks.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using CleanTasks.WebAPI.Extensions;
-using CleanTasks.Common.Constants;
-using System;
 
 namespace CleanTasks.WebAPI
 {

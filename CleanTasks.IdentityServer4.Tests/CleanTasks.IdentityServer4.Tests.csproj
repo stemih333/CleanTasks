@@ -18,8 +18,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CleanTasks.IdentityServer4\CleanTasks.IdentityServer4.csproj" />
-  </ItemGroup>
-
 </Project>

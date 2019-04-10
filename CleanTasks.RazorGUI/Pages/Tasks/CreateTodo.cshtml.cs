@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using CleanTasks.Application.Interfaces;
 using CleanTasks.Common.Constants;
 using CleanTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;

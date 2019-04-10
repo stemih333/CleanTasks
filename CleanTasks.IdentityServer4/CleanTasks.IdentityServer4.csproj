@@ -8,8 +8,6 @@
     
     <PackageReference Include="IdentityServer4" Version="2.3.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="2.3.0" />
-    <PackageReference Include="MediatR" Version="6.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0" PrivateAssets="all">
@@ -20,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanTasks.Application\CleanTasks.Application.csproj" />
     <ProjectReference Include="..\CleanTasks.CommonWeb\CleanTasks.CommonWeb.csproj" />
     <ProjectReference Include="..\CleanTasks.Common\CleanTasks.Common.csproj" />
   </ItemGroup>

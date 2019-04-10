@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CleanTasks.Common\CleanTasks.Common.csproj" />
     <ProjectReference Include="..\CleanTasks.Domains\CleanTasks.Domain.csproj" />
     <ProjectReference Include="..\CleanTasks.Persistence\CleanTasks.Persistence.csproj" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using CleanTasks.Application.TodoArea.Models;
-using CleanTasks.Application.User.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,5 +10,6 @@ namespace CleanTasks.RazorGUI.Interfaces
         Task<List<TodoAreaDto>> GetAllTodoAreas();
         Task CreateTodoArea(string areaName, string userName);
         Task DeleteTodoArea(int areaId);
+        Task<bool> AreaExist(int id);
     }
 }

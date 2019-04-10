@@ -1,9 +1,7 @@
 ﻿using CleanTasks.Common.Constants;
 using IdentityServer4;
 using IdentityServer4.Models;
-using IdentityServer4.Test;
 using System.Collections.Generic;
-using System.Security.Claims;
 
 namespace CleanTasks.IdentityServer4
 {
@@ -80,25 +78,6 @@ namespace CleanTasks.IdentityServer4
                     UpdateAccessTokenClaimsOnRefresh = true,
                     IdentityTokenLifetime = 3600
                 }
-            };
-
-        public static List<TestUser> GetTestUsers()
-            => new List<TestUser>
-            {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "mihste",
-                    IsActive = true,
-                    Password = "Stemih11",
-                    Claims = new List<Claim>
-                    {
-                        new Claim("name", "Stefan Mihailovic"),
-                        new Claim("email", "stemih11@gmail.com"),
-                        new Claim("nickname", "stemih"),
-                        new Claim("test", "test claim")
-                    }
-                }
-            };
+            };   
     }
 }

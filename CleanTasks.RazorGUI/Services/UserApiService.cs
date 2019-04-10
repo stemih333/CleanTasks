@@ -1,5 +1,5 @@
-﻿using CleanTasks.Application.User.Models;
-using CleanTasks.RazorGUI.Interfaces;
+﻿using CleanTasks.RazorGUI.Interfaces;
+using CleanTasks.RazorGUI.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;

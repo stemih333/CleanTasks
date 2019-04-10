@@ -1,6 +1,7 @@
 ﻿using CleanTasks.Application.TodoArea.Models;
 using CleanTasks.RazorGUI.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +62,10 @@ namespace CleanTasks.RazorGUI.Services
             return builder.ToString();
         }
 
-
+        public async Task<bool> AreaExist(int id)
+        {
+            var areas = await GetTodoAreas(new List<string> { id.ToString() });
+            return areas != null && areas.Any();
+        }
     }
 }

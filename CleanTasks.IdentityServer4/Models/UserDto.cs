@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanTasks.Application.User.Models
+namespace CleanTasks.IdentityServer4.Models
 {
     public class UserDto
     {

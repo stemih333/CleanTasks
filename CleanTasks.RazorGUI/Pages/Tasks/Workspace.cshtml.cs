@@ -4,6 +4,7 @@ using CleanTasks.RazorGUI.Interfaces;
 using CleanTasks.RazorGUI.Pages.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,11 @@ namespace CleanTasks.RazorGUI.Pages
 
         public async Task OnGet(int? id, [FromQuery]bool refresh)
         {
+            if(id.HasValue)
+            {
+                if (!await Client.AreaExist(id.Value)) throw new Exception($"Area id '{id.Value}' does not exist.");
+            }
+
             CurrentArea = id;
             IsAdmin = (await AuthService.AuthorizeAsync(User, Policies.Admin)).Succeeded;
             Areas = AppSessionHandler.GetData<List<TodoAreaDto>>(AreasKey);

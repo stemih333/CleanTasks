@@ -1,4 +1,4 @@
-﻿using CleanTasks.Application.User.Models;
+﻿using CleanTasks.RazorGUI.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

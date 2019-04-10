@@ -1,6 +1,7 @@
 ﻿using CleanTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI.Pages.Tasks
 {
@@ -16,8 +17,6 @@ namespace CleanTasks.RazorGUI.Pages.Tasks
             AuthService = authService;
             Client = client;
             AppSessionHandler = appSessionHandler;
-        }
-
-
+        }       
     }
 }

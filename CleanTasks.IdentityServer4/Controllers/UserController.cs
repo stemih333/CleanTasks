@@ -1,11 +1,13 @@
-﻿using CleanTasks.Application.User.Models;
-using CleanTasks.Application.User.Queries;
+﻿using CleanTasks.Common.Constants;
 using CleanTasks.IdentityServer4.Identity;
-using MediatR;
+using CleanTasks.IdentityServer4.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CleanTasks.IdentityServer4.Controllers
@@ -15,18 +17,32 @@ namespace CleanTasks.IdentityServer4.Controllers
     public class UserController
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMediator _mediator;
 
-        public UserController(UserManager<ApplicationUser> userManager, IMediator mediator)
+        public UserController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
-            _mediator = mediator;
         }
-
+            
         [HttpGet()]
-        public async Task<List<UserDto>> Get() => await _mediator.Send(new GetAllUsersQuery());
+        public async Task<List<UserDto>> Get()
+            => (await _userManager.GetUsersForClaimAsync(new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission)))?
+            .Select(MapFromApplicationUser)
+            .ToList();
 
         [HttpGet("{id:int?}")]
-        public async Task<List<UserDto>> Get(int? id) => await _mediator.Send(new GetUsersByAreaQuery { Id = id });
+        public async Task<List<UserDto>> Get([Required]int? id)
+            => (await _userManager.GetUsersForClaimAsync(new Claim(PermissionTypes.TodoAreaPermission, id.Value.ToString())))?
+            .Select(MapFromApplicationUser)
+            .ToList();
+
+        private UserDto MapFromApplicationUser(ApplicationUser user)
+        => new UserDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Id = user.Id,
+            UserName = user.UserName
+        };
     }
 }

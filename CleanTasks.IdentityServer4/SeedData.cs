@@ -61,9 +61,7 @@ namespace CleanTasks.IdentityServer4
 
                         result = userMgr.AddClaimsAsync(mihste, new Claim[]{
                         
-                        new Claim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission),
-                        new Claim(AuthConstants.PermissionType, "test1"),
-                        new Claim(AuthConstants.PermissionType, "test2")
+                        new Claim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission)
                     }).Result;
                         if (!result.Succeeded)
                         {

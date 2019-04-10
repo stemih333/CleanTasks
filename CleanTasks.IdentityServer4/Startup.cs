@@ -35,13 +35,8 @@ namespace CleanTasks.IdentityServer4
         public void ConfigureServices(IServiceCollection services)
         {
             var assembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-            //services.AddTransient<IUserService, UserService>();
-
-            //services.AddMediatR(typeof(CreateAttachmentHandler).Assembly);
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehaviour<,>));
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

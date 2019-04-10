@@ -17,6 +17,7 @@ namespace CleanTasks.Persistence
         public DbSet<Todo> Todos { get; set; }
         public DbSet<TodoArea> TodoAreas { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<TodoAreaPermission> TodoAreaPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,7 @@ namespace CleanTasks.Persistence
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new TodoConfiguration());
             modelBuilder.ApplyConfiguration(new TodoAreaConfiguration());
+            modelBuilder.ApplyConfiguration(new TodoAreaPermissionConfiguration());
         }
 
         public Task<int> SaveAuditableChangesAsync(string userName, CancellationToken cancellationToken = default(CancellationToken))
