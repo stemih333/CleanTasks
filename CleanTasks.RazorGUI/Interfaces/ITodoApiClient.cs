@@ -1,15 +1,14 @@
-﻿using CleanTasks.Application.TodoArea.Models;
-using System.Collections.Generic;
+using CleanTasks.Application.Todo.Commands;
+using CleanTasks.Application.Todo.Models;
+using CleanTasks.Application.Todo.Queries;
 using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI.Interfaces
 {
     public interface ITodoApiClient
     {
-        Task<List<TodoAreaDto>> GetTodoAreas(List<string> allowedAreas);
-        Task<List<TodoAreaDto>> GetAllTodoAreas();
-        Task CreateTodoArea(string areaName, string userName);
-        Task DeleteTodoArea(int areaId);
-        Task<bool> AreaExist(int id);
+        Task CreateTodoTask(CreateTodoCommand model);
+        Task<PagedTodoResultDto> SearchTodos(TodoSearchQuery model);
+        Task<PagedTodoResultDto> FilterTodos(TodoFilterSearchQuery model);
     }
 }

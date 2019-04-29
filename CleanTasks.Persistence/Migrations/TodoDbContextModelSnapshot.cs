@@ -65,11 +65,7 @@ namespace CleanTasks.Persistence.Migrations
                     b.Property<string>("AssignedTo")
                         .HasMaxLength(25);
 
-                    b.Property<string>("AssignedToName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("CloseReason")
-                        .IsRequired();
+                    b.Property<string>("CloseReason");
 
                     b.Property<DateTime>("Created");
 
@@ -83,6 +79,8 @@ namespace CleanTasks.Persistence.Migrations
 
                     b.Property<int?>("LinkedTodoId");
 
+                    b.Property<bool?>("Notify");
+
                     b.Property<byte[]>("Rowversion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
@@ -94,7 +92,8 @@ namespace CleanTasks.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<int?>("TodoAreaId");
+                    b.Property<int?>("TodoAreaId")
+                        .IsRequired();
 
                     b.Property<string>("Type")
                         .IsRequired();
@@ -110,6 +109,9 @@ namespace CleanTasks.Persistence.Migrations
                     b.HasIndex("LinkedTodoId");
 
                     b.HasIndex("TodoAreaId");
+
+                    b.HasIndex("Title", "TodoAreaId")
+                        .IsUnique();
 
                     b.ToTable("Todos");
                 });
@@ -166,7 +168,7 @@ namespace CleanTasks.Persistence.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(25);
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -259,7 +261,8 @@ namespace CleanTasks.Persistence.Migrations
 
                     b.HasOne("CleanTasks.Domain.Entities.TodoArea", "TodoArea")
                         .WithMany("Todos")
-                        .HasForeignKey("TodoAreaId");
+                        .HasForeignKey("TodoAreaId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CleanTasks.Domain.Entities.TodoAreaPermission", b =>

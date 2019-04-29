@@ -13,14 +13,33 @@
                     <a class="btn btn-primary mt-2 mb-2" asp-page="/Tasks/AddArea"><span class="oi oi-plus"></span></a>
                 </div>
             }
-            
-            <vc:todo-areas-list areas="@Model.Areas"></vc:todo-areas-list>           
 
+            <ul class="list-group list-group-flush">
+                @if (@Model.Areas != null && @Model.Areas.Any())
+                {
+                    @foreach (var area in @Model.Areas)
+                    {
+                        <li class="list-group-item task-area-list-item">
+                            <div class="task-area-list-item">
+                                <a asp-route-id="@area.TodoAreaId" class="task-area-list-item-link ellipsis">@area.Name</a>
+                                <div class="task-area-list-item-icons">
+                                    <a asp-page="EditArea" asp-route-id="@area.TodoAreaId"><span class="oi oi-pencil"></span></a>
+                                    <a asp-page="DeleteArea" asp-route-id="@area.TodoAreaId"><span class="oi oi-trash"></span></a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item task-area-list-item">No areas to display</li>
+                }
+            </ul>
         </section>
         <section class="col-xl-10 col-lg-9" style="padding: 0">
-            @if (Model.CurrentArea.HasValue)
+            @if (Model.Id.HasValue)
             {
-                <vc:todo-list area-id="@Model.CurrentArea.Value" area-name="@Model.CurrentAreaName" todos="null"></vc:todo-list>
+                <vc:todo-list area-id="@Model.Id.Value" area-name="@Model.CurrentAreaName" todos="@Model.Todos"></vc:todo-list>
             }
 
         </section>

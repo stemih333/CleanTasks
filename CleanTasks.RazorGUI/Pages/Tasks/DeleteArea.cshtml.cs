@@ -1,4 +1,6 @@
 ﻿using CleanTasks.Application.TodoArea.Models;
+using CleanTasks.Common.Constants;
+using CleanTasks.RazorGUI.Attributes;
 using CleanTasks.RazorGUI.Constants;
 using CleanTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,14 +13,15 @@ using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI.Pages.Tasks
 {
-    public class DeleteModel : TasksBaseModel
+    [Authorize(Policy = Policies.Admin), ValidArea]
+    public class DeleteAreaModel : TasksBaseModel
     {
         public string AreaName { get; set; }
 
         [BindProperty, Required, HiddenInput]
         public int? Id { get; set; }
 
-        public DeleteModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public DeleteAreaModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         { }
 
         public void OnGet(int id)
@@ -42,7 +45,7 @@ namespace CleanTasks.RazorGUI.Pages.Tasks
         {
             if(ModelState.IsValid)
             {
-                await Client.DeleteTodoArea(Id.Value);
+                await TodoAreaClient.DeleteTodoArea(Id.Value);
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area deleted successfully.";

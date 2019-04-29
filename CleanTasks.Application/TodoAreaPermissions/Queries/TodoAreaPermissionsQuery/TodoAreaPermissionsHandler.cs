@@ -31,8 +31,8 @@ namespace CleanTasks.Application.TodoAreaPermissions.Queries
                     UserId = _.UserId
                 });
 
-            if (!string.IsNullOrEmpty(request.UserId)) permissions.Where(_ => _.UserId.Equals(request.UserId));
-            if (request.TodoAreaId.HasValue) permissions.Where(_ => _.TodoAreaId == request.TodoAreaId);
+            if (!string.IsNullOrEmpty(request.UserId)) permissions =  permissions.Where(_ => _.UserId.Equals(request.UserId));
+            if (request.TodoAreaId.HasValue) permissions = permissions.Where(_ => _.TodoAreaId == request.TodoAreaId);
 
             return Task.FromResult(permissions.ToList());
         }

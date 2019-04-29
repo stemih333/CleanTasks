@@ -45,6 +45,16 @@ namespace CleanTasks.RazorGUI
 
             services.AddHttpContextAccessor();
 
+            services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>(async (c) =>
+            {
+                var serviceProvider = services.BuildServiceProvider();
+                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+                
+                c.BaseAddress = new Uri("https://localhost:5004/");
+                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            });
+
             services.AddHttpClient<ITodoApiClient, TodoApiClient>(async (c) =>
             {
                 var serviceProvider = services.BuildServiceProvider();

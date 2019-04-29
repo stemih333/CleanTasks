@@ -17,9 +17,9 @@ namespace CleanTasks.Application.TodoAreaPermissions.Commands
 
         public async Task<Unit> Handle(DeleteTodoAreaPermissionCommand request, CancellationToken cancellationToken)
         {
-            var permissionToDelete = new TodoAreaPermission { TodoAreaId = request.Id.Value };
+            var permissionToDelete = new TodoAreaPermission { Id = request.Id.Value };
 
-            _todoDbContext.Remove(permissionToDelete);
+            _todoDbContext.TodoAreaPermissions.Remove(permissionToDelete);
 
             await _todoDbContext.SaveChangesAsync(cancellationToken);
 

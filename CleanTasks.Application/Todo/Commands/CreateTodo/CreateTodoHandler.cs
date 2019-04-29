@@ -19,11 +19,12 @@ namespace CleanTasks.Application.Todo.Commands
             var newTodo = new Domain.Entities.Todo
             {
                 AssignedTo = request.AssignedTo,
-                AssignedToName = request.AssignedToName,
                 Description = request.Description,
                 Status = Domain.Enums.TodoStatuses.New,
                 Title = request.Title,
-                Type = request.Type,
+                Type = request.Type.Value,
+                Notify = request.Notify,
+                TodoAreaId = request.TodoAreaId
             };
 
             await _todoDbContext.AddAsync(newTodo);

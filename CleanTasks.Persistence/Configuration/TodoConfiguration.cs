@@ -26,9 +26,6 @@ namespace CleanTasks.Persistence.Configuration
             builder.Property(_ => _.AssignedTo)
                 .HasMaxLength(25);
 
-            builder.Property(_ => _.AssignedToName)
-                .HasMaxLength(100);
-
             builder.Property(_ => _.Status)
                 .IsRequired()
                 .HasConversion(new EnumToStringConverter<TodoStatuses>());
@@ -43,9 +40,15 @@ namespace CleanTasks.Persistence.Configuration
             builder.Property(_ => _.Rowversion)
                 .IsRowVersion();
 
+            builder.Property(_ => _.TodoAreaId)
+                .IsRequired();
+
             builder.HasMany(_ => _.LinkedTodos)
                 .WithOne(_ => _.LinkedTodo)
                 .HasForeignKey(_ => _.LinkedTodoId);
+
+            builder.HasIndex(new[] { "Title", "TodoAreaId" })
+                .IsUnique();
 
             builder.SetAllAuditableProperties();
         }

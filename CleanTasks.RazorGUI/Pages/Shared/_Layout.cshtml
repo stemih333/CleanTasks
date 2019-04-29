@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization 
+@using CleanTasks.Common.Constants
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -31,6 +35,11 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-page="/Tasks/Workspace">Tasks</a>
                     </li>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Policies.All)).Succeeded)
+                    {
+                        <li class="nav-item"><a class="nav-link text-dark" asp-page="/PermissionAdmin/Workspace">Permissions</a></li>
+                    }
+                    
                 </ul>
             }
 
@@ -43,7 +52,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="left: -80px;">
                         <a class="dropdown-item" href="#">User details</a>
-                        
+
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" asp-page="/SignOut">Sign out</a>
                     </div>
@@ -60,7 +69,7 @@
     <section class="message-container">
         <partial name="_MessageAlert" />
     </section>
-    
+
     @RenderBody()
 
     <environment include="Development">

@@ -6,31 +6,41 @@
 }
 
 @section Styles {
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <style>
-        .ql-snow .ql-color-picker .ql-picker-label, .ql-snow .ql-icon-picker .ql-picker-label {
-            padding: 0px 4px;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
 }
 
 <main class="container-fluid main-container">
     <form class="card mt-2" style="max-width: 1000px;" method="post">
         <input asp-for="@Model.CurrentArea" />
         <section class="card-header">
-            Create new Todo
+            Create new Todo Task
+
+
+            <label class="notification-bell-container  float-lg-right " title="Notify assigned user about changes">
+                <input asp-for="@Model.Notify" class="notification-bell-input" type="checkbox" />
+                <span class="oi oi-bell notification-bell"></span>
+            </label>
+
         </section>
         <section class="card-body">
             <div class="form-group">
                 <label asp-for="@Model.Title"></label>
-                <input asp-for="@Model.Title" />
+                <input asp-for="@Model.Title" class="form-control" />
                 <span asp-validation-for="@Model.Title" class="form-text text-danger small"></span>
             </div>
             <div class="form-group">
+                <label asp-for="@Model.AssignedTo"></label>
+                <select asp-for="@Model.AssignedTo" asp-items="@Model.Users" class="form-control">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.TodoTypeId"></label>
+                <select asp-for="@Model.TodoTypeId" asp-items="@Model.TodoTypes" class="form-control"></select>
+            </div>
+            <div class="form-group">
                 <label asp-for="@Model.Description"></label>
-                <input asp-for="@Model.Description" id="description" />
-                <div id="editor"></div>
-                <small id="textCount" class="form-text text-muted"></small>
+                <textarea id="editor" asp-for="@Model.Description"></textarea>
                 <span asp-validation-for="@Model.Description" class="form-text text-danger small"></span>
             </div>
         </section>
@@ -38,48 +48,24 @@
             <button type="submit" class="btn btn-Success">Save</button>
             <a class="btn btn-secondary" asp-page="/Tasks/Workspace" asp-route-id="@Model.CurrentArea">Cancel</a>
         </section>
-        
+
     </form>
 </main>
 
 @section Scripts {
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
 
     <script>
-        function startQuill(id, delta) {
-            var limit = 10000;
-            var textCount = $('#textCount');
-            var description = $('#description')
-
-            var toolbarOptions = [
-                ['bold', 'italic', 'underline', 'clean'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'indent': '-1' }, { 'indent': '+1' }, { 'align': [] }],
-                [{ 'size': ['small', false, 'large', 'huge'] }, { 'header': [1, 2, 3, 4, 5, 6, false] }, { 'font': [] }],
-                ['blockquote', 'code-block']
-            ];
-
-            var quill = new Quill(id, {
-                theme: 'snow',
-                modules: {
-                    toolbar: toolbarOptions
-                }
+        $(document).ready(function () {
+            $('#editor').summernote({
+                height: 250,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['style', ['bold', 'italic', 'underline', 'clear', 'fontsize', 'fontname', 'color']],                   
+                    ['para', ['ul', 'ol', 'paragraph', 'height']],
+                    ['height', ['undo', 'redo']]
+                ]
             });
-
-            quill.on('text-change', function (delta, old, source) {
-                var contents = quill.getContents();
-                //console.log('contents', JSON.stringify(contents), JSON.parse(JSON.stringify(contents)));
-                description.val(JSON.stringify(contents));
-                if (quill.getLength() > limit) {
-                    quill.deleteText(limit, quill.getLength());
-                }
-
-                textCount.text((quill.getLength() - 1) + '/' + limit + ' characters');
-            });
-            textCount.text((quill.getLength() - 1) + '/' + limit + ' characters');
-        } 
-
-        startQuill('#editor');
+        });
     </script>
 }

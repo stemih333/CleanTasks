@@ -57,15 +57,6 @@ body, html {
         display: inline-block;
     }
 
-.task-area-list-item-link, .todo-area-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.todo-area-title {
-    max-width: 15rem;
-}
 
 .task-area-list-item-icons {
     position: absolute;
@@ -89,3 +80,34 @@ body, html {
     align-content: stretch;
 }
 
+.notification-bell-container {
+    margin-bottom: 0;
+}
+
+.notification-bell {
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: gray;
+}
+
+.notification-bell-input {
+    display: none;
+}
+
+    .notification-bell-input:checked + .notification-bell {
+        color: gold;
+    }
+
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.single-line {
+    white-space: nowrap;
+}
+
+.pointer {
+    cursor: pointer;
+}

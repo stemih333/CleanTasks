@@ -1,0 +1,14 @@
+﻿@model (string, string, string)
+
+@if (Model.Item2.Equals(Model.Item1))
+{
+    if (Model.Item3.Equals("asc"))
+    {
+        <span class="oi oi-sort-ascending"></span>
+    }
+    else
+    {
+        <span class="oi oi-sort-descending"></span>
+    }
+
+}

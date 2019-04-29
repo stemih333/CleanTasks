@@ -15,7 +15,7 @@ namespace CleanTasks.Persistence.Configuration
 
             builder.Property(_ => _.UserId)
                 .IsRequired()
-                .HasMaxLength(25);
+                .HasMaxLength(50);
 
             builder.SetAllAuditableProperties();
         }

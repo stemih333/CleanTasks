@@ -1,24 +1,25 @@
 ﻿using CleanTasks.Application.Todo.Commands;
+using CleanTasks.Application.Todo.Models;
+using CleanTasks.Application.Todo.Queries;
 using CleanTasks.WebAPI.Filters;
-using CleanTasks.WebAPI.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CleanTasks.WebAPI.Controllers
 {
     public class TodoController : TodoControllerBase
     {
-
         [HttpPut, ValidateViewModel]
-        public async Task<int> Put([FromBody] CreateTodoInputModel model)
-        => await Mediator.Send(new CreateTodoCommand {
-            AssignedTo = model.AssignedTo,
-            AssignedToName = model.AssignedToName,
-            Description = model.Description,
-            Title = model.Title,
-            TodoAreaId = model.TodoAreaId,
-            Type = model.Type,
-            UserName = model.UserName
-        });
+        public async Task<int> Put([FromBody] CreateTodoCommand model)
+        => await Mediator.Send(model);
+
+        [HttpGet, ValidateViewModel]
+        public async Task<PagedTodoResultDto> Get([FromQuery] TodoSearchQuery model)
+        => await Mediator.Send(model);
+
+        [HttpGet("filter"), ValidateViewModel]
+        public async Task<PagedTodoResultDto> Filter([FromQuery] TodoFilterSearchQuery model)
+       => await Mediator.Send(model);
     }
 }

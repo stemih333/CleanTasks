@@ -1,5 +1,5 @@
-﻿using CleanTasks.Application.TodoArea.Models;
-using CleanTasks.Domain.Enums;
+﻿using CleanTasks.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace CleanTasks.Application.Todo.Models
@@ -10,20 +10,25 @@ namespace CleanTasks.Application.Todo.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public string AssignedTo { get; set; }
-        public string AssignedToName { get; set; }
+        public bool? Notify { get; set; }
 
-        public ICollection<AuditedIdNameDto> Comments { get; set; }
-        public ICollection<AuditedIdNameDto> Tags { get; set; }
+        public IEnumerable<AuditedIdNameDto> Comments { get; set; }
+        public IEnumerable<AuditedIdNameDto> Tags { get; set; }
 
-        public TodoTypes Type { get; set; }
-        public TodoStatuses Status { get; set; }
-        public TodoReasons CloseReason { get; set; }
+        public TodoTypes? Type { get; set; }
+        public TodoStatuses? Status { get; set; }
+        public TodoReasons? CloseReason { get; set; }
 
         public int? LinkedTodoId { get; set; }
         public int LinkedTodoTitle { get; set; }
 
         public byte[] Rowversion { get; set; }
 
-        public TodoAreaDto MyProperty { get; set; }
+        public int? TodoAreaId { get; set; }
+
+        public DateTime? Created { get; set; }
+        public DateTime? Updated { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
     }
 }

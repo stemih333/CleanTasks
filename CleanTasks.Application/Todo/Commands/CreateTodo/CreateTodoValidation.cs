@@ -10,7 +10,7 @@ namespace CleanTasks.Application.Todo.Commands
             RuleFor(_ => _.Title).NotEmpty().MaximumLength(100);
             RuleFor(_ => _.Description).NotEmpty().MaximumLength(10000);
             RuleFor(_ => _.AssignedTo).MaximumLength(25);
-            RuleFor(_ => _.AssignedToName).MaximumLength(100);
+            RuleFor(_ => _.Type).NotEmpty();
             RuleFor(_ => _.TodoAreaId).NotEmpty();
         }
     }

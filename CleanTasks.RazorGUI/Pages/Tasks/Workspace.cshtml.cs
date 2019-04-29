@@ -1,45 +1,65 @@
-﻿using CleanTasks.Application.TodoArea.Models;
+﻿using CleanTasks.Application.Todo.Models;
+using CleanTasks.Application.Todo.Queries;
+using CleanTasks.Application.TodoArea.Models;
 using CleanTasks.Common.Constants;
+using CleanTasks.RazorGUI.Attributes;
 using CleanTasks.RazorGUI.Interfaces;
 using CleanTasks.RazorGUI.Pages.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CleanTasks.RazorGUI.Pages
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.All), ValidArea]
     public class WorkspaceModel : TasksBaseModel
     {
         public bool IsAdmin { get; set; }
         public List<TodoAreaDto> Areas { get; set; }
-        public int? CurrentArea { get; set; }
+        
         public string CurrentAreaName { get; set; }
+        public List<TodoDto> Todos { get; set; }
 
-        public WorkspaceModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) 
-            : base(authService, client, appSessionHandler) {}
+        [BindProperty(SupportsGet = true)]
+        public TodoFilterSearchQuery SearchModel { get; set; }
 
-        public async Task OnGet(int? id, [FromQuery]bool refresh)
+        [BindProperty(SupportsGet = true)]
+        public int? Id { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public bool Refresh { get; set; }
+
+        private readonly ITodoApiClient _todoApiClient;
+
+        public WorkspaceModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler, ITodoApiClient todoApiClient) 
+            : base(authService, client, appSessionHandler) {
+            _todoApiClient = todoApiClient;
+        }
+       
+        public async Task OnGet()
         {
-            if(id.HasValue)
-            {
-                if (!await Client.AreaExist(id.Value)) throw new Exception($"Area id '{id.Value}' does not exist.");
-            }
-
-            CurrentArea = id;
             IsAdmin = (await AuthService.AuthorizeAsync(User, Policies.Admin)).Succeeded;
             Areas = AppSessionHandler.GetData<List<TodoAreaDto>>(AreasKey);
 
-            if (Areas == null || refresh)
+            if (Areas == null || Refresh)
             {
-                Areas = (IsAdmin) ? await Client.GetAllTodoAreas() : await GetAreasByPermission();
+                Areas = (IsAdmin) ? await TodoAreaClient.GetAllTodoAreas() : await GetAreasByPermission();
                 AppSessionHandler.SetData(AreasKey, Areas);              
             }
 
-            if (Areas != null && Areas.Any() && CurrentArea.HasValue) CurrentAreaName = Areas.FirstOrDefault(_ => _.TodoAreaId == CurrentArea)?.Name;
+            if (Areas != null && Areas.Any() && Id.HasValue) CurrentAreaName = Areas.FirstOrDefault(_ => _.TodoAreaId == Id)?.Name;
+
+            if (Id.HasValue)
+            {
+                if (!SearchModel.CurrentPage.HasValue) SearchModel.CurrentPage = 1;
+                if (!SearchModel.PageSize.HasValue) SearchModel.PageSize = 25;
+                SearchModel.TodoAreaId = Id;
+                var result = await _todoApiClient.FilterTodos(SearchModel);
+                if (result != null)
+                    Todos = result.Todos;
+            }
         }
 
         private async Task<List<TodoAreaDto>> GetAreasByPermission()
@@ -49,7 +69,7 @@ namespace CleanTasks.RazorGUI.Pages
                 .Select(_ => _.Value)
                 .ToList();
 
-            return allowedAreas.Any() ? await Client.GetTodoAreas(allowedAreas) : null;
+            return allowedAreas.Any() ? await TodoAreaClient.GetTodoAreas(allowedAreas) : null;
         }
     }
 }

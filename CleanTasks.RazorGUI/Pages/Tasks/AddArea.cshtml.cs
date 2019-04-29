@@ -12,7 +12,7 @@ namespace CleanTasks.RazorGUI.Pages.Tasks
     [Authorize(Policy = Policies.Admin)]
     public class AddAreaModel : TasksBaseModel
     {
-        public AddAreaModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public AddAreaModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         { }
 
         [BindProperty, Required, StringLength(50, MinimumLength = 2), Display(Name = "Area name")]
@@ -24,7 +24,7 @@ namespace CleanTasks.RazorGUI.Pages.Tasks
         {
             if(ModelState.IsValid)
             {
-                await Client.CreateTodoArea(AreaName, User.GetUserName());
+                await TodoAreaClient.CreateTodoArea(AreaName, User.GetUserName());
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area '{AreaName}' created successfully.";

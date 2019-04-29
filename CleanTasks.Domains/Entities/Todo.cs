@@ -9,7 +9,7 @@ namespace CleanTasks.Domain.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public string AssignedTo { get; set; }
-        public string AssignedToName { get; set; }
+        public bool? Notify { get; set; }
 
         public ICollection<TodoComment> Comments { get; set; } = new List<TodoComment>();
         public ICollection<TodoTag> Tags { get; set; } = new List<TodoTag>();
@@ -17,7 +17,7 @@ namespace CleanTasks.Domain.Entities
        
         public TodoTypes Type { get; set; }
         public TodoStatuses Status { get; set; }
-        public TodoReasons CloseReason { get; set; }
+        public TodoReasons? CloseReason { get; set; }
 
         public int? LinkedTodoId { get; set; }
         public Todo LinkedTodo { get; set; }

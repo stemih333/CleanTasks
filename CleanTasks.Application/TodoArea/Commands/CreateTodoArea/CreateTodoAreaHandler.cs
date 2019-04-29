@@ -27,6 +27,5 @@ namespace CleanTasks.Application.TodoArea.Commands
 
             return newArea.TodoAreaId;
         }
-
     }
 }

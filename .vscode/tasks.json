@@ -7,9 +7,30 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CleanTasks.IdentityServer4/CleanTasks.IdentityServer4.csproj"
+                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
+            ],
+            "problemMatcher": "$tsc"
         }
     ]
 }
