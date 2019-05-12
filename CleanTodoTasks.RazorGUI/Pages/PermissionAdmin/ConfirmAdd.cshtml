@@ -1,0 +1,24 @@
+﻿@page
+@model CleanTodoTasks.RazorGUI.Pages.PermissionAdmin.ConfirmAddModel
+@{
+    ViewData["Title"] = "Add Area Permissions";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mb-2 mt-2" style="max-width: 20rem;" method="post">
+        <input asp-for="@Model.UserId" />
+        <input asp-for="@Model.UserName" />
+        <input asp-for="@Model.AreaName" />
+        <input asp-for="@Model.AreaId" />
+        <section class="card-header">Confirm add new area permission</section>
+        <section class="card-body">
+            Do you want to give user '@Model.UserName' permission to '@Model.AreaName'?
+        </section>
+        <section class="card-footer">
+            <button class="btn-primary btn" type="submit">Yes</button>
+            <a class="btn-danger btn" asp-page="/PermissionAdmin/Details" asp-route-userId="@Model.UserId" asp-route-userName="@Model.UserName">No</a>
+        </section>
+    </form>
+</main>
+
+

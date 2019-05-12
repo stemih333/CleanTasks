@@ -1,0 +1,169 @@
+﻿@page "{id:int?}"
+@using CleanTasks.CommonWeb.Helpers;
+
+@model CleanTodoTasks.RazorGUI.Pages.Tasks.EditTodoModel
+@{
+    ViewData["Title"] = "Edit Todo";
+}
+
+@section Styles {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.css" rel="stylesheet">
+}
+
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 70rem;" method="post">
+        <input asp-for="@Model.TodoId" />
+        <input asp-for="@Model.TodoAreaId" />
+        <section class="card-header">
+            Edit Todo Task
+            <a class="float-right" asp-page="/Tasks/AddTag" asp-route-todoid="@Model.TodoId">
+                <span class="oi oi-bookmark notification-bell ml-3"></span>
+            </a>
+            <a class="float-right">
+                <span class="oi oi-paperclip notification-bell ml-3" style="vertical-align: top;"></span>
+            </a>
+            <label class="notification-bell-container float-right " title="Notify assigned user about changes">
+                <input asp-for="@Model.Notify" class="notification-bell-input" type="checkbox" />
+                <span class="oi oi-bell notification-bell"></span>
+            </label>
+        </section>
+        <section class="card-body">
+            <h5>
+                @if (Model.Tags != null && Model.Tags.Any())
+                {
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="badge badge-secondary mr-2">
+                            @tag.Name
+                            <a asp-page="/Tasks/DeleteTag" asp-route-id="@tag.Id" asp-route-todoid="@Model.TodoId"><span class="oi oi-trash text-dark"></span></a>
+                        </span>
+                    }
+                }
+            </h5>
+            <div class="form-row">
+                <div class="form-group col-xl-8 col-lg-10 col-md-12">
+                    <label asp-for="@Model.Title"></label>
+                    <input asp-for="@Model.Title" class="form-control" />
+                    <span asp-validation-for="@Model.Title" class="form-text text-danger small"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.TodoTypeId"></label>
+                    <select disabled
+                            asp-for="@Model.TodoTypeId"
+                            asp-items="@Model.TodoTypesSelect"
+                            class="form-control"></select>
+                </div>
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.TodoStatusId"></label>
+                    <select asp-for="@Model.TodoStatusId" asp-items="@Model.TodoStatusesSelect" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-row">
+
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.CloseReasonId"></label>
+                    @if (Model.DisabledCloseReason)
+                    {
+                        <input value="Todo task not closed" class="form-control" disabled />
+                    }
+                    else
+                    {
+                        <select asp-for="@Model.CloseReasonId"
+                                asp-items="@Model.CloseReasonsSelect"
+                                class="form-control"></select>
+                    }
+                </div>
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.AssignedTo"></label>
+                    <select asp-for="@Model.AssignedTo" asp-items="@Model.UsersSelect" class="form-control">
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.UpdatedBy"></label>
+                    <input asp-for="@Model.UpdatedBy" disabled class="form-control" />
+                </div>
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.Updated"></label>
+                    <input asp-for="@Model.Updated" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.CreatedBy"></label>
+                    <input asp-for="@Model.CreatedBy" disabled class="form-control" />
+                </div>
+                <div class="form-group col-xl-4 col-lg-5 col-md-6">
+                    <label asp-for="@Model.Created"></label>
+                    <input asp-for="@Model.Created" disabled class="form-control" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-xl-7 col-lg-8 col-md-12">
+                    <label asp-for="@Model.Description"></label>
+                    <textarea id="editor" asp-for="@Model.Description"></textarea>
+                    <span asp-validation-for="@Model.Description" class="form-text text-danger small"></span>
+                </div>
+                <div class="form-group col-xl-5 col-lg-4 col-md-12">
+                    <label>Comments</label>
+                    <div class="list-group" style="max-height: 16rem; overflow-y: auto">
+                        @if (Model.Comments != null && Model.Comments.Any())
+                        {
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <small>@comment.CreateBy</small>
+                                        <small>@comment.Created.ToString("yyyy-MM-dd HH:mm:ss")</small>
+                                    </div>
+                                    <p class="mb-1">@comment.Name</p>
+                                    <small>
+                                        @if (User.GetUserId().Equals(comment.CreateBy, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            <a class="oi oi-trash mr-2 float-right" asp-page="/Tasks/DeleteComment" asp-route-id="@comment.Id" asp-route-todoid="@Model.TodoId"></a>
+                                        }
+                                    </small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="list-group-item">
+                                <p class="mb-1">No comments added</p>
+                            </div>
+                        }
+                    </div>
+                    <a asp-page="/Tasks/AddComment" asp-route-id="@Model.TodoId" class="btn btn-primary mt-2 float-right">Add comment</a>
+                </div>
+            </div>
+        </section>
+        <section class="card-footer">
+            <button type="submit" class="btn btn-Success">Save</button>
+            <a class="btn btn-secondary" asp-page="/Tasks/Workspace" asp-route-id="@Model.TodoAreaId">Cancel</a>
+        </section>
+    </form>
+</main>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote-bs4.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#editor').summernote({
+                height: 200,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['style', ['bold', 'italic', 'underline', 'clear', 'fontsize', 'fontname', 'color']],
+                    ['para', ['ul', 'ol', 'paragraph', 'height']],
+                    ['height', ['undo', 'redo']]
+                ]
+            });
+        });
+    </script>
+}

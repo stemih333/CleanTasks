@@ -1,0 +1,117 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+label {
+    margin-bottom: 0 !important;
+}
+
+body, html {
+    height: 100%;
+}
+
+.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+.border-right {
+    border-right: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.message-container {
+    position: fixed; 
+    top: 4rem;
+    right: 1rem;
+    left: 1rem;
+    z-index: 9999;
+}
+
+.main-container {
+    padding-top: 3.5rem;
+    height: 100%;
+    position: relative;
+}
+
+.task-area-list {
+    overflow-y: auto;
+    overflow-x:hidden;
+}
+
+.task-area-list-item {   
+    position: relative;
+}
+
+    .task-area-list-item:hover > .task-area-list-item-icons {
+        display: inline-block;
+    }
+
+
+.task-area-list-item-icons {
+    position: absolute;
+    right: 0;
+    display: none;
+}
+
+    .task-area-list-item-icons span {
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        cursor: pointer;
+    }
+
+    .task-area-list-item-icons span:hover {
+        color: blue;
+    }
+
+.task-container {
+    height: 100%;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.notification-bell-container {
+    margin-bottom: 0;
+}
+
+.notification-bell {
+    font-size: 1rem;
+    cursor: pointer;
+    color: gray;
+}
+
+.notification-bell-input {
+    display: none;
+}
+
+    .notification-bell-input:checked + .notification-bell {
+        color: gold;
+    }
+
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.single-line {
+    white-space: nowrap;
+}
+
+.pointer {
+    cursor: pointer;
+}

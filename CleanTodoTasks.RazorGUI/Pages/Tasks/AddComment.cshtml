@@ -1,0 +1,23 @@
+﻿@page "{id:int?}"
+@model CleanTodoTasks.RazorGUI.Pages.Tasks.AddCommentModel
+@{
+    ViewData["Title"] = "Add Comment";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 30rem;" method="post">
+        <input asp-for="@Model.TodoId" />
+        <div class="card-header">Add Comment</div>
+        <div class="card-body">
+            <div class="form-group">
+                <label asp-for="@Model.Comment"></label>
+                <textarea class="form-control" asp-for="@Model.Comment"></textarea>
+                <span asp-validation-for="@Model.Comment" class="form-text text-danger small"></span>
+            </div>            
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-secondary mr-2" asp-page="/Tasks/EditTodo" asp-route-id="@Model.TodoId">Cancel</a>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</main>

@@ -1,0 +1,23 @@
+﻿@page "{todoId:int?}"
+@model CleanTodoTasks.RazorGUI.Pages.Tasks.AddTagModel
+@{
+    ViewData["Title"] = "Add Tag";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 20rem;" method="post">
+        <input asp-for="@Model.TodoId" />
+        <div class="card-header">Add Tag</div>
+        <div class="card-body">
+            <div class="form-group">
+                <label asp-for="@Model.TagText"></label>
+                <input class="form-control" asp-for="@Model.TagText" />
+                <span asp-validation-for="@Model.TagText" class="form-text text-danger small"></span>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-secondary mr-2" asp-page="/Tasks/EditTodo" asp-route-id="@Model.TodoId">Cancel</a>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</main>

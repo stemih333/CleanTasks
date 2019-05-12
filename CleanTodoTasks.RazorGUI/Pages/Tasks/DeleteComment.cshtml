@@ -1,0 +1,19 @@
+﻿@page "{id:int?}"
+@model CleanTodoTasks.RazorGUI.Pages.Tasks.DeleteCommentModel
+    ViewData["Title"] = "Delete Comment";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 20rem;" method="post">
+        <input asp-for="@Model.Id" />
+        <input asp-for="@Model.TodoId" />
+        <div class="card-header">Delete Comment</div>
+        <div class="card-body">
+            Are you sure you want to delete comment?
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-secondary mr-2" asp-page="/Tasks/EditTodo" asp-route-id="@Model.TodoId">No</a>
+            <button class="btn btn-primary">Yes</button>
+        </div>
+    </form>
+</main>
