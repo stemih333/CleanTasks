@@ -1,0 +1,28 @@
+﻿using CleanTodoTasks.Application.Interfaces;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CleanTodoTasks.Application.TodoArea.Commands
+{
+    public class DeleteTodoAreaHandler : IRequestHandler<DeleteTodoAreaCommand>
+    {
+        private readonly ITodoDbContext _todoDbContext;
+
+        public DeleteTodoAreaHandler(ITodoDbContext todoDbContext)
+        {
+            _todoDbContext = todoDbContext;
+        }
+
+        public async Task<Unit> Handle(DeleteTodoAreaCommand request, CancellationToken cancellationToken)
+        {
+            var areaToDelete = new Domain.Entities.TodoArea { TodoAreaId = request.TodoAreaId.Value };
+
+            _todoDbContext.TodoAreas.Remove(areaToDelete);
+
+            await _todoDbContext.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
+        }
+    }
+}
