@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace CleanTodoTasks.RazorGUI.Pages
+namespace TodoTasks.RazorGUI.Pages
 {
     [AllowAnonymous]
     public class IndexModel : BaseModel

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CleanTodoTasks.Application.TodoArea.Commands;
-using CleanTodoTasks.Application.TodoArea.Models;
-using CleanTodoTasks.Application.TodoArea.Queries;
-using CleanTodoTasks.WebAPI.Filters;
-using CleanTodoTasks.WebAPI.Models.InputModels;
+using TodoTasks.Application.TodoArea.Commands;
+using TodoTasks.Application.TodoArea.Models;
+using TodoTasks.Application.TodoArea.Queries;
+using TodoTasks.WebAPI.Filters;
+using TodoTasks.WebAPI.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoAreaController : TodoControllerBase
     {

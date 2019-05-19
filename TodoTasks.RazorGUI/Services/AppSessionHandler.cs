@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace CleanTodoTasks.RazorGUI.Services
+namespace TodoTasks.RazorGUI.Services
 {
     public class AppSessionHandler : IAppSessionHandler
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanTodoTasks.Domain.Entities
+namespace TodoTasks.Domain.Entities
 {
     public abstract class AuditableEntity
     {

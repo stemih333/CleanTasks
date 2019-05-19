@@ -1,11 +1,11 @@
-using CleanTodoTasks.Application.Todo.Commands;
-using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.Application.Todo.Queries;
-using CleanTodoTasks.Application.TodoComment.Commands;
-using CleanTodoTasks.Application.TodoTag.Commands;
+using TodoTasks.Application.Todo.Commands;
+using TodoTasks.Application.Todo.Models;
+using TodoTasks.Application.Todo.Queries;
+using TodoTasks.Application.TodoComment.Commands;
+using TodoTasks.Application.TodoTag.Commands;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Interfaces
+namespace TodoTasks.RazorGUI.Interfaces
 {
     public interface ITodoApiClient
     {

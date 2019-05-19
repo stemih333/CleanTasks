@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 
-namespace CleanTodoTasks.RazorGUI.Exceptions
+namespace TodoTasks.RazorGUI.Exceptions
 {
     public class InvalidModelStateException : Exception
     {

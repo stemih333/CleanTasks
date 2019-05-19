@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.Application.TodoTag.Commands;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.Application.TodoTag.Commands;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.All)]
     public class AddTagModel : PageModel

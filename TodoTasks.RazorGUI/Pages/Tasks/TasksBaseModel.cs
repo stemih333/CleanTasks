@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
-using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     public class TasksBaseModel : PageModel
     {

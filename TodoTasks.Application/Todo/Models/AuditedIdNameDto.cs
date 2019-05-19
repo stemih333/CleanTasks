@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
+﻿using TodoTasks.Application.ReferenceData.Models;
 using System;
 
-namespace CleanTodoTasks.Application.Todo.Models
+namespace TodoTasks.Application.Todo.Models
 {
     public class AuditedIdNameDto : IdNameDto
     {

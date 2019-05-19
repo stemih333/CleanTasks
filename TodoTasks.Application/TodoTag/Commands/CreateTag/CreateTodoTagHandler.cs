@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.Interfaces;
+﻿using TodoTasks.Application.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.TodoTag.Commands
+namespace TodoTasks.Application.TodoTag.Commands
 {
     public class CreateTodoTagHandler : IRequestHandler<CreateTodoTagCommand, int>
     {

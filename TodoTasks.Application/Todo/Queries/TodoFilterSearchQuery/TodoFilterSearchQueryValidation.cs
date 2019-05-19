@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CleanTodoTasks.Application.Todo.Queries
+namespace TodoTasks.Application.Todo.Queries
 {
     public class TodoFilterSearchQueryValidation : AbstractValidator<TodoFilterSearchQuery>
     {

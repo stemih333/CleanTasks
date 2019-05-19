@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.TodoArea.Models
+﻿namespace TodoTasks.Application.TodoArea.Models
 {
     public class TodoAreaDto
     {

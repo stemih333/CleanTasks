@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CleanTodoTasks.Application.TodoAreaPermissions.Commands;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
-using CleanTodoTasks.Application.TodoAreaPermissions.Queries;
-using CleanTodoTasks.WebAPI.Filters;
+using TodoTasks.Application.TodoAreaPermissions.Commands;
+using TodoTasks.Application.TodoAreaPermissions.Models;
+using TodoTasks.Application.TodoAreaPermissions.Queries;
+using TodoTasks.WebAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoAreaPermissionController : TodoControllerBase
     {

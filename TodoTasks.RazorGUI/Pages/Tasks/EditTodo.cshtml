@@ -1,7 +1,7 @@
 ﻿@page "{id:int?}"
 @using CleanTasks.CommonWeb.Helpers;
 
-@model CleanTodoTasks.RazorGUI.Pages.Tasks.EditTodoModel
+@model TodoTasks.RazorGUI.Pages.Tasks.EditTodoModel
 @{
     ViewData["Title"] = "Edit Todo";
 }
@@ -51,14 +51,16 @@
             <div class="form-row">
                 <div class="form-group col-xl-4 col-lg-5 col-md-6">
                     <label asp-for="@Model.TodoTypeId"></label>
-                    <select disabled
+                    <select readonly
                             asp-for="@Model.TodoTypeId"
                             asp-items="@Model.TodoTypesSelect"
                             class="form-control"></select>
+                    <span asp-validation-for="@Model.TodoTypeId" class="form-text text-danger small"></span>
                 </div>
                 <div class="form-group col-xl-4 col-lg-5 col-md-6">
                     <label asp-for="@Model.TodoStatusId"></label>
                     <select asp-for="@Model.TodoStatusId" asp-items="@Model.TodoStatusesSelect" class="form-control"></select>
+                    <span asp-validation-for="@Model.TodoStatusId" class="form-text text-danger small"></span>
                 </div>
             </div>
             <div class="form-row">
@@ -81,6 +83,8 @@
                     <select asp-for="@Model.AssignedTo" asp-items="@Model.UsersSelect" class="form-control">
                         <option></option>
                     </select>
+                    <span asp-validation-for="@Model.AssignedTo" class="form-text text-danger small"></span>
+
                 </div>
             </div>
             <div class="form-row">

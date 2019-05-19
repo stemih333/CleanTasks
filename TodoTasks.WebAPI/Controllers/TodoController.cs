@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Application.Todo.Commands;
-using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.Application.Todo.Queries;
-using CleanTodoTasks.WebAPI.Filters;
+﻿using TodoTasks.Application.Todo.Commands;
+using TodoTasks.Application.Todo.Models;
+using TodoTasks.Application.Todo.Queries;
+using TodoTasks.WebAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoController : TodoControllerBase
     {

@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Domain.Entities
+﻿namespace TodoTasks.Domain.Entities
 {
     public class Attachment : AuditableEntity
     {

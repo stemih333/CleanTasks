@@ -1,8 +1,8 @@
 ﻿using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.RazorGUI.Attributes;
-using CleanTodoTasks.RazorGUI.Constants;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Attributes;
+using TodoTasks.RazorGUI.Constants;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.Admin), ValidArea]
     public class EditModel : TasksBaseModel

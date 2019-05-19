@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.Application.Exceptions;
+﻿using TodoTasks.Application.Exceptions;
 using System.Collections.Generic;
 using System.Net;
 
-namespace CleanTodoTasks.WebAPI.Models.Dtos
+namespace TodoTasks.WebAPI.Models.Dtos
 {
     public class HttpError
     {

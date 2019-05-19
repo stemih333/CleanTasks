@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.BaseClasses;
+﻿using TodoTasks.Application.BaseClasses;
 using MediatR;
 
-namespace CleanTodoTasks.Application.TodoArea.Commands
+namespace TodoTasks.Application.TodoArea.Commands
 {
     public class CreateTodoAreaCommand : BaseCommand, IRequest<int>
     {

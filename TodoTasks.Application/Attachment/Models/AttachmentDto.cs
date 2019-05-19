@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.Attachment.Models
+﻿namespace TodoTasks.Application.Attachment.Models
 {
     public class AttachmentDto
     {

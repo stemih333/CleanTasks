@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.Common;
+﻿using TodoTasks.Application.Todo.Models;
+using TodoTasks.Common;
 using MediatR;
 using System;
 
-namespace CleanTodoTasks.Application.Todo.Queries
+namespace TodoTasks.Application.Todo.Queries
 {
     public class TodoSearchQuery : IRequest<PagedTodoResultDto>
     {

@@ -6,17 +6,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.Application.Todo.Commands;
-using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.Application.Todo.Queries;
-using CleanTodoTasks.Common;
-using CleanTodoTasks.RazorGUI.Interfaces;
-using CleanTodoTasks.RazorGUI.Models;
+using TodoTasks.Application.Todo.Commands;
+using TodoTasks.Application.Todo.Models;
+using TodoTasks.Application.Todo.Queries;
+using TodoTasks.Common;
+using TodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.All)]
     public class EditTodoModel : TasksBaseModel
@@ -27,7 +27,7 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
         public string Title { get; set; }
         [Required, BindProperty, StringLength(10000), HiddenInput]
         public string Description { get; set; }
-        [BindProperty, StringLength(25), DisplayName("Assigned to")]
+        [BindProperty, StringLength(50), DisplayName("Assigned to")]
         public string AssignedTo { get; set; }
         [BindProperty, Required, DisplayName("Todo type")]
         public TodoType? TodoTypeId { get; set; }
@@ -70,7 +70,6 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
         public async Task OnGet([Required]int? id)
         {
             if (!ModelState.IsValid) throw new ArgumentNullException("Could not edit Todo. Id value is missing.");
-            AppSessionHandler.DeleteData(UsersKey);
             AppSessionHandler.DeleteData(TodoKey);
 
             TodoId = id;
@@ -80,7 +79,12 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
 
         public async Task<IActionResult> OnPost()
         {
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid) {
+                var todo = await GetTodo();
+                await SetModelFromTodo(todo);
+
+                return Page();
+            }
 
             await _todoClient.EditTodoTask(new EditTodoCommand
             {
@@ -99,7 +103,7 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
             return RedirectToPage("/Tasks/Workspace", new { Id = TodoAreaId });
         }
 
-        private async Task<SelectList> GetUsers()
+        private async Task<List<UserDto>> GetUsers()
         {
             var users = AppSessionHandler.GetData<List<UserDto>>(UsersKey);
             if (users == null)
@@ -109,6 +113,14 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
             }
 
             if (users == null) throw new NullReferenceException("Could not retireve users from user API.");
+
+            users.Add(new UserDto { Id = User.GetUserId(), UserName = User.GetUserName() });
+
+            return users;
+        }
+
+        private async Task<SelectList> GetUsersSelect(List<UserDto> users)
+        {
             var userPermissions = (await TodoAreaClient.GetPermissionsByAreaId(TodoAreaId))?.Select(_ => _.UserId).ToList();
             if (userPermissions == null) throw new NullReferenceException("Could not retireve permissions from API.");
 
@@ -127,22 +139,24 @@ namespace CleanTodoTasks.RazorGUI.Pages.Tasks
 
         private async Task SetModelFromTodo(TodoDto todo)
         {
+            var users = await GetUsers();
+
             Title = todo.Title;
             Description = todo.Description;
             AssignedTo = todo.AssignedTo;
             CloseReasonId = todo.CloseReason;
             TodoTypeId = todo.Type;
             TodoStatusId = todo.Status;
-            Notify = (todo.Notify.HasValue) ? todo.Notify.Value : false;
-            CreatedBy = todo.CreatedBy;
-            UpdatedBy = todo.UpdatedBy;
+            Notify = todo.Notify ?? false;
+            CreatedBy = users.FirstOrDefault(x => x.Id.Equals(todo.CreatedBy))?.UserName ?? "Unknown";
+            UpdatedBy = users.FirstOrDefault(x => x.Id.Equals(todo.UpdatedBy))?.UserName ?? "Unknown";
             Created = todo.Created?.ToString("yyyy-MM-dd");
             Updated = todo.Updated?.ToString("yyyy-MM-dd");
             Tags = todo.Tags;
             Comments = todo.Comments;
             TodoAreaId = todo.TodoAreaId;
 
-            UsersSelect = await GetUsers();
+            UsersSelect = await GetUsersSelect(users);
 
             var referenceData = await GetReferenceData();
 

@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.TodoTag.Commands;
+﻿using TodoTasks.Application.TodoTag.Commands;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoTagController : TodoControllerBase
     {

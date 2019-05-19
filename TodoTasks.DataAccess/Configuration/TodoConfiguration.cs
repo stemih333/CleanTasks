@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Common;
-using CleanTodoTasks.DataAccess.Extensions;
-using CleanTodoTasks.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TodoTasks.Common;
+using TodoTasks.DataAccess.Extensions;
+using TodoTasks.Domain.Entities;
 
-namespace CleanTodoTasks.DataAccess.Configuration
+namespace TodoTasks.DataAccess.Configuration
 {
     class TodoConfiguration : IEntityTypeConfiguration<Todo>
     {

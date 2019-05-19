@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.RazorGUI.Models
+﻿namespace TodoTasks.RazorGUI.Models
 {
     public class UserDto
     {

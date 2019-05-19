@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanTodoTasks.Application.Exceptions
+namespace TodoTasks.Application.Exceptions
 {
     public class NotFoundException : Exception
     {

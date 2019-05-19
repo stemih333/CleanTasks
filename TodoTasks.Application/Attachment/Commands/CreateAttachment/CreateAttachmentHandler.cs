@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.Attachment.Models;
+﻿using TodoTasks.Application.Attachment.Models;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Attachment.Commands.CreateAttachment
+namespace TodoTasks.Application.Attachment.Commands.CreateAttachment
 {
     public class CreateAttachmentHandler : IRequestHandler<CreateAttachmentCommand, AttachmentDto>
     {

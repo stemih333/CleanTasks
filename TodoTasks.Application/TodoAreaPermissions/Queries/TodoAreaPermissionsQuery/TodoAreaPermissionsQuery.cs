@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.Application.TodoAreaPermissions.Models;
+﻿using TodoTasks.Application.TodoAreaPermissions.Models;
 using MediatR;
 using System.Collections.Generic;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Queries
+namespace TodoTasks.Application.TodoAreaPermissions.Queries
 {
     public class TodoAreaPermissionsQuery : IRequest<List<TodoAreaPermissionDto>>
     {

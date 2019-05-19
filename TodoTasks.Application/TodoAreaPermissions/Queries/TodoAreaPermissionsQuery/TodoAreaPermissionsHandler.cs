@@ -1,5 +1,5 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
+﻿using TodoTasks.Application.Interfaces;
+using TodoTasks.Application.TodoAreaPermissions.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Queries
+namespace TodoTasks.Application.TodoAreaPermissions.Queries
 {
     public class TodoAreaPermissionsHandler : IRequestHandler<TodoAreaPermissionsQuery, List<TodoAreaPermissionDto>>
     {

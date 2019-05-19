@@ -1,13 +1,13 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using CleanTodoTasks.DataAccess.Configuration;
-using CleanTodoTasks.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TodoTasks.Application.Interfaces;
+using TodoTasks.DataAccess.Configuration;
+using TodoTasks.Domain.Entities;
 
-namespace CleanTodoTasks.DataAccess
+namespace TodoTasks.DataAccess
 {
     public class TodoDbContext : DbContext, ITodoDbContext
     {

@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TodoTasks.Application.Interfaces;
 
-namespace CleanTodoTasks.DataAccess
+namespace TodoTasks.DataAccess
 {
     public class DataAccessStartup
     {
@@ -11,6 +11,11 @@ namespace CleanTodoTasks.DataAccess
             services.AddDbContext<ITodoDbContext, TodoDbContext>(options => {
                 options.UseSqlServer(connectionString);
             }, ServiceLifetime.Transient);
+        }
+
+        public static void ConfigureDevServices(IServiceCollection services)
+        {
+            services.AddDbContext<ITodoDbContext, TodoDbContext>(options => options.UseInMemoryDatabase(databaseName: "TodoTasks"), ServiceLifetime.Transient);
         }
     }
 }

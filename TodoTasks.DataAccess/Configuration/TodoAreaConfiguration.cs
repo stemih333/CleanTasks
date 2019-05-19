@@ -1,9 +1,8 @@
-﻿using CleanTodoTasks.DataAccess.Extensions;
-using CleanTodoTasks.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace CleanTodoTasks.DataAccess.Configuration
+using TodoTasks.DataAccess.Extensions;
+using TodoTasks.Domain.Entities;
+namespace TodoTasks.DataAccess.Configuration
 {
     public class TodoAreaConfiguration : IEntityTypeConfiguration<TodoArea>
     {

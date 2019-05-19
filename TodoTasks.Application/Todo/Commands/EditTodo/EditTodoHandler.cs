@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Application.Interfaces;
+﻿using TodoTasks.Application.Interfaces;
 using MediatR;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Todo.Commands.EditTodo
+namespace TodoTasks.Application.Todo.Commands.EditTodo
 {
     public class EditTodoHandler : IRequestHandler<EditTodoCommand, int>
     {

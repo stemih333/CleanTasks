@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.RazorGUI.Pages.PermissionAdmin
+﻿namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class await
     {

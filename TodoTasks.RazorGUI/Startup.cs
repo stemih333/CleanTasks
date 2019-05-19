@@ -1,7 +1,7 @@
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Classes;
-using CleanTodoTasks.RazorGUI.Interfaces;
-using CleanTodoTasks.RazorGUI.Services;
+using TodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI
+namespace TodoTasks.RazorGUI
 {
     public class Startup
     {

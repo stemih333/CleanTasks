@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.RazorGUI.Models;
+﻿using TodoTasks.RazorGUI.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Interfaces
+namespace TodoTasks.RazorGUI.Interfaces
 {
     public interface IUserApiClient
     {

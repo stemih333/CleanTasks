@@ -1,20 +1,33 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Serilog;
+using Microsoft.Extensions.DependencyInjection;
+using TodoTasks.DataAccess;
 
-namespace CleanTodoTasks.WebAPI
+namespace TodoTasks.WebAPI
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;               
+                var env = services.GetService<IHostingEnvironment>();
+
+                if(env.IsDevelopment())
+                {
+                    TestData.Init(services);
+                }              
+            }
+
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog()
                 .Build();
     }
 }

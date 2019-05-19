@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using TodoTasks.Common;
 
-namespace CleanTodoTasks.Domain.Entities
+namespace TodoTasks.Domain.Entities
 {
     public class Todo : AuditableEntity
     {

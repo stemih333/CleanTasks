@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController, Authorize]

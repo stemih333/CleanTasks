@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CleanTodoTasks.Application.Exceptions
+namespace TodoTasks.Application.Exceptions
 {
     public class TodoValidationException : Exception
     {

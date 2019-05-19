@@ -1,5 +1,5 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using CleanTodoTasks.Application.TodoArea.Models;
+﻿using TodoTasks.Application.Interfaces;
+using TodoTasks.Application.TodoArea.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.TodoArea.Queries
+namespace TodoTasks.Application.TodoArea.Queries
 {
     public class TodoAreaAllHandler : IRequestHandler<TodoAreaAllQuery, List<TodoAreaDto>>
     {

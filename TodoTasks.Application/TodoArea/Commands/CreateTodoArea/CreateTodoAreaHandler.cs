@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.Interfaces;
+﻿using TodoTasks.Application.Interfaces;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.TodoArea.Commands
+namespace TodoTasks.Application.TodoArea.Commands
 {
     public class CreateTodoAreaHandler : IRequestHandler<CreateTodoAreaCommand, int>
     {

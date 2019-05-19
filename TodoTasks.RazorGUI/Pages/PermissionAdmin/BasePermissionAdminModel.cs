@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CleanTodoTasks.RazorGUI.Pages.PermissionAdmin
+namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class BasePermissionAdminModel : PageModel
     {

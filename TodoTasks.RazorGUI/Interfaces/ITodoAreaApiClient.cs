@@ -1,10 +1,10 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
-using CleanTodoTasks.Application.TodoArea.Models;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
+﻿using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.Application.TodoArea.Models;
+using TodoTasks.Application.TodoAreaPermissions.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Interfaces
+namespace TodoTasks.RazorGUI.Interfaces
 {
     public interface ITodoAreaApiClient
     {

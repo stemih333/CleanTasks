@@ -4,38 +4,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
-using CleanTodoTasks.Application.TodoArea.Commands;
-using CleanTodoTasks.WebAPI.Filters;
-using Serilog;
-using CleanTodoTasks.WebAPI.Extensions;
-using CleanTodoTasks.Application;
-using CleanTodoTasks.DataAccess;
-using CleanTodoTasks.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using TodoTasks.WebAPI.Filters;
+using Microsoft.Extensions.Logging;
+using TodoTasks.DataAccess;
+using TodoTasks.Application;
+using TodoTasks.Application.TodoArea.Commands;
 
-namespace CleanTodoTasks.WebAPI
+namespace TodoTasks.WebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
         {
             Configuration = configuration;
             Environment = env;
+            _logger = logger;
         }
+        private readonly ILogger _logger;
 
         public IHostingEnvironment Environment;
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var loggerConfig = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration);
-
-            services.AddSerilogServices(loggerConfig);
-
             ApplicationStartup.ConfigureServices(services);
-            DataAccessStartup.ConfigureServices(services, Configuration.GetConnectionString("TodoDbContext"));
+            if(Environment.IsDevelopment())
+            {
+                DataAccessStartup.ConfigureDevServices(services);
+            }
+            else
+            {
+                DataAccessStartup.ConfigureServices(services, Configuration.GetConnectionString("TodoDbContext"));
+            }
 
             services.AddMvc(_ => {
                 _.Filters.Add<GlobalExceptionFilter>();
@@ -46,7 +46,6 @@ namespace CleanTodoTasks.WebAPI
                 _.RegisterValidatorsFromAssemblyContaining<CreateTodoAreaValidation>();
             });
                      
-            // Customise default API behavour
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -62,19 +61,19 @@ namespace CleanTodoTasks.WebAPI
 
 
             services.AddAuthorization();
+            _logger.LogInformation("Services configured.");
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsProduction())
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+            _logger.LogInformation("Http pipeline configured.");
         }
     }
 }

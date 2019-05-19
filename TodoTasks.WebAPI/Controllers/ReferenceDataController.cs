@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
-using CleanTodoTasks.Application.ReferenceData.Queries;
+﻿using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.Application.ReferenceData.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class ReferenceDataController : TodoControllerBase
     {

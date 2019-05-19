@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.BaseClasses;
+﻿using TodoTasks.Application.BaseClasses;
 using MediatR;
 
-namespace CleanTodoTasks.Application.TodoTag.Commands
+namespace TodoTasks.Application.TodoTag.Commands
 {
     public class CreateTodoTagCommand : BaseCommand, IRequest<int>
     {

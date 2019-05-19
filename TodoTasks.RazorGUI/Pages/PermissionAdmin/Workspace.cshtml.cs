@@ -1,15 +1,15 @@
 ﻿using CleanTasks.Common.Constants;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
-using CleanTodoTasks.RazorGUI.Extensions;
-using CleanTodoTasks.RazorGUI.Interfaces;
-using CleanTodoTasks.RazorGUI.Models;
+using TodoTasks.Application.TodoAreaPermissions.Models;
+using TodoTasks.RazorGUI.Extensions;
+using TodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages.PermissionAdmin
+namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     [Authorize(Policy = Policies.Admin)]
     public class WorkspaceModel : BasePermissionAdminModel

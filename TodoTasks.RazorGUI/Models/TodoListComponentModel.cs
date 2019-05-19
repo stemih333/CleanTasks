@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.Todo.Models;
+﻿using TodoTasks.Application.Todo.Models;
 using System.Collections.Generic;
 
-namespace CleanTodoTasks.RazorGUI.Models
+namespace TodoTasks.RazorGUI.Models
 {
     public class TodoListComponentModel
     {

@@ -6,17 +6,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.Application.Todo.Commands;
-using CleanTodoTasks.Common;
-using CleanTodoTasks.RazorGUI.Attributes;
-using CleanTodoTasks.RazorGUI.Constants;
-using CleanTodoTasks.RazorGUI.Interfaces;
-using CleanTodoTasks.RazorGUI.Models;
+using TodoTasks.Application.Todo.Commands;
+using TodoTasks.Common;
+using TodoTasks.RazorGUI.Attributes;
+using TodoTasks.RazorGUI.Constants;
+using TodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.All), ValidArea]
     public class CreateTodoModel : TasksBaseModel

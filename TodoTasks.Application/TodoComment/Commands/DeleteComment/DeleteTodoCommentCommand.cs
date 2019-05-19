@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.BaseClasses;
+﻿using TodoTasks.Application.BaseClasses;
 using MediatR;
 
-namespace CleanTodoTasks.Application.TodoComment.Commands
+namespace TodoTasks.Application.TodoComment.Commands
 {
     public class DeleteTodoCommentCommand : BaseCommand, IRequest
     {

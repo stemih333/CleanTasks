@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Queries
+namespace TodoTasks.Application.TodoAreaPermissions.Queries
 {
     public class TodoAreaPermissionsValidation : AbstractValidator<TodoAreaPermissionsQuery>
     {

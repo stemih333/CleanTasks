@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.TodoComment.Commands;
+﻿using TodoTasks.Application.TodoComment.Commands;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.WebAPI.Controllers
+namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoCommentController : TodoControllerBase
     {

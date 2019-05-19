@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace CleanTodoTasks.WebAPI.Filters
+namespace TodoTasks.WebAPI.Filters
 {
     public class ValidateViewModelAttribute : ActionFilterAttribute
     {

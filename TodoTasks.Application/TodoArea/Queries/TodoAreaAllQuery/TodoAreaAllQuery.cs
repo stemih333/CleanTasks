@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.Application.TodoArea.Models;
+﻿using TodoTasks.Application.TodoArea.Models;
 using MediatR;
 using System.Collections.Generic;
 
-namespace CleanTodoTasks.Application.TodoArea.Queries
+namespace TodoTasks.Application.TodoArea.Queries
 {
     public class TodoAreaAllQuery : IRequest<List<TodoAreaDto>>
     {

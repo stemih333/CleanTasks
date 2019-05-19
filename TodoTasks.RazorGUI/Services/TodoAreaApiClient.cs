@@ -1,14 +1,14 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
-using CleanTodoTasks.Application.TodoArea.Models;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
-using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.Application.TodoArea.Models;
+using TodoTasks.Application.TodoAreaPermissions.Models;
+using TodoTasks.RazorGUI.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Services
+namespace TodoTasks.RazorGUI.Services
 {
     public class TodoAreaApiClient : ITodoAreaApiClient
     {

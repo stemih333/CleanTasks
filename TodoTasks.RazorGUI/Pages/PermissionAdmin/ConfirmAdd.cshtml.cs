@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.RazorGUI.Exceptions;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Exceptions;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanTodoTasks.RazorGUI.Pages.PermissionAdmin
+namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class ConfirmAddModel : BasePermissionAdminModel
     {

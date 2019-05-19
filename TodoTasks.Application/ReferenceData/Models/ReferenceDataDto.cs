@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CleanTodoTasks.Application.ReferenceData.Models
+namespace TodoTasks.Application.ReferenceData.Models
 {
     public class ReferenceDataDto
     {

@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.RazorGUI.Interfaces
+﻿namespace TodoTasks.RazorGUI.Interfaces
 {
     public interface IAppSessionHandler
     {

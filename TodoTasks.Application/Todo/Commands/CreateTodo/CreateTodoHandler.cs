@@ -1,10 +1,10 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using CleanTodoTasks.Common;
+﻿using TodoTasks.Application.Interfaces;
+using TodoTasks.Common;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Todo.Commands
+namespace TodoTasks.Application.Todo.Commands
 {
     public class CreateTodoHandler : IRequestHandler<CreateTodoCommand, int>
     {

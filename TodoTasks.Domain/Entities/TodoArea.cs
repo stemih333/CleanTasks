@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CleanTodoTasks.Domain.Entities
+namespace TodoTasks.Domain.Entities
 {
     public class TodoArea : AuditableEntity
     {

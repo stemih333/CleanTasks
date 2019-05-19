@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.Todo.Models;
+﻿using TodoTasks.Application.Todo.Models;
 using MediatR;
 
-namespace CleanTodoTasks.Application.Todo.Queries
+namespace TodoTasks.Application.Todo.Queries
 {
     public class TodoFilterSearchQuery : IRequest<PagedTodoResultDto>
     {

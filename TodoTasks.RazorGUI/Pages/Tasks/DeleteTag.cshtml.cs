@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CleanTasks.Common.Constants;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.All)]
     public class DeleteTagModel : PageModel

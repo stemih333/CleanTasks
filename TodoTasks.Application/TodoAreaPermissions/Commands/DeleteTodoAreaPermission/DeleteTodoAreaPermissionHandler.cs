@@ -1,10 +1,10 @@
-﻿using CleanTodoTasks.Domain.Entities;
+﻿using TodoTasks.Domain.Entities;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using CleanTodoTasks.Application.Interfaces;
+using TodoTasks.Application.Interfaces;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Commands
+namespace TodoTasks.Application.TodoAreaPermissions.Commands
 {
     public class DeleteTodoAreaPermissionHandler : IRequestHandler<DeleteTodoAreaPermissionCommand>
     {

@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.RazorGUI.Constants
+﻿namespace TodoTasks.RazorGUI.Constants
 {
     public static class ViewDataKeys
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CleanTodoTasks.RazorGUI.Extensions
+namespace TodoTasks.RazorGUI.Extensions
 {
     public static class LinqToObjectExtensions
     {

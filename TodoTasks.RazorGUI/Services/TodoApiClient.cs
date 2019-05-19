@@ -1,15 +1,15 @@
 using System.Net.Http;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Interfaces;
 using System.Threading.Tasks;
-using CleanTodoTasks.Application.Todo.Commands;
-using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.Application.Todo.Queries;
+using TodoTasks.Application.Todo.Commands;
+using TodoTasks.Application.Todo.Models;
+using TodoTasks.Application.Todo.Queries;
 using System.Linq;
 using Microsoft.AspNetCore.WebUtilities;
-using CleanTodoTasks.Application.TodoComment.Commands;
-using CleanTodoTasks.Application.TodoTag.Commands;
+using TodoTasks.Application.TodoComment.Commands;
+using TodoTasks.Application.TodoTag.Commands;
 
-namespace CleanTodoTasks.RazorGUI.Services {
+namespace TodoTasks.RazorGUI.Services {
     public class TodoApiClient : ITodoApiClient {
         private readonly HttpClient _client;
 

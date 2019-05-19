@@ -1,4 +1,4 @@
-﻿using CleanTodoTasks.Application.Exceptions;
+﻿using TodoTasks.Application.Exceptions;
 using FluentValidation;
 using MediatR;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Behaviours
+namespace TodoTasks.Application.Behaviours
 {
     public class RequestValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

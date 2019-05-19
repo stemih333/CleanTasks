@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages
+namespace TodoTasks.RazorGUI.Pages
 {
     public class SignOutModel : PageModel
     {

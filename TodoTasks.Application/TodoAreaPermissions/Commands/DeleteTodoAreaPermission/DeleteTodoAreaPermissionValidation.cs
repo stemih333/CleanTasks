@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Commands
+namespace TodoTasks.Application.TodoAreaPermissions.Commands
 {
     public class DeleteTodoAreaPermissionValidation : AbstractValidator<DeleteTodoAreaPermissionCommand>
     {

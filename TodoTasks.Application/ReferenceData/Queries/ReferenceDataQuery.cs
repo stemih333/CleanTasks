@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
+﻿using TodoTasks.Application.ReferenceData.Models;
 using MediatR;
 
-namespace CleanTodoTasks.Application.ReferenceData.Queries
+namespace TodoTasks.Application.ReferenceData.Queries
 {
     public class ReferenceDataQuery : IRequest<ReferenceDataDto>
     {

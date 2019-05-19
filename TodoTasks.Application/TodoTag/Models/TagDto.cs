@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.TodoTag.Models
+﻿namespace TodoTasks.Application.TodoTag.Models
 {
     public class TagDto
     {

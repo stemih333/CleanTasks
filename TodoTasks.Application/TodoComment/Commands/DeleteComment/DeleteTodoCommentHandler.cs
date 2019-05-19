@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using CleanTodoTasks.Application.Interfaces;
+using TodoTasks.Application.Interfaces;
 using MediatR;
 
-namespace CleanTodoTasks.Application.TodoComment.Commands
+namespace TodoTasks.Application.TodoComment.Commands
 {
     public class DeleteTodoCommentHandler : IRequestHandler<DeleteTodoCommentCommand>
     {

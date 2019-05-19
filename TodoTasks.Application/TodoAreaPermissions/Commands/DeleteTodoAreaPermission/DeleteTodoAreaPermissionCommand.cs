@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace CleanTodoTasks.Application.TodoAreaPermissions.Commands
+namespace TodoTasks.Application.TodoAreaPermissions.Commands
 {
     public class DeleteTodoAreaPermissionCommand : IRequest
     {

@@ -1,14 +1,14 @@
-﻿using CleanTodoTasks.Application.TodoArea.Models;
-using CleanTodoTasks.Application.TodoAreaPermissions.Models;
-using CleanTodoTasks.RazorGUI.Exceptions;
-using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.Application.TodoArea.Models;
+using TodoTasks.Application.TodoAreaPermissions.Models;
+using TodoTasks.RazorGUI.Exceptions;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages.PermissionAdmin
+namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class DetailsModel : BasePermissionAdminModel
     {

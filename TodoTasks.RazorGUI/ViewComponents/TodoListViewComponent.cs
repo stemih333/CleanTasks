@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.Application.Todo.Models;
-using CleanTodoTasks.RazorGUI.Models;
+﻿using TodoTasks.Application.Todo.Models;
+using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace CleanTodoTasks.RazorGUI.ViewComponents
+namespace TodoTasks.RazorGUI.ViewComponents
 {
     public class TodoListViewComponent : ViewComponent
     {

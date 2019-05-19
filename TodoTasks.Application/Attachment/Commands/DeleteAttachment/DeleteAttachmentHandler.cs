@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.Attachment.Commands.DeleteAttachment
+﻿namespace TodoTasks.Application.Attachment.Commands.DeleteAttachment
 {
     class DeleteAttachmentHandler
     {

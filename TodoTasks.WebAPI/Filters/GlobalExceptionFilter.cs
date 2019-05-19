@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Application.Exceptions;
-using CleanTodoTasks.WebAPI.Models.Dtos;
+﻿using TodoTasks.Application.Exceptions;
+using TodoTasks.WebAPI.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Net;
 
-namespace CleanTodoTasks.WebAPI.Filters
+namespace TodoTasks.WebAPI.Filters
 {
     public class GlobalExceptionFilter : IExceptionFilter
     {

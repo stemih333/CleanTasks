@@ -1,9 +1,9 @@
-﻿using CleanTodoTasks.RazorGUI.Interfaces;
+﻿using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace CleanTodoTasks.RazorGUI.Attributes
+namespace TodoTasks.RazorGUI.Attributes
 {
     public class ValidAreaAttribute : Attribute, IPageFilter
     {

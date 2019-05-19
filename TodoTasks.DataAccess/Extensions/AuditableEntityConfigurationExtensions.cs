@@ -1,7 +1,8 @@
-﻿using CleanTodoTasks.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TodoTasks.DataAccess.Extensions;
+using TodoTasks.Domain.Entities;
 
-namespace CleanTodoTasks.DataAccess.Extensions
+namespace TodoTasks.DataAccess.Extensions
 {
     public static class AuditableEntityConfigurationExtensions
     {

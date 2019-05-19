@@ -1,8 +1,8 @@
-﻿using CleanTodoTasks.Common;
+﻿using TodoTasks.Common;
 using System;
 using System.Collections.Generic;
 
-namespace CleanTodoTasks.Application.Todo.Models
+namespace TodoTasks.Application.Todo.Models
 {
     public class TodoDto
     {

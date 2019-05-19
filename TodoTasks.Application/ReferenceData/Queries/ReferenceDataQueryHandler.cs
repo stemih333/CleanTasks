@@ -1,12 +1,12 @@
-﻿using CleanTodoTasks.Application.ReferenceData.Models;
-using CleanTodoTasks.Common;
+﻿using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.Common;
 using MediatR;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.ReferenceData.Queries
+namespace TodoTasks.Application.ReferenceData.Queries
 {
     public class ReferenceDataQueryHandler : IRequestHandler<ReferenceDataQuery, ReferenceDataDto>
     {

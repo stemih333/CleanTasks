@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Behaviours
+namespace TodoTasks.Application.Behaviours
 {
     public class AuditTrailBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
@@ -16,7 +16,7 @@ namespace CleanTodoTasks.Application.Behaviours
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            _log.Information("{@request}", request);
+            _log.LogInformation("{@request}", request);
             return next();
         }
     }

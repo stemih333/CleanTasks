@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CleanTodoTasks.Application.TodoComment.Models
+namespace TodoTasks.Application.TodoComment.Models
 {
     public class CommentDto
     {

@@ -1,10 +1,10 @@
-﻿using CleanTodoTasks.RazorGUI.Interfaces;
-using CleanTodoTasks.RazorGUI.Models;
+﻿using TodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Services
+namespace TodoTasks.RazorGUI.Services
 {
     public class UserApiClient : IUserApiClient
     {

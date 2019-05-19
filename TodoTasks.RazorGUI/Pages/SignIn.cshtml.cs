@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CleanTodoTasks.RazorGUI.Pages
+namespace TodoTasks.RazorGUI.Pages
 {
     [Authorize]
     public class SignInModel : PageModel

@@ -1,11 +1,11 @@
-﻿using CleanTodoTasks.Application.Exceptions;
-using CleanTodoTasks.Application.Interfaces;
+﻿using TodoTasks.Application.Exceptions;
+using TodoTasks.Application.Interfaces;
 using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.TodoArea.Commands
+namespace TodoTasks.Application.TodoArea.Commands
 {
     public class UpdateTodoAreaHandler : IRequestHandler<UpdateTodoAreaCommand>
     {

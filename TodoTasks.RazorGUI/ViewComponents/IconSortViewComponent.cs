@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace CleanTodoTasks.RazorGUI.ViewComponents
+namespace TodoTasks.RazorGUI.ViewComponents
 {
     public class IconSortViewComponent : ViewComponent
     {

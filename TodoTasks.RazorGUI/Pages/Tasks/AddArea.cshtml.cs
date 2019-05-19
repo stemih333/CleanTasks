@@ -1,13 +1,13 @@
 ﻿using CleanTasks.Common.Constants;
 using CleanTasks.CommonWeb.Helpers;
-using CleanTodoTasks.RazorGUI.Constants;
-using CleanTodoTasks.RazorGUI.Interfaces;
+using TodoTasks.RazorGUI.Constants;
+using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.RazorGUI.Pages.Tasks
+namespace TodoTasks.RazorGUI.Pages.Tasks
 {
     [Authorize(Policy = Policies.Admin)]
     public class AddAreaModel : TasksBaseModel

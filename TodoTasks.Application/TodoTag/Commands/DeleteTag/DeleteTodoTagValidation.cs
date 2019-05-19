@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CleanTodoTasks.Application.TodoTag.Commands
+namespace TodoTasks.Application.TodoTag.Commands
 {
     public class DeleteTodoTagValidation : AbstractValidator<DeleteTodoTagCommand>
     {

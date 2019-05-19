@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.WebAPI.Models.InputModels
+﻿namespace TodoTasks.WebAPI.Models.InputModels
 {
     public class IdValueInputModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace CleanTodoTasks.Application.ReferenceData.Models
+namespace TodoTasks.Application.ReferenceData.Models
 {
     public class IdNameDto
     {

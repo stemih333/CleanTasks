@@ -4,7 +4,7 @@
 @using System.Text.RegularExpressions
 @using System.Net
 @inject IAuthorizationService AuthorizationService
-@model CleanTodoTasks.RazorGUI.Pages.WorkspaceModel
+@model TodoTasks.RazorGUI.Pages.WorkspaceModel
 @{
     ViewData["Title"] = "Workspace";
 }
@@ -41,7 +41,7 @@
         <section class="col-xl-10 col-lg-9" style="padding: 0">
             @if (Model.Id.HasValue)
             {
-                <vc:todo-list area-id="@Model.Id.Value" area-name="@Model.CurrentAreaName" todos="@Model.Todos"></vc:todo-list>
+                @*<vc:todo-list area-id="@Model.Id.Value" area-name="@Model.CurrentAreaName" todos="@Model.Todos"></vc:todo-list>*@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light ">
                     <b style="max-width: 15rem;" class="navbar-brand ellipsis" title="@Model.CurrentAreaName">
                         @Model.CurrentAreaName

@@ -1,7 +1,7 @@
-﻿using CleanTodoTasks.Application.BaseClasses;
+﻿using TodoTasks.Application.BaseClasses;
 using MediatR;
 
-namespace CleanTodoTasks.Application.Attachment.Commands.DeleteAttachment
+namespace TodoTasks.Application.Attachment.Commands.DeleteAttachment
 {
     public class DeleteAttachmentCommand : BaseCommand, IRequest
     {

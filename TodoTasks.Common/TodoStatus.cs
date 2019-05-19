@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Common
+﻿namespace TodoTasks.Common
 {
     public enum TodoStatus
     {

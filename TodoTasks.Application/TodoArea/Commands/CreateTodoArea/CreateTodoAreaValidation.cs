@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CleanTodoTasks.Application.TodoArea.Commands
+namespace TodoTasks.Application.TodoArea.Commands
 {
     public class CreateTodoAreaValidation : AbstractValidator<CreateTodoAreaCommand>
     {

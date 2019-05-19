@@ -1,5 +1,5 @@
-﻿using CleanTodoTasks.Application.Interfaces;
-using CleanTodoTasks.Application.Todo.Models;
+﻿using TodoTasks.Application.Interfaces;
+using TodoTasks.Application.Todo.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CleanTodoTasks.Application.Todo.Queries
+namespace TodoTasks.Application.Todo.Queries
 {
     public class TodoFilterSearchQueryHandler : IRequestHandler<TodoFilterSearchQuery, PagedTodoResultDto>
     {

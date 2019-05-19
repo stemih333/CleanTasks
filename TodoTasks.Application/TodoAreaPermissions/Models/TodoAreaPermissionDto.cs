@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.TodoAreaPermissions.Models
+﻿namespace TodoTasks.Application.TodoAreaPermissions.Models
 {
     public class TodoAreaPermissionDto
     {

@@ -1,8 +1,7 @@
-﻿namespace CleanTodoTasks.Common
+﻿namespace TodoTasks.Common
 {
     public enum TodoType
     {
-        Group,
         Task,
         Bug
     }

@@ -1,4 +1,4 @@
-﻿namespace CleanTodoTasks.Application.BaseClasses
+﻿namespace TodoTasks.Application.BaseClasses
 {
     public abstract class BaseCommand
     {
