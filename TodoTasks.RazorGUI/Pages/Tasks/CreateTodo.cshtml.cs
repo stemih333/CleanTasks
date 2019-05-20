@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using CleanTasks.Common.Constants;
-using CleanTasks.CommonWeb.Helpers;
 using TodoTasks.Application.Todo.Commands;
 using TodoTasks.Common;
 using TodoTasks.RazorGUI.Attributes;
@@ -15,6 +13,7 @@ using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TodoTasks.RazorGUI.Extensions;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {

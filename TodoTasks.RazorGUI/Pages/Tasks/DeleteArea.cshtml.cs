@@ -1,5 +1,4 @@
-﻿using CleanTasks.Common.Constants;
-using TodoTasks.Application.TodoArea.Models;
+﻿using TodoTasks.Application.TodoArea.Models;
 using TodoTasks.RazorGUI.Attributes;
 using TodoTasks.RazorGUI.Constants;
 using TodoTasks.RazorGUI.Interfaces;

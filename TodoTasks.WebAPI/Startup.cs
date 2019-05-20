@@ -5,28 +5,29 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using TodoTasks.WebAPI.Filters;
-using Microsoft.Extensions.Logging;
 using TodoTasks.DataAccess;
 using TodoTasks.Application;
 using TodoTasks.Application.TodoArea.Commands;
+using TodoTasks.Common.Models;
 
 namespace TodoTasks.WebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
             Environment = env;
-            _logger = logger;
         }
-        private readonly ILogger _logger;
-
         public IHostingEnvironment Environment;
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = new AuthSettings();
+            Configuration.Bind("AuthSettings", config);
+            services.AddSingleton(config);
+
             ApplicationStartup.ConfigureServices(services);
             if(Environment.IsDevelopment())
             {
@@ -54,14 +55,13 @@ namespace TodoTasks.WebAPI
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "https://localhost:5000";
+                    options.Authority = config.AuthUrl;
                     options.RequireHttpsMetadata = true;
-                    options.Audience = "WebAPI";
+                    options.Audience = config.ClientId;
                 });
 
 
             services.AddAuthorization();
-            _logger.LogInformation("Services configured.");
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -73,7 +73,6 @@ namespace TodoTasks.WebAPI
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
-            _logger.LogInformation("Http pipeline configured.");
         }
     }
 }

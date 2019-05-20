@@ -1,5 +1,3 @@
-using CleanTasks.Common.Constants;
-using CleanTasks.CommonWeb.Classes;
 using TodoTasks.RazorGUI.Interfaces;
 using TodoTasks.RazorGUI.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -13,6 +11,10 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using TodoTasks.Common;
+using TodoTasks.RazorGUI.Helpers;
+using TodoTasks.RazorGUI.Constants;
+using TodoTasks.Common.Models;
 
 namespace TodoTasks.RazorGUI
 {
@@ -27,6 +29,10 @@ namespace TodoTasks.RazorGUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = new AuthSettings();
+            Configuration.Bind("AuthSettings", config);
+            services.AddSingleton(config);
+
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -51,7 +57,7 @@ namespace TodoTasks.RazorGUI
                 var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
                 var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
                 
-                c.BaseAddress = new Uri("https://localhost:5004/");
+                c.BaseAddress = new Uri(config.ApiUrl);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
@@ -61,7 +67,7 @@ namespace TodoTasks.RazorGUI
                 var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
                 var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
                 
-                c.BaseAddress = new Uri("https://localhost:5004/");
+                c.BaseAddress = new Uri(config.ApiUrl);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
@@ -71,7 +77,7 @@ namespace TodoTasks.RazorGUI
                 var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
                 var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
 
-                c.BaseAddress = new Uri("https://localhost:5000/");
+                c.BaseAddress = new Uri(config.AuthUrl);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
@@ -101,8 +107,8 @@ namespace TodoTasks.RazorGUI
             {
                 options.SignInScheme = "Cookie";
                 options.Authority = "https://localhost:5000";
-                options.ClientId = "razorgui_ID";
-                options.ClientSecret = "RazorGUISecret";
+                options.ClientId = config.ClientId;
+                options.ClientSecret = config.ClientSecret;
                 options.ResponseType = "code id_token";
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;

@@ -1,6 +1,4 @@
-﻿using CleanTasks.Common.Constants;
-using CleanTasks.CommonWeb.Helpers;
-using TodoTasks.Application.Todo.Models;
+﻿using TodoTasks.Application.Todo.Models;
 using TodoTasks.Application.Todo.Queries;
 using TodoTasks.Application.TodoArea.Models;
 using TodoTasks.RazorGUI.Attributes;
@@ -12,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TodoTasks.RazorGUI.Extensions;
+using TodoTasks.RazorGUI.Constants;
 
 namespace TodoTasks.RazorGUI.Pages
 {

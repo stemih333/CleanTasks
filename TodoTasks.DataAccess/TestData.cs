@@ -15,21 +15,32 @@ namespace TodoTasks.DataAccess
             using (var context = new TodoDbContext(serviceProvider.GetRequiredService<DbContextOptions<TodoDbContext>>())) {
 
                 
-                var area = new TodoArea
+                var area1 = new TodoArea
                 {
-                    Name = "In memory area"
+                    Name = "In memory area 1"
                 };
 
-                context.TodoAreas.Add(area);
+                var area2 = new TodoArea
+                {
+                    Name = "In memory area 2"
+                };
+
+                context.TodoAreas.AddRange(area1, area2);
                 context.SaveAuditableChangesAsync(User);
 
-                var permission = new TodoAreaPermission
+                var permission1 = new TodoAreaPermission
                 {
                     UserId = User,
-                    TodoArea = area
+                    TodoArea = area1
                 };
 
-                context.TodoAreaPermissions.Add(permission);
+                var permission2 = new TodoAreaPermission
+                {
+                    UserId = User,
+                    TodoArea = area2
+                };
+
+                context.TodoAreaPermissions.AddRange(permission1, permission2);
                 context.SaveAuditableChangesAsync(User);
 
                 var todo1 = new Todo
@@ -41,7 +52,7 @@ namespace TodoTasks.DataAccess
                     Status = TodoStatus.New,
                     Title = "In memory todo 1",
                     Type = TodoType.Task,
-                    TodoArea = area,
+                    TodoArea = area1,
                     Tags = new List<TodoTag> { new TodoTag { Value = "In memory tag 1" } }
                 };
 
@@ -53,7 +64,7 @@ namespace TodoTasks.DataAccess
                     Status = TodoStatus.New,
                     Title = "In memory todo 2",
                     Type = TodoType.Task,
-                    TodoArea = area,
+                    TodoArea = area1,
                     Tags = new List<TodoTag> { new TodoTag { Value = "In memory tag 2" } }
                 };
 

@@ -1,4 +1,4 @@
-﻿namespace TodoTasks.Common
+﻿namespace TodoTasks.RazorGUI.Constants
 {
     public static class AuthConstants
     {

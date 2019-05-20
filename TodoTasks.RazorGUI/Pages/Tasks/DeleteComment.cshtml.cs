@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using CleanTasks.Common.Constants;
 using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TodoTasks.RazorGUI.Constants;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {

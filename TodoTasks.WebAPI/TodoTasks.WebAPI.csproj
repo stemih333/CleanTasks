@@ -6,15 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Exceptions\**" />
+    <Content Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <None Remove="Exceptions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
