@@ -1,10 +1,10 @@
 ﻿using TodoTasks.Application.BaseClasses;
 using MediatR;
 
-namespace TodoTasks.Application.Attachment.Commands.DeleteAttachment
+namespace TodoTasks.Application.Attachment.Commands
 {
-    public class DeleteAttachmentCommand : BaseCommand, IRequest
+    public class DeleteAttachmentCommand : IRequest
     {
-        public int? TodoId { get; set; }
+        public int? AttachmentId { get; set; }
     }
 }

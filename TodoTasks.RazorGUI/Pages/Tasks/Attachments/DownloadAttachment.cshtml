@@ -1,0 +1,21 @@
+﻿@page "{attachmentId:int?}"
+@model TodoTasks.RazorGUI.Pages.Tasks.Attachments.DownloadAttachmentModel
+@{
+    ViewData["Title"] = "Delete attachment";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 20rem;" method="post">
+        <input asp-for="@Model.AttachmentId" />
+        <input asp-for="@Model.TodoId" />
+        <div class="card-header">Download Attachment</div>
+        <div class="card-body">
+            Press download button to download attachment.
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary">Download</button>
+            <a class="btn btn-secondary" asp-page="/Tasks/Attachments/AttachmentManagement" asp-route-todoId="@Model.TodoId">Back</a>
+        </div>
+    </form>
+</main>
+

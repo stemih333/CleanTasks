@@ -1,0 +1,57 @@
+﻿@page "{todoid:int?}"
+@using ByteSizeLib
+@model TodoTasks.RazorGUI.Pages.Tasks.Attachments.AttachmentManagementModel
+@{
+    ViewData["Title"] = "Attachments";
+}
+
+<main class="container-fluid main-container">
+    <div class="card mt-2" style="max-width: 70rem;">
+        <section class="card-header">
+            Attachments
+            <a class="float-right btn btn-primary btn-sm" asp-page="/Tasks/Attachments/AddAttachment" asp-route-todoid="@Model.TodoId">
+                <span class="oi oi-plus"></span>
+            </a>
+        </section>
+        <section class="card-body">
+            <div class="">
+                <table class="table table-sm table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Added</th>
+                            <th>Description</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Attachments)
+                        {
+                            <tr>
+                                <td>@item.AttachmentId</td>
+                                <td style="max-width:7rem;" title="@item.Name"><div class="ellipsis single-line">@item.Name</div></td>
+                                <td class="single-line">@item.Type</td>
+                                <td class="single-line">@ByteSize.FromKiloBytes(@item.Size).ToString()</td>
+                                <td class="single-line">@item.AddedDate.ToString("yyyy-MM-dd")</td>
+                                <td style="max-width:7rem;" title="@item.Description"><div class="ellipsis">@item.Description</div></td>
+                                <td style="width: 1%">
+                                    <a asp-page="DeleteAttachment" asp-route-attachmentId="@item.AttachmentId" asp-route-todoId="@Model.TodoId"><span class="oi oi-trash"></span></a>
+                                </td>
+                                <td style="width: 1%">
+                                    <a asp-page="DownloadAttachment" asp-route-attachmentId="@item.AttachmentId" asp-route-todoId="@Model.TodoId"><span class="oi oi-data-transfer-download"></span></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="card-footer">
+            <a class="btn btn-secondary" asp-page="/Tasks/EditTodo" asp-route-id="@Model.TodoId">Back</a>
+        </section>
+    </div>
+</main>

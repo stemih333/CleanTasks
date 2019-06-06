@@ -19,7 +19,7 @@
             <a class="float-right" asp-page="/Tasks/AddTag" asp-route-todoid="@Model.TodoId">
                 <span class="oi oi-bookmark notification-bell ml-3"></span>
             </a>
-            <a class="float-right">
+            <a class="float-right"  asp-page="/Tasks/Attachments/AttachmentManagement" asp-route-todoid="@Model.TodoId">
                 <span class="oi oi-paperclip notification-bell ml-3" style="vertical-align: top;"></span>
             </a>
             <label class="notification-bell-container float-right " title="Notify assigned user about changes">

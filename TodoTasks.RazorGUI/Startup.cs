@@ -29,8 +29,8 @@ namespace TodoTasks.RazorGUI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = new AuthSettings();
-            Configuration.Bind("AuthSettings", config);
+            var config = new AppSettings();
+            Configuration.Bind("AppSettings", config);
             services.AddSingleton(config);
 
             services.AddDistributedMemoryCache();
@@ -106,7 +106,7 @@ namespace TodoTasks.RazorGUI
             .AddOpenIdConnect("oidc", options =>
             {
                 options.SignInScheme = "Cookie";
-                options.Authority = "https://localhost:5000";
+                options.Authority = config.AuthUrl;
                 options.ClientId = config.ClientId;
                 options.ClientSecret = config.ClientSecret;
                 options.ResponseType = "code id_token";

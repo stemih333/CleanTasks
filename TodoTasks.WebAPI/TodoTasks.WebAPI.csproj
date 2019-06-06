@@ -24,6 +24,8 @@
     <ProjectReference Include="..\TodoTasks.Application\TodoTasks.Application.csproj" />
     <ProjectReference Include="..\TodoTasks.Common\TodoTasks.Common.csproj" />
     <ProjectReference Include="..\TodoTasks.DataAccess\TodoTasks.DataAccess.csproj" />
+    <ProjectReference Include="..\TodoTasks.FileSaver\TodoTasks.FileSaver.csproj" />
+    <ProjectReference Include="..\TodoTasks.Logging\TodoTasks.Logging.csproj" />
   </ItemGroup>
 
 </Project>

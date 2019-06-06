@@ -1,0 +1,20 @@
+﻿@page "{attachmentId:int?}"
+@model TodoTasks.RazorGUI.Pages.Tasks.Attachments.DeleteAttachmentModel
+@{
+    ViewData["Title"] = "Delete attachment";
+}
+
+<main class="container-fluid main-container">
+    <form class="card mt-2" style="max-width: 20rem;" method="post">
+        <input asp-for="@Model.AttachmentId" />
+        <input asp-for="@Model.TodoId" />
+        <div class="card-header">Delete Attachment</div>
+        <div class="card-body">
+            Are you sure you want to delete attachment?
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-primary">Yes</button>
+            <a class="btn btn-secondary" asp-page="/Tasks/Attachments/AttachmentManagement" asp-route-todoId="@Model.TodoId">No</a>
+        </div>
+    </form>
+</main>

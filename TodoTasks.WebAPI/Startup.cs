@@ -9,6 +9,8 @@ using TodoTasks.DataAccess;
 using TodoTasks.Application;
 using TodoTasks.Application.TodoArea.Commands;
 using TodoTasks.Common.Models;
+using TodoTasks.Logging;
+using TodoTasks.FileSaver;
 
 namespace TodoTasks.WebAPI
 {
@@ -24,11 +26,12 @@ namespace TodoTasks.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = new AuthSettings();
-            Configuration.Bind("AuthSettings", config);
+            var config = new AppSettings();
+            Configuration.Bind("AppSettings", config);
             services.AddSingleton(config);
 
             ApplicationStartup.ConfigureServices(services);
+            FileSaver.FileSaver.ConfigureDevServices(services);
             if(Environment.IsDevelopment())
             {
                 DataAccessStartup.ConfigureDevServices(services);
@@ -37,6 +40,8 @@ namespace TodoTasks.WebAPI
             {
                 DataAccessStartup.ConfigureServices(services, Configuration.GetConnectionString("TodoDbContext"));
             }
+
+            SerilogLogging.ConfigureServices(services, Configuration);
 
             services.AddMvc(_ => {
                 _.Filters.Add<GlobalExceptionFilter>();

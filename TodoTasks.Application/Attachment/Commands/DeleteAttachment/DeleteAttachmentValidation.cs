@@ -1,6 +1,12 @@
-﻿namespace TodoTasks.Application.Attachment.Commands.DeleteAttachment
+﻿using FluentValidation;
+
+namespace TodoTasks.Application.Attachment.Commands
 {
-    class DeleteAttachmentValidation
+    public class DeleteAttachmentValidation : AbstractValidator<DeleteAttachmentCommand>
     {
+        public DeleteAttachmentValidation()
+        {
+            RuleFor(_ => _.AttachmentId).NotEmpty();
+        }
     }
 }
