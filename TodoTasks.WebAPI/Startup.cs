@@ -8,9 +8,8 @@ using TodoTasks.WebAPI.Filters;
 using TodoTasks.DataAccess;
 using TodoTasks.Application;
 using TodoTasks.Application.TodoArea.Commands;
-using TodoTasks.Common.Models;
 using TodoTasks.Logging;
-using TodoTasks.FileSaver;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.WebAPI
 {
@@ -26,12 +25,12 @@ namespace TodoTasks.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = new AppSettings();
-            Configuration.Bind("AppSettings", config);
-            services.AddSingleton(config);
-
             ApplicationStartup.ConfigureServices(services);
             FileSaver.FileSaver.ConfigureDevServices(services);
+
+            // AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
+            AuthStartup.ConfigureOpenIdApi(services, Configuration);
+
             if(Environment.IsDevelopment())
             {
                 DataAccessStartup.ConfigureDevServices(services);
@@ -56,15 +55,6 @@ namespace TodoTasks.WebAPI
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = config.AuthUrl;
-                    options.RequireHttpsMetadata = true;
-                    options.Audience = config.ClientId;
-                });
-
 
             services.AddAuthorization();
         }

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace TodoTasks.RazorGUI.Pages
@@ -13,8 +13,7 @@ namespace TodoTasks.RazorGUI.Pages
         {
             if(User.Identity.IsAuthenticated && User is ClaimsPrincipal)
             {
-                Username = User.Claims.FirstOrDefault(_ => _.Type.Equals("given_name"))?.Value + " "
-                    + User.Claims.FirstOrDefault(_ => _.Type.Equals("family_name"))?.Value;
+                Username = User.Identity.Name;
             }
         }
     }

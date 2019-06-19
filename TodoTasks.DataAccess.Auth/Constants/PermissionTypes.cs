@@ -1,4 +1,4 @@
-﻿namespace TodoTasks.RazorGUI.Constants
+﻿namespace TodoTasks.DataAccess.Auth
 {
     public static class PermissionTypes
     {

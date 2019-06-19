@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 Presentation", "1.1 Presentation", "{B17FECF9-3990-4DC3-BF9A-5757F8C947C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.1 Clients", "1.1 Clients", "{B17FECF9-3990-4DC3-BF9A-5757F8C947C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.2 DataAccess", "1.2 DataAccess", "{25B6421B-2FE7-47EA-9B07-4EAB1B4AFA8D}"
 EndProject
@@ -25,11 +25,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.RazorGUI", "TodoT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.WebAPI", "TodoTasks.WebAPI\TodoTasks.WebAPI.csproj", "{9E0F9F1D-B4AC-4647-8AE9-EBB1CDF9D70D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.3 Infrastructure", "1.3 Infrastructure", "{5E7641EF-E4E9-4583-BA15-90BD43EC6FD8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.3 Services", "1.3 Services", "{5E7641EF-E4E9-4583-BA15-90BD43EC6FD8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.Logging", "TodoTasks.Logging\TodoTasks.Logging.csproj", "{CCE54942-40CF-4E0C-983F-F430BDE3FDA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTasks.FileSaver", "TodoTasks.FileSaver\TodoTasks.FileSaver.csproj", "{2B8038BD-870D-4E86-9B5C-B7AE600B659D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.FileSaver", "TodoTasks.FileSaver\TodoTasks.FileSaver.csproj", "{2B8038BD-870D-4E86-9B5C-B7AE600B659D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.DataAccess.Auth", "TodoTasks.DataAccess.Auth\TodoTasks.DataAccess.Auth.csproj", "{FB827951-6CEC-48EA-94B5-26364E6A441F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.4 Infrastructure", "1.4 Infrastructure", "{AB7994ED-F2DA-446E-B1FE-0626ED7B2939}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.IdentityServer4", "TodoTasks.IdentityServer4\TodoTasks.IdentityServer4.csproj", "{36AE3691-E47F-447B-827E-44E91741DE2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +75,14 @@ Global
 		{2B8038BD-870D-4E86-9B5C-B7AE600B659D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B8038BD-870D-4E86-9B5C-B7AE600B659D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B8038BD-870D-4E86-9B5C-B7AE600B659D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB827951-6CEC-48EA-94B5-26364E6A441F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB827951-6CEC-48EA-94B5-26364E6A441F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB827951-6CEC-48EA-94B5-26364E6A441F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB827951-6CEC-48EA-94B5-26364E6A441F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36AE3691-E47F-447B-827E-44E91741DE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36AE3691-E47F-447B-827E-44E91741DE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36AE3691-E47F-447B-827E-44E91741DE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36AE3691-E47F-447B-827E-44E91741DE2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +96,8 @@ Global
 		{9E0F9F1D-B4AC-4647-8AE9-EBB1CDF9D70D} = {B17FECF9-3990-4DC3-BF9A-5757F8C947C8}
 		{CCE54942-40CF-4E0C-983F-F430BDE3FDA0} = {5E7641EF-E4E9-4583-BA15-90BD43EC6FD8}
 		{2B8038BD-870D-4E86-9B5C-B7AE600B659D} = {5E7641EF-E4E9-4583-BA15-90BD43EC6FD8}
+		{FB827951-6CEC-48EA-94B5-26364E6A441F} = {25B6421B-2FE7-47EA-9B07-4EAB1B4AFA8D}
+		{36AE3691-E47F-447B-827E-44E91741DE2B} = {AB7994ED-F2DA-446E-B1FE-0626ED7B2939}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C870DE0B-7EC7-4CB7-A26F-3996349DC2D9}

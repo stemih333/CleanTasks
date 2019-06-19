@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoTasks.RazorGUI.Constants;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
@@ -26,7 +26,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 
         public IEnumerable<TodoPermissionModel> UserPermissions { get; set; }
 
-        public WorkspaceModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler, IUserApiClient userApiService) : base(todoAreaApiClient, appSessionHandler, userApiService)
+        public WorkspaceModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
         {
         }
 
@@ -35,7 +35,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
             var users = AppSessionHandler.GetData<List<UserDto>>(AllUserKey);
             if(users == null)
             {
-                users = await UserApiService.GetAllUsers();
+                users = new List<UserDto>();
                 AppSessionHandler.SetData(AllUserKey, users);
             }
 

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoTasks.RazorGUI.Extensions;
-using TodoTasks.RazorGUI.Constants;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {
@@ -57,13 +57,11 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         public SelectList TodoStatusesSelect { get; set; }
         public bool DisabledCloseReason { get; set; }
 
-        private readonly IUserApiClient _userApiService;
         private readonly ITodoApiClient _todoClient;
         private const string TodoKey = "TodoKey";
 
-        public EditTodoModel(ITodoApiClient todoClient, IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler, IUserApiClient userApiService) : base(authService, client, appSessionHandler)
+        public EditTodoModel(ITodoApiClient todoClient, IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         {
-            _userApiService = userApiService;
             _todoClient = todoClient;
         }
 
@@ -103,12 +101,12 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             return RedirectToPage("/Tasks/Workspace", new { Id = TodoAreaId });
         }
 
-        private async Task<List<UserDto>> GetUsers()
+        private List<UserDto> GetUsers()
         {
             var users = AppSessionHandler.GetData<List<UserDto>>(UsersKey);
             if (users == null)
             {
-                users = await _userApiService.GetAllUsers();
+                users = new List<UserDto>();
                 AppSessionHandler.SetData(UsersKey, users);
             }
 
@@ -139,7 +137,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
 
         private async Task SetModelFromTodo(TodoDto todo)
         {
-            var users = await GetUsers();
+            var users = GetUsers();
 
             Title = todo.Title;
             Description = todo.Description;

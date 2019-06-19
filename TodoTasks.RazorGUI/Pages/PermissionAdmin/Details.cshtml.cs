@@ -21,7 +21,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         public IEnumerable<TodoAreaPermissionDto> Permissions { get; set; }
         public IEnumerable<TodoAreaDto> AvailableAreas { get; set; }
 
-        public DetailsModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler, IUserApiClient userApiService) : base(todoAreaApiClient, appSessionHandler, userApiService)
+        public DetailsModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
         {}
 
         public async Task OnGet()

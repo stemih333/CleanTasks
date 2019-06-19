@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TodoTasks.RazorGUI.Extensions;
-using TodoTasks.RazorGUI.Constants;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages
 {
@@ -36,12 +36,10 @@ namespace TodoTasks.RazorGUI.Pages
         public List<UserDto> Users { get; set; }
 
         private readonly ITodoApiClient _todoApiClient;
-        private readonly IUserApiClient _userApiClient;
 
-        public WorkspaceModel(IUserApiClient userApiClient, IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler, ITodoApiClient todoApiClient) 
+        public WorkspaceModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler, ITodoApiClient todoApiClient) 
             : base(authService, client, appSessionHandler) {
             _todoApiClient = todoApiClient;
-            _userApiClient = userApiClient;
         }
        
         public async Task OnGet()
@@ -63,7 +61,7 @@ namespace TodoTasks.RazorGUI.Pages
                     Users = AppSessionHandler.GetData<List<UserDto>>(UsersKey);
                     if(Users == null)
                     {
-                        Users = await _userApiClient.GetAllUsers();                     
+                        Users = new List<UserDto>();                     
                         AppSessionHandler.SetData(UsersKey, Users);
                     }
 

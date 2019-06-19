@@ -8,13 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using TodoTasks.Common;
-using TodoTasks.RazorGUI.Helpers;
-using TodoTasks.RazorGUI.Constants;
-using TodoTasks.Common.Models;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI
 {
@@ -29,10 +24,6 @@ namespace TodoTasks.RazorGUI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = new AppSettings();
-            Configuration.Bind("AppSettings", config);
-            services.AddSingleton(config);
-
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -43,11 +34,13 @@ namespace TodoTasks.RazorGUI
                 options.Cookie.IsEssential = true;
             });
 
+            AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
+            AuthStartup.ConfigureOpenIdGui(services, Configuration);
+            AuthStartup.ConfigureAuthorization(services);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTransient<IAppSessionHandler, AppSessionHandler>();
-
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddHttpContextAccessor();
 
@@ -57,7 +50,7 @@ namespace TodoTasks.RazorGUI
                 var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
                 var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
                 
-                c.BaseAddress = new Uri(config.ApiUrl);
+                c.BaseAddress = new Uri(Configuration["ApiUrl"]);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
@@ -67,70 +60,52 @@ namespace TodoTasks.RazorGUI
                 var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
                 var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
                 
-                c.BaseAddress = new Uri(config.ApiUrl);
+                c.BaseAddress = new Uri(Configuration["ApiUrl"]);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
 
-            services.AddHttpClient<IUserApiClient, UserApiClient>(async (c) =>
-            {
-                var serviceProvider = services.BuildServiceProvider();
-                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultScheme = "Cookie";
+            //    options.DefaultChallengeScheme = "oidc";
+            //})
+            //.AddCookie("Cookie", opts => {
+            //    opts.ExpireTimeSpan = TimeSpan.FromHours(1);
+            //})
+            //.AddOpenIdConnect("oidc", options =>
+            //{
+            //    options.SignInScheme = "Cookie";
+            //    options.Authority = config.AuthUrl;
+            //    options.ClientId = config.ClientId;
+            //    options.ClientSecret = config.ClientSecret;
+            //    options.ResponseType = "code id_token";
+            //    options.SaveTokens = true;
+            //    options.GetClaimsFromUserInfoEndpoint = true;
+            //    options.Scope.Add("openid");
+            //    options.Scope.Add("profile");
+            //    options.Scope.Add("email");
+            //    options.Scope.Add("WebAPI");
+            //    options.Scope.Add("offline_access");
+            //    options.Scope.Add(AuthConstants.PermissionType);
+            //    options.Scope.Add(PermissionTypes.TodoAreaPermission);
+            //    options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
+            //    options.ClaimActions.Add(new JsonKeyArrayClaimAction(PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission));
+            //    options.Events.OnRemoteFailure = ctx =>
+            //    {
+            //        if(!string.IsNullOrEmpty(ctx.Failure.Message) && ctx.Failure.Message.Contains("access_denied"))
+            //        {
+            //            ctx.Response.Redirect("/");
+            //            ctx.HandleResponse();
+            //        }
+            //        return Task.CompletedTask;
+            //    };
 
-                c.BaseAddress = new Uri(config.AuthUrl);
-                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            });
-
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(Policies.Admin, policy =>
-                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
-                options.AddPolicy(Policies.User, policy =>
-                    policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
-                options.AddPolicy(Policies.All, policy =>
-                    policy.RequireAssertion(
-                        assert =>
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
-            });
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Cookie";
-                options.DefaultChallengeScheme = "oidc";
-            })
-            .AddCookie("Cookie", opts => {
-                opts.ExpireTimeSpan = TimeSpan.FromHours(1);
-            })
-            .AddOpenIdConnect("oidc", options =>
-            {
-                options.SignInScheme = "Cookie";
-                options.Authority = config.AuthUrl;
-                options.ClientId = config.ClientId;
-                options.ClientSecret = config.ClientSecret;
-                options.ResponseType = "code id_token";
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
-                options.Scope.Add("email");
-                options.Scope.Add("WebAPI");
-                options.Scope.Add("offline_access");
-                options.Scope.Add(AuthConstants.PermissionType);
-                options.Scope.Add(PermissionTypes.TodoAreaPermission);
-                options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
-                options.ClaimActions.Add(new JsonKeyArrayClaimAction(PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission));
-                options.Events.OnRemoteFailure = ctx =>
-                {
-                    if(!string.IsNullOrEmpty(ctx.Failure.Message) && ctx.Failure.Message.Contains("access_denied"))
-                    {
-                        ctx.Response.Redirect("/");
-                        ctx.HandleResponse();
-                    }
-                    return Task.CompletedTask;
-                };
-            });
+            //    options.Events.OnUserInformationReceived = ctx =>
+            //    {
+            //        return Task.CompletedTask;
+            //    };
+            //});
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -145,11 +120,13 @@ namespace TodoTasks.RazorGUI
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-            app.UseAuthentication();
+
+            app.UseSession();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSession();
+            app.UseAuthentication();
 
             app.UseMvc();
         }

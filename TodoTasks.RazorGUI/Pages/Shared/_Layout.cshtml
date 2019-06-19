@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Authorization
-@using TodoTasks.RazorGUI.Constants
+@using TodoTasks.DataAccess.Auth
 
 @inject IAuthorizationService AuthorizationService
 
@@ -36,10 +36,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-page="/Tasks/Workspace">Tasks</a>
                     </li>
-                    @if ((await AuthorizationService.AuthorizeAsync(User, Policies.Admin)).Succeeded)
-                    {
-                        <li class="nav-item"><a class="nav-link text-dark" asp-page="/PermissionAdmin/Workspace">Permissions</a></li>
-                    }
+                    @*@if ((await AuthorizationService.AuthorizeAsync(User, Policies.Admin)).Succeeded)
+                        {
+                            <li class="nav-item"><a class="nav-link text-dark" asp-page="/PermissionAdmin/Workspace">Permissions</a></li>
+                        }*@
 
                 </ul>
             }

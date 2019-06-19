@@ -1,6 +1,4 @@
-﻿using ByteSizeLib;
-using MediatR;
-using System;
+﻿using MediatR;
 using System.IO;
 using System.Linq;
 using System.Threading;

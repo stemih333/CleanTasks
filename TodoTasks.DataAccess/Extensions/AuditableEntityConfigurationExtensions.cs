@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TodoTasks.DataAccess.Extensions;
 using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.DataAccess.Extensions

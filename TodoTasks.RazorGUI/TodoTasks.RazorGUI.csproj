@@ -11,13 +11,14 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\TodoTasks.Application\TodoTasks.Application.csproj" />
     <ProjectReference Include="..\TodoTasks.Common\TodoTasks.Common.csproj" />
+    <ProjectReference Include="..\TodoTasks.DataAccess.Auth\TodoTasks.DataAccess.Auth.csproj" />
   </ItemGroup>
 
 </Project>

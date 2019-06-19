@@ -16,7 +16,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         public string AreaName { get; set; }
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public string UserId { get; set; }
-        public ConfirmRemoveModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler, IUserApiClient userApiService) : base(todoAreaApiClient, appSessionHandler, userApiService)
+        public ConfirmRemoveModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
         { }
 
         public void OnGet()
