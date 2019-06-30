@@ -1,13 +1,12 @@
-﻿using TodoTasks.Application.TodoAreaPermissions.Models;
-using TodoTasks.RazorGUI.Extensions;
+﻿using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.RazorGUI.Interfaces;
-using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TodoTasks.DataAccess.Auth;
+using TodoTasks.Domain.Entities;
+using System.Linq;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
@@ -24,37 +23,21 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         [BindProperty(SupportsGet = true)]
         public string CurrentSort { get; set; } = "";
 
-        public IEnumerable<TodoPermissionModel> UserPermissions { get; set; }
+        public IEnumerable<AppUser> Users { get; set; }
 
-        public WorkspaceModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
+        public ITodoApiClient _todoApiClient { get; set; }
+        public WorkspaceModel(ITodoAreaApiClient todoAreaApiClient, ITodoApiClient apiClient) : base(todoAreaApiClient)
         {
+            _todoApiClient = apiClient;
         }
 
         public async Task OnGet()
-        {
-            var users = AppSessionHandler.GetData<List<UserDto>>(AllUserKey);
-            if(users == null)
-            {
-                users = new List<UserDto>();
-                AppSessionHandler.SetData(AllUserKey, users);
-            }
-
-            var permissions = AppSessionHandler.GetData<List<TodoAreaPermissionDto>>(AreaPermissionKey);
-            if(permissions == null)
-            {
-                permissions = await TodoAreaApiClient.GetAllPermissions();
-                AppSessionHandler.SetData(AreaPermissionKey, permissions);
-            }
-
-            UserPermissions = users.Select(_ => new TodoPermissionModel {
-                Id = _.Id,
-                FirstName = _.FirstName,
-                LastName = _.LastName,
-                UserName = _.UserName,
-                PermittedAreas = permissions.Where(x => x.UserId.Equals(_.Id)).Select(x => x.AreaName).ToList()
-            });
-
-            if(!string.IsNullOrEmpty(Sort))
+        {           
+            var admins = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+            var appUsers = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+            Users = admins.Concat(appUsers).ToList();
+            
+            if (!string.IsNullOrEmpty(Sort))
             {
                 if(Sort == CurrentSort)
                 {
@@ -64,7 +47,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
                 {
                     SortOrder = "asc";
                 }
-                UserPermissions = UserPermissions.OrderByString(Sort, SortOrder);
+                Users = Users.OrderByString(Sort, SortOrder);
             }
             CurrentSort = Sort;
         }

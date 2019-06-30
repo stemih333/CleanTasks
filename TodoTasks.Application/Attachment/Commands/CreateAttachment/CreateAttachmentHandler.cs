@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TodoTasks.Application.Interfaces;
 using System.IO;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace TodoTasks.Application.Attachment.Commands
 {
@@ -10,16 +12,19 @@ namespace TodoTasks.Application.Attachment.Commands
     {
         private readonly ITodoDbContext _todoDbContext;
         private readonly IFileSaver _fileSaver;
+        private readonly string _filePath;
 
-        public CreateAttachmentHandler(ITodoDbContext todoDbContext, IFileSaver fileSaver)
+        public CreateAttachmentHandler(ITodoDbContext todoDbContext, IFileSaver fileSaver, IConfiguration configuration)
         {
             _todoDbContext = todoDbContext;
             _fileSaver = fileSaver;
+            _filePath = configuration["FilePath"];
         }
 
         public async Task<int> Handle(CreateAttachmentCommand request, CancellationToken cancellationToken)
         {
-            var fullpath = Path.Combine(request.FilePath, Path.GetRandomFileName());
+            if (string.IsNullOrEmpty(_filePath)) throw new Exception("Cannot create attachment. File path is missing in app settings.");
+            var fullpath = Path.Combine(_filePath, Path.GetRandomFileName());
             await _fileSaver.SaveFile(fullpath, request.FileBytes);
 
             _todoDbContext.Attachments.Add(new Domain.Entities.Attachment

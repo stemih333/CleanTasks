@@ -10,7 +10,6 @@ namespace TodoTasks.Application.Attachment.Commands
         public string FileType { get; set; }
         public long FileSize { get; set; }
         public string Description { get; set; }
-        public string FilePath { get; set; }
         public int? TodoId { get; set; }
     }
 }

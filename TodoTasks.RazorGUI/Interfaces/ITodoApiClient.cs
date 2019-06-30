@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TodoTasks.Application.Attachment.Models;
 using System.Collections.Generic;
 using TodoTasks.Application.Attachment.Commands;
+using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Interfaces
 {
@@ -25,5 +26,7 @@ namespace TodoTasks.RazorGUI.Interfaces
         Task<int> CreateAttachment(CreateAttachmentCommand command);
         Task<IEnumerable<AttachmentDto>> GetAttachments(int? todoId);
         Task<BinaryAttachmentDto> GetAttachment(int? attachmentId);
+        Task<IEnumerable<AppUser>> SearchUsers(string claimType, string claimValue);
+        Task<PermissionUser> GetPermissionUser(string username);
     }
 }

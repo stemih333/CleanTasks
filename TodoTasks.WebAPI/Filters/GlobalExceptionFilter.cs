@@ -25,6 +25,11 @@ namespace TodoTasks.WebAPI.Filters
                 httpError.StatusCode = HttpStatusCode.BadRequest;
             }
 
+            if (exceptionType == typeof(AuthDbOperationException))
+            {
+                httpError.AuthErrors = ((AuthDbOperationException)context.Exception).Errors;
+            }
+
             if (exceptionType == typeof(NotFoundException))
             {
                 httpError.StatusCode = HttpStatusCode.NotFound;

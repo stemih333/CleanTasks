@@ -11,7 +11,6 @@ namespace TodoTasks.Application.Interfaces
         DbSet<TodoTasks.Domain.Entities.Todo> Todos { get; set; }
         DbSet<TodoTasks.Domain.Entities.TodoArea> TodoAreas { get; set; }
         DbSet<TodoTasks.Domain.Entities.Attachment> Attachments { get; set; }
-        DbSet<TodoTasks.Domain.Entities.TodoAreaPermission> TodoAreaPermissions { get; set; }
 
         Task<int> SaveAuditableChangesAsync(string userName, CancellationToken cancellationToken = default);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

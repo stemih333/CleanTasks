@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
@@ -24,7 +23,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         {
             if(ModelState.IsValid)
             {
-                await TodoAreaClient.CreateTodoArea(AreaName, User.GetUserId());
+                await TodoAreaClient.CreateTodoArea(AreaName, User.Identity.Name);
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area '{AreaName}' created successfully.";

@@ -35,7 +35,7 @@ namespace TodoTasks.RazorGUI
             });
 
             AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
-            AuthStartup.ConfigureOpenIdGui(services, Configuration);
+            AuthStartup.ConfigureOpenId(services, Configuration);
             AuthStartup.ConfigureAuthorization(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -63,49 +63,6 @@ namespace TodoTasks.RazorGUI
                 c.BaseAddress = new Uri(Configuration["ApiUrl"]);
                 c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             });
-
-            
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = "Cookie";
-            //    options.DefaultChallengeScheme = "oidc";
-            //})
-            //.AddCookie("Cookie", opts => {
-            //    opts.ExpireTimeSpan = TimeSpan.FromHours(1);
-            //})
-            //.AddOpenIdConnect("oidc", options =>
-            //{
-            //    options.SignInScheme = "Cookie";
-            //    options.Authority = config.AuthUrl;
-            //    options.ClientId = config.ClientId;
-            //    options.ClientSecret = config.ClientSecret;
-            //    options.ResponseType = "code id_token";
-            //    options.SaveTokens = true;
-            //    options.GetClaimsFromUserInfoEndpoint = true;
-            //    options.Scope.Add("openid");
-            //    options.Scope.Add("profile");
-            //    options.Scope.Add("email");
-            //    options.Scope.Add("WebAPI");
-            //    options.Scope.Add("offline_access");
-            //    options.Scope.Add(AuthConstants.PermissionType);
-            //    options.Scope.Add(PermissionTypes.TodoAreaPermission);
-            //    options.ClaimActions.Add(new JsonKeyArrayClaimAction(AuthConstants.PermissionType, AuthConstants.PermissionType, AuthConstants.PermissionType));
-            //    options.ClaimActions.Add(new JsonKeyArrayClaimAction(PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission, PermissionTypes.TodoAreaPermission));
-            //    options.Events.OnRemoteFailure = ctx =>
-            //    {
-            //        if(!string.IsNullOrEmpty(ctx.Failure.Message) && ctx.Failure.Message.Contains("access_denied"))
-            //        {
-            //            ctx.Response.Redirect("/");
-            //            ctx.HandleResponse();
-            //        }
-            //        return Task.CompletedTask;
-            //    };
-
-            //    options.Events.OnUserInformationReceived = ctx =>
-            //    {
-            //        return Task.CompletedTask;
-            //    };
-            //});
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

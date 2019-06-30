@@ -1,5 +1,4 @@
 ﻿@page "{id:int?}"
-@using TodoTasks.RazorGUI.Extensions
 @model TodoTasks.RazorGUI.Pages.Tasks.EditTodoModel
 @{
     ViewData["Title"] = "Edit Todo";
@@ -126,7 +125,7 @@
                                     </div>
                                     <p class="mb-1">@comment.Name</p>
                                     <small>
-                                        @if (User.GetUserId().Equals(comment.CreateBy, StringComparison.CurrentCultureIgnoreCase))
+                                        @if (User.Identity.Name.Equals(comment.CreateBy, StringComparison.CurrentCultureIgnoreCase))
                                         {
                                             <a class="oi oi-trash mr-2 float-right" asp-page="/Tasks/DeleteComment" asp-route-id="@comment.Id" asp-route-todoid="@Model.TodoId"></a>
                                         }

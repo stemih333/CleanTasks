@@ -9,12 +9,11 @@ using TodoTasks.Application.Todo.Models;
 using TodoTasks.Application.Todo.Queries;
 using TodoTasks.Common;
 using TodoTasks.RazorGUI.Interfaces;
-using TodoTasks.RazorGUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.DataAccess.Auth;
+using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {
@@ -95,34 +94,35 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
                 TodoId = TodoId,
                 TodoStatusId = TodoStatusId,
                 Type = TodoTypeId,
-                UserId = User.GetUserId()
+                UserId = User.Identity.Name
             });
 
             return RedirectToPage("/Tasks/Workspace", new { Id = TodoAreaId });
         }
 
-        private List<UserDto> GetUsers()
+        private async Task<List<AppUser>> GetUsers()
         {
-            var users = AppSessionHandler.GetData<List<UserDto>>(UsersKey);
+            var users = AppSessionHandler.GetData<List<AppUser>>(UsersKey);
             if (users == null)
             {
-                users = new List<UserDto>();
-                AppSessionHandler.SetData(UsersKey, users);
+                var user = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+                var admins = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+                var allUsers = user.Concat(admins);
+                AppSessionHandler.SetData(UsersKey, user.Concat(admins));
+                users = allUsers.ToList();
             }
 
             if (users == null) throw new NullReferenceException("Could not retireve users from user API.");
 
-            users.Add(new UserDto { Id = User.GetUserId(), UserName = User.GetUserName() });
-
             return users;
         }
 
-        private async Task<SelectList> GetUsersSelect(List<UserDto> users)
+        private async Task<SelectList> GetUsersSelect(List<AppUser> users)
         {
-            var userPermissions = (await TodoAreaClient.GetPermissionsByAreaId(TodoAreaId))?.Select(_ => _.UserId).ToList();
+            var userPermissions = (await _todoClient.SearchUsers(PermissionTypes.TodoAreaPermission, TodoAreaId.Value.ToString()))?.Select(_ => _.UserName).ToList();
             if (userPermissions == null) throw new NullReferenceException("Could not retireve permissions from API.");
 
-            return new SelectList(users.Where(_ => userPermissions.Contains(_.Id)), "Id", "UserName");
+            return new SelectList(users.Where(_ => userPermissions.Contains(_.UserName)), "UserName", "UserName");
         }
 
         private async Task<TodoDto> GetTodo()
@@ -137,7 +137,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
 
         private async Task SetModelFromTodo(TodoDto todo)
         {
-            var users = GetUsers();
+            var users = await GetUsers();
 
             Title = todo.Title;
             Description = todo.Description;
@@ -146,8 +146,8 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             TodoTypeId = todo.Type;
             TodoStatusId = todo.Status;
             Notify = todo.Notify ?? false;
-            CreatedBy = users.FirstOrDefault(x => x.Id.Equals(todo.CreatedBy))?.UserName ?? "Unknown";
-            UpdatedBy = users.FirstOrDefault(x => x.Id.Equals(todo.UpdatedBy))?.UserName ?? "Unknown";
+            CreatedBy = todo.CreatedBy;
+            UpdatedBy = todo.UpdatedBy;
             Created = todo.Created?.ToString("yyyy-MM-dd");
             Updated = todo.Updated?.ToString("yyyy-MM-dd");
             Tags = todo.Tags;

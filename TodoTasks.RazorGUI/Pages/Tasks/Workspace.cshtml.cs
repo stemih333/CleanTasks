@@ -3,15 +3,14 @@ using TodoTasks.Application.Todo.Queries;
 using TodoTasks.Application.TodoArea.Models;
 using TodoTasks.RazorGUI.Attributes;
 using TodoTasks.RazorGUI.Interfaces;
-using TodoTasks.RazorGUI.Models;
 using TodoTasks.RazorGUI.Pages.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.DataAccess.Auth;
+using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Pages
 {
@@ -33,7 +32,7 @@ namespace TodoTasks.RazorGUI.Pages
         [BindProperty(SupportsGet = true)]
         public bool Refresh { get; set; }
 
-        public List<UserDto> Users { get; set; }
+        public List<AppUser> Users { get; set; }
 
         private readonly ITodoApiClient _todoApiClient;
 
@@ -58,30 +57,26 @@ namespace TodoTasks.RazorGUI.Pages
                 if (result != null)
                 {
                     Todos = result.Todos;
-                    Users = AppSessionHandler.GetData<List<UserDto>>(UsersKey);
+                    Users = AppSessionHandler.GetData<List<AppUser>>(UsersKey);
                     if(Users == null)
                     {
-                        Users = new List<UserDto>();                     
+                        var admins = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+                        var appUsers = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+                        Users = admins.Concat(appUsers).ToList();                     
                         AppSessionHandler.SetData(UsersKey, Users);
                     }
 
-                    Users.Add(new UserDto { Id = User.GetUserId(), UserName = User.GetUserName() });
-
-                    Todos = Todos.Select(_ => {
-                        _.AssignedTo = Users.FirstOrDefault(x => x.Id.Equals(_.AssignedTo))?.UserName;
-                        _.CreatedBy = Users.FirstOrDefault(x => x.Id.Equals(_.CreatedBy))?.UserName ?? "Unknown";
-                        _.UpdatedBy = Users.FirstOrDefault(x => x.Id.Equals(_.UpdatedBy))?.UserName ?? "Unknown";
-                        return _;
-                    }).ToList();
+                    //Users.Add(new UserDto { Id = User.GetUserId(), UserName = User.GetUserName() });
                 }                   
             }
         }
 
         private async Task<List<TodoAreaDto>> GetAreasByPermission()
         {
-            var areaPermissions = (await TodoAreaClient.GetPermissionsByUserId(User.GetUserId()))?.Select(_ => _.TodoAreaId.ToString()).ToList();
-
-            return areaPermissions.Any() ? await TodoAreaClient.GetTodoAreas(areaPermissions) : null;
+            var user = await _todoApiClient.GetPermissionUser(User.Identity.Name);
+            if (user == null) return null;
+            var areas = await TodoAreaClient.GetTodoAreas(user.Permissions.Where(_ => _.PermissionName.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => _.PermissionValue));
+            return areas;
         }
     }
 }

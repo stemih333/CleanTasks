@@ -77,6 +77,7 @@ namespace TodoTasks.IdentityServer4
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     AlwaysIncludeUserClaimsInIdToken = true,
                     RedirectUris = new List<string> { "https://localhost:5002/sign-in-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
                     BackChannelLogoutUri = "https://localhost:5002/",
                     AllowedScopes = new List<string>
                     {
@@ -91,10 +92,9 @@ namespace TodoTasks.IdentityServer4
                         AuthConstants.PermissionType
                     },
                     Description = "MVC Razor Pages GUI.",
-                    AllowOfflineAccess = true,
-                    UpdateAccessTokenClaimsOnRefresh = true,
-                    IdentityTokenLifetime = 3600,
-                    AccessTokenLifetime = 3600
+                    AccessTokenLifetime = 10000,
+                    IdentityTokenLifetime = 10000,
+                    AllowOfflineAccess = true                   
                 }
             };
         public static List<TestUser> GetUsers()

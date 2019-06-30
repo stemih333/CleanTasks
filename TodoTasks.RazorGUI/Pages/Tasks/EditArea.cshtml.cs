@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
@@ -43,7 +42,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         {
             if (ModelState.IsValid)
             {
-                await TodoAreaClient.EditTodoArea(NewAreaName, CurrentAreaId.Value, User.GetUserId());
+                await TodoAreaClient.EditTodoArea(NewAreaName, CurrentAreaId.Value, User.Identity.Name);
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area name changed successfully.";

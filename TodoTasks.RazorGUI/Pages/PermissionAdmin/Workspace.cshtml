@@ -21,24 +21,15 @@
                             <a asp-page="/PermissionAdmin/Workspace" asp-route-sort="LastName" asp-route-currentsort="@Model.CurrentSort" asp-route-sortorder="@Model.SortOrder">Last name</a>
                             <vc:icon-sort property-name="LastName" sort-order="@Model.SortOrder" sort-column="@Model.Sort"></vc:icon-sort>
                         </th>
-                        <th>Permissions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var permission in Model.UserPermissions)
+                    @foreach (var permission in Model.Users)
                     {
                         <tr>
-                            <td><a asp-page="/PermissionAdmin/Details" asp-route-userId="@permission.Id" asp-route-userName="@permission.UserName">@permission.UserName</a></td>
+                            <td><a asp-page="/PermissionAdmin/Details" asp-route-userName="@permission.UserName">@permission.UserName</a></td>
                             <td>@permission.FirstName</td>
-                            <td>@permission.LastName</td>
-                            <td>
-                                <ul>
-                                    @foreach (var area in permission.PermittedAreas)
-                                    {
-                                        <li>@area</li>
-                                    }
-                                </ul>
-                            </td>
+                            <td>@permission.LastName</td>                            
                         </tr>
                     }
                 </tbody>

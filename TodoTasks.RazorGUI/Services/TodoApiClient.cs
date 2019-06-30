@@ -12,6 +12,7 @@ using TodoTasks.Application.Attachment.Models;
 using System.Collections.Generic;
 using TodoTasks.Application.Attachment.Commands;
 using System.Net.Http.Headers;
+using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Services {
     public class TodoApiClient : ITodoApiClient {
@@ -33,7 +34,6 @@ namespace TodoTasks.RazorGUI.Services {
                 }, "File", command.FileName);
                 if (!string.IsNullOrEmpty(command.Description)) multiContent.Add(new StringContent(command.Description), "Description");
                 multiContent.Add(new StringContent(command.UserId), "UserId");
-                multiContent.Add(new StringContent(command.FilePath), "FilePath");
                 multiContent.Add(new StringContent(command.TodoId.ToString()), "TodoId");
 
                 var result = await _client.PutAsync("api/attachment", multiContent);
@@ -145,6 +145,24 @@ namespace TodoTasks.RazorGUI.Services {
             result.EnsureSuccessStatusCode();
 
             return await result.Content.ReadAsAsync<PagedTodoResultDto>();
+        }
+
+        public async Task<IEnumerable<AppUser>> SearchUsers(string claimType, string claimValue)
+        {
+            var result = await _client.GetAsync($"api/appuser/users?claimtype={claimType}&claimvalue={claimValue}");
+
+            result.EnsureSuccessStatusCode();
+
+            return await result.Content.ReadAsAsync<IEnumerable<AppUser>>();
+        }
+
+        public async Task<PermissionUser> GetPermissionUser(string username)
+        {
+            var result = await _client.GetAsync("api/appuser/userpermission?username=" + username);
+
+            result.EnsureSuccessStatusCode();
+
+            return await result.Content.ReadAsAsync<PermissionUser>();
         }
 
         private string CreateUrl<T>(string path, T model)

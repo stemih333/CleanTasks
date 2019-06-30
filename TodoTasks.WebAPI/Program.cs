@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using TodoTasks.DataAccess;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.WebAPI
 {
@@ -19,6 +20,7 @@ namespace TodoTasks.WebAPI
                 if(env.IsDevelopment())
                 {
                     TestData.Init(services);
+                    AuthStartup.SeedAsync(services).Wait();
                 }              
             }
 

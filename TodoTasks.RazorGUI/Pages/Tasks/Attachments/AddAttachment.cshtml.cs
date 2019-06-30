@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using TodoTasks.Application.Attachment.Commands;
-using TodoTasks.Common.Models;
 using TodoTasks.DataAccess.Auth;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
@@ -26,12 +25,10 @@ namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
         public IFormFile UploadedFile { get; set; }
 
         private readonly ITodoApiClient _todoClient;
-        private readonly string _filePath;
 
-        public AddAttachmentModel(ITodoApiClient todoClient, AppSettings settings)
+        public AddAttachmentModel(ITodoApiClient todoClient)
         {
             _todoClient = todoClient;
-            _filePath = settings.FilePath;
         }
 
         public void OnGet()
@@ -49,11 +46,10 @@ namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
                 {
                     FileBytes = reader.ReadBytes((int)UploadedFile.Length),
                     FileName = UploadedFile.FileName,
-                    UserId = User.GetUserId(),
+                    UserId = User.Identity.Name,
                     FileSize = UploadedFile.Length,
                     FileType = UploadedFile.ContentType,
                     Description = Description,
-                    FilePath = _filePath,
                     TodoId = TodoId.Value
                 };
 

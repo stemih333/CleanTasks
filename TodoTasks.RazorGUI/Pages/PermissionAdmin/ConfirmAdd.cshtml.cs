@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using TodoTasks.RazorGUI.Exceptions;
 using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using TodoTasks.RazorGUI.Extensions;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
@@ -13,12 +12,10 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public string UserName { get; set; }
         [BindProperty(SupportsGet = true), Required, HiddenInput]
-        public string UserId { get; set; }
-        [BindProperty(SupportsGet = true), Required, HiddenInput]
         public int? AreaId { get; set; }
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public string AreaName { get; set; }
-        public ConfirmAddModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
+        public ConfirmAddModel(ITodoAreaApiClient todoAreaApiClient) : base(todoAreaApiClient)
         {}
 
         public void OnGet()
@@ -30,9 +27,9 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         {
             if (!ModelState.IsValid) throw new InvalidModelStateException(ModelState, "Failed to add new area permission.");
 
-            await TodoAreaApiClient.CreateAreaPermission(AreaId, UserId, User.GetUserId());
+            await TodoAreaApiClient.CreateAreaPermission(AreaId, UserName);
 
-            return RedirectToPage("/PermissionAdmin/Details", new { UserId, UserName });
+            return RedirectToPage("/PermissionAdmin/Details", new { UserName });
         }
     }
 }

@@ -6,7 +6,6 @@ using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TodoTasks.RazorGUI.Extensions;
 using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
@@ -39,7 +38,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             await todoApiClient.CreateTodoComment(new CreateTodoCommentCommand
             {
                 TodoId = TodoId,
-                UserId = User.GetUserId(),
+                UserId = User.Identity.Name,
                 Value = Comment
             });
 

@@ -1,6 +1,5 @@
 ﻿using TodoTasks.Application.ReferenceData.Models;
 using TodoTasks.Application.TodoArea.Models;
-using TodoTasks.Application.TodoAreaPermissions.Models;
 using TodoTasks.RazorGUI.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,44 +84,17 @@ namespace TodoTasks.RazorGUI.Services
 
             return await client.Content.ReadAsAsync<ReferenceDataDto>();
         }
-
-        public async Task<List<TodoAreaPermissionDto>> GetAllPermissions()
+       
+        public async Task CreateAreaPermission(int? areaId, string username)
         {
-            var client = await _client.GetAsync("api/todoareapermission");
-
-            client.EnsureSuccessStatusCode();
-
-            return await client.Content.ReadAsAsync<List<TodoAreaPermissionDto>>();
-        }
-
-        public async Task<List<TodoAreaPermissionDto>> GetPermissionsByUserId(string userId)
-        {
-            var client = await _client.GetAsync("api/todoareapermission?UserId=" + userId);
-
-            client.EnsureSuccessStatusCode();
-
-            return await client.Content.ReadAsAsync<List<TodoAreaPermissionDto>>();
-        }
-
-        public async Task<List<TodoAreaPermissionDto>> GetPermissionsByAreaId(int? areaId)
-        {
-            var client = await _client.GetAsync("api/todoareapermission?TodoAreaId=" + areaId);
-
-            client.EnsureSuccessStatusCode();
-
-            return await client.Content.ReadAsAsync<List<TodoAreaPermissionDto>>();
-        }
-
-        public async Task CreateAreaPermission(int? areaId, string userId, string createdBy)
-        {
-            var client = await _client.PutAsJsonAsync("api/todoareapermission", new { TodoAreaId = areaId, UserId = userId, UserName = createdBy });
+            var client = await _client.PutAsJsonAsync("api/appuser/area", new { Permission = areaId, UserName = username });
 
             client.EnsureSuccessStatusCode();
         }
 
-        public async Task DeleteAreaPermission(int? permissionId)
+        public async Task DeleteAreaPermission(int? areaId, string username)
         {
-            var client = await _client.DeleteAsync("api/todoareapermission/" + permissionId);
+            var client = await _client.DeleteAsync($"api/appuser?permission={areaId.Value.ToString()}&username={username}");
 
             client.EnsureSuccessStatusCode();
         }

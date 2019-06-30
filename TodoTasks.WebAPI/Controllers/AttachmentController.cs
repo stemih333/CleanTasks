@@ -40,7 +40,6 @@ namespace TodoTasks.WebAPI.Controllers
                     FileSize = model.File.Length,
                     FileType = model.File.ContentType,
                     Description = model.Description,
-                    FilePath = model.FilePath,
                     TodoId = model.TodoId
                 };
             }

@@ -26,10 +26,11 @@ namespace TodoTasks.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             ApplicationStartup.ConfigureServices(services);
-            FileSaver.FileSaver.ConfigureDevServices(services);
+            FileSaver.FileSaver.ConfigureServices(services);
+            AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
 
             // AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
-            AuthStartup.ConfigureOpenIdApi(services, Configuration);
+            AuthStartup.ConfigureJwtApi(services, Configuration);
 
             if(Environment.IsDevelopment())
             {

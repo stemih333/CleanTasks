@@ -1,38 +1,39 @@
 ﻿using TodoTasks.Application.TodoArea.Models;
-using TodoTasks.Application.TodoAreaPermissions.Models;
 using TodoTasks.RazorGUI.Exceptions;
 using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using TodoTasks.Domain.Entities;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class DetailsModel : BasePermissionAdminModel
     {
         [BindProperty(SupportsGet = true), Required]
-        public string UserId { get; set; }
-
-        [BindProperty(SupportsGet = true), Required]
         public string UserName { get; set; }
-
-        public IEnumerable<TodoAreaPermissionDto> Permissions { get; set; }
+        public IEnumerable<AppPermission> Permissions { get; set; }
         public IEnumerable<TodoAreaDto> AvailableAreas { get; set; }
+        public IEnumerable<TodoAreaDto> UserAreas { get; set; }
+        private readonly ITodoApiClient _apiClient;
 
-        public DetailsModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
-        {}
+        public DetailsModel(ITodoAreaApiClient todoAreaApiClient, ITodoApiClient apiClient) : base(todoAreaApiClient)
+        {
+            _apiClient = apiClient;
+        }
 
         public async Task OnGet()
         {
             if (!ModelState.IsValid) throw new InvalidModelStateException(ModelState);
 
-            Permissions = await TodoAreaApiClient.GetPermissionsByUserId(UserId);
-
+            var user = await _apiClient.GetPermissionUser(UserName);
+            Permissions = user.Permissions.Where(_ => _.PermissionName.Equals(PermissionTypes.TodoAreaPermission));
             var areas = await TodoAreaApiClient.GetAllTodoAreas();
-            AvailableAreas = areas.Where(_ => !Permissions.Any(x => x.TodoAreaId == _.TodoAreaId));
-            
+            AvailableAreas = areas.Where(_ => !Permissions.Any(x => x.PermissionValue.Equals(_.TodoAreaId.Value.ToString())));
+            UserAreas = areas.Where(_ => Permissions.Any(x => x.PermissionValue.Equals(_.TodoAreaId.Value.ToString())));
         }
     }
 }

@@ -14,9 +14,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         public int? AreaPermissionId { get; set; }
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public string AreaName { get; set; }
-        [BindProperty(SupportsGet = true), Required, HiddenInput]
-        public string UserId { get; set; }
-        public ConfirmRemoveModel(ITodoAreaApiClient todoAreaApiClient, IAppSessionHandler appSessionHandler) : base(todoAreaApiClient, appSessionHandler)
+        public ConfirmRemoveModel(ITodoAreaApiClient todoAreaApiClient) : base(todoAreaApiClient)
         { }
 
         public void OnGet()
@@ -28,9 +26,9 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         {
             if (!ModelState.IsValid) throw new InvalidModelStateException(ModelState, "Failed to remove area permission.");
 
-            await TodoAreaApiClient.DeleteAreaPermission(AreaPermissionId);
+            await TodoAreaApiClient.DeleteAreaPermission(AreaPermissionId, UserName);
 
-            return RedirectToPage("/PermissionAdmin/Details", new { UserId, UserName });
+            return RedirectToPage("/PermissionAdmin/Details", new { UserName });
         }
     }
 }

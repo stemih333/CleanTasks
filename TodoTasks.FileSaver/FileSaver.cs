@@ -18,7 +18,7 @@ namespace TodoTasks.FileSaver
             return Task.CompletedTask;
         }
 
-        public static void ConfigureDevServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IFileSaver, FileSaver>();
         }
