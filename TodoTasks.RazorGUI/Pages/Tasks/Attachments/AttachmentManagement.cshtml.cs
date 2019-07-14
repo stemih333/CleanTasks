@@ -11,7 +11,7 @@ using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.User)]
     public class AttachmentManagementModel : PageModel
     {
         [Required, BindProperty(SupportsGet = true), HiddenInput]

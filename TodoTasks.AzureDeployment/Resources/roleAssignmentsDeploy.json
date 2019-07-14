@@ -1,0 +1,45 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string"
+    },
+    "roleAssignmentName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the name of the role assignment to create. It can be any valid GUID."
+      }
+    },
+    "roleDefinitionID": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the role definition ID used in the role assignment."
+      }
+    },
+    "principalId": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the principal ID assigned to the role."
+      }
+    }
+  },
+  "variables": {
+    "scope": "[resourceGroup().id]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2017-09-01",
+      "name": "[guid(resourceId('Microsoft.Resources/resourceGroups/', parameters('resourceGroupName')), parameters('roleAssignmentName'))]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]",
+        "principalId": "[parameters('principalId')]",
+        "scope": "[variables('scope')]"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

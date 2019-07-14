@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using TodoTasks.DataAccess;
 using TodoTasks.DataAccess.Auth;
 
@@ -19,9 +20,20 @@ namespace TodoTasks.WebAPI
 
                 if(env.IsDevelopment())
                 {
+                    Log.Information("Seeding Todo test data.");
                     TestData.Init(services);
-                    AuthStartup.SeedAsync(services).Wait();
-                }              
+                    Log.Information("Seeding Identity user.");
+                    AuthStartup.SeedIdentityUser(services).Wait();
+                }
+                else
+                {
+                    Log.Information("Running Identity migrations.");
+                    AuthStartup.RunIdentityMigrations(services);
+                    Log.Information("Running TodoDb migrations.");
+                    DataAccessStartup.RunTodoDbMigrations(services);
+                }
+                Log.Information("Seeding Identity admin.");
+                AuthStartup.SeedIdentityAdmin(services).Wait();
             }
 
             host.Run();

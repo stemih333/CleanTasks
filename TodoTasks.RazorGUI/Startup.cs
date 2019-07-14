@@ -15,11 +15,13 @@ namespace TodoTasks.RazorGUI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
+        public IHostingEnvironment Environment;
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -34,9 +36,19 @@ namespace TodoTasks.RazorGUI
                 options.Cookie.IsEssential = true;
             });
 
-            AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
-            AuthStartup.ConfigureOpenId(services, Configuration);
-            AuthStartup.ConfigureAuthorization(services);
+            var connectionString = Configuration.GetConnectionString("TodoDbContext");
+
+            if (Environment.IsDevelopment())
+            {
+                AuthStartup.ConfigureDevIdentityServices(services);
+            }
+            else
+            {
+                AuthStartup.ConfigureIdentityServices(services, connectionString);
+            }
+
+            AuthStartup.ConfigureOpenIdServices(services, Configuration);
+            AuthStartup.ConfigureAuthorizationServices(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

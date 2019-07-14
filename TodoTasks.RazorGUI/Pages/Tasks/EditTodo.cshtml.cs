@@ -17,7 +17,7 @@ using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.User)]
     public class EditTodoModel : TasksBaseModel
     {
         [Required, BindProperty, HiddenInput]

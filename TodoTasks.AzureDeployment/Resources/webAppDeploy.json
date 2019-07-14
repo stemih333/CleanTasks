@@ -1,0 +1,61 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "todoTasksPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "todoTasksAPIName": {
+      "type": "string"
+    },
+    "alwaysOn": {
+      "type": "bool"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "currentStack": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "appName": "[concat(parameters('todoTasksAPIName'), '-', parameters('environment'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-02-01",
+      "name": "[variables('appName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "tags": { "displayName": "API App" },
+
+      "properties": {
+        "name": "[variables('appName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "[parameters('environment')]"
+            }
+          ],
+          "alwaysOn": "[parameters('alwaysOn')]",
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "[resourceGroup().location]"
+            }
+          ]
+        },
+        "serverFarmId": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('todoTasksPlanName'))]",
+        "hostingEnvironment": "[parameters('hostingEnvironment')]",
+        "clientAffinityEnabled": true
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

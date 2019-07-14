@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
+    [ApiController, Authorize(Policy = Policies.User)]
     public abstract class TodoControllerBase : ControllerBase
     {
         private IMediator _mediator;

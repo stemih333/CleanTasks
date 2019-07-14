@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 using TodoTasks.Application.Attachment.Commands;
 using TodoTasks.DataAccess.Auth;
 using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.User)]
     [RequestSizeLimit(10000000)]
     public class AddAttachmentModel : PageModel
     {

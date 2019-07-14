@@ -9,7 +9,7 @@ using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.User)]
     public class DeleteAttachmentModel : PageModel
     {
         [BindProperty(SupportsGet = true), Required, HiddenInput]

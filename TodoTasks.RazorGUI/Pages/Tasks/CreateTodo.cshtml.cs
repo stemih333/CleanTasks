@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {
-    [Authorize(Policy = Policies.All), ValidArea]
+    [Authorize(Policy = Policies.User), ValidArea]
     public class CreateTodoModel : TasksBaseModel
     {       
         [Required, BindProperty, HiddenInput]

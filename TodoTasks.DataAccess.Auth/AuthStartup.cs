@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -18,9 +20,9 @@ using TodoTasks.Application.Interfaces;
 
 namespace TodoTasks.DataAccess.Auth
 {
-    public class AuthStartup
+    public static class AuthStartup
     {
-        public static void ConfigureIdentity(IServiceCollection services, string connectionString)
+        public static void ConfigureIdentityServices(IServiceCollection services, string connectionString)
         {
             services.AddDbContext<ApplicationDbContext>(opts => opts.UseSqlServer(connectionString));
             services.AddIdentityCore<ApplicationUser>(opts => {
@@ -32,7 +34,33 @@ namespace TodoTasks.DataAccess.Auth
             services.AddTransient<IAppUserRepository, AppUserRepository>();
         }
 
-        public static void ConfigureAuthorization(IServiceCollection services)
+        public static void ConfigureDevIdentityServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(opts => opts.UseInMemoryDatabase("TodoDb"));
+            services.AddIdentityCore<ApplicationUser>(opts => {
+                opts.Password.RequiredLength = 8;
+                opts.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<IAppUserRepository, AppUserRepository>();
+        }
+
+        public static void RunIdentityMigrations(IServiceProvider services)
+        {
+            var context = services.GetService<ApplicationDbContext>();
+
+            context.Database.Migrate();
+        }
+
+        public static bool DatabaseExists(IServiceProvider services)
+        {
+            var context = services.GetService<ApplicationDbContext>();
+
+            return (context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists();
+        }
+
+        public static void ConfigureAuthorizationServices(IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -40,15 +68,10 @@ namespace TodoTasks.DataAccess.Auth
                     policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission));
                 options.AddPolicy(Policies.User, policy =>
                     policy.RequireClaim(AuthConstants.PermissionType, AuthConstants.UserPermission));
-                options.AddPolicy(Policies.All, policy =>
-                    policy.RequireAssertion(
-                        assert =>
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission) ||
-                            assert.User.HasClaim(AuthConstants.PermissionType, AuthConstants.UserPermission)));
             });
         }
 
-        public static void ConfigureJwtApi(IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureJwtApiServices(IServiceCollection services, IConfiguration configuration)
         {
             var config = new AuthSettings();
             configuration.Bind("AuthSettings", config);
@@ -63,11 +86,33 @@ namespace TodoTasks.DataAccess.Auth
                     {
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config.ClientSecret))
                     };
+
+                    opts.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = async ctx =>
+                        {
+                            if (string.IsNullOrEmpty(ctx.Principal.Identity.Name)) { ctx.Fail($"Unknown user is trying to access the API."); return; }
+
+
+                            var userManager = ctx.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                            // Check if user exists in database. Users that dont exist get added automatically to database as regular users.
+                            var user = await userManager.FindByEmailAsync(ctx.Principal.Identity.Name) ?? await userManager.FindByNameAsync(ctx.Principal.Identity.Name);
+                            IList<Claim> claimsToAdd = new List<Claim>();
+
+                            if (user == null) { ctx.Fail($"Principal {ctx.Principal.Identity.Name} is not authorized."); return; }
+
+                            // Append the claims retrieved from database to user logged in with Open ID.
+                            if (!claimsToAdd.Any()) claimsToAdd = await userManager.GetClaimsAsync(user);
+                            var appIdentity = new ClaimsIdentity(claimsToAdd);
+                            ctx.Principal.AddIdentity(appIdentity);
+                        }
+                    };
+                 
                 });
                 //.AddAzureADBearer(options => configuration.Bind("AuthSettings", options));
         }
 
-        public static void ConfigureOpenId(IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureOpenIdServices(IServiceCollection services, IConfiguration configuration)
         {
             var config = new AuthSettings();
             configuration.Bind("AuthSettings", config);
@@ -113,44 +158,75 @@ namespace TodoTasks.DataAccess.Auth
                     options.Scope.Add("offline_access");
                 }
 
-                options.Events.OnTokenValidated = async ctx =>
+                options.Events = new OpenIdConnectEvents
                 {
-
-                    var userManager = ctx.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
-                    // Check if user exists in database. Users that dont exist get added automatically to database as regular users.
-                    var user = await userManager.FindByEmailAsync(ctx.Principal.Identity.Name) ?? await userManager.FindByNameAsync(ctx.Principal.Identity.Name);
-                    IList<Claim> claimsToAdd = new List<Claim>();
-                    if (user == null)
+                    OnTokenValidated = async ctx =>
                     {
-                        var name = ctx.Principal.Claims.First(_ => _.Type.Equals(ClaimTypes.Name));
-                        var givenName = ctx.Principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.GivenName));
-                        var surname = ctx.Principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.Surname));
-                        if (name == null || givenName == null || surname == null) throw new Exception($"User {ctx.Principal.Identity.Name ?? "Unknown"} is missing one or more name claims.");
-                        user = new ApplicationUser
+
+                        var userManager = ctx.HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+                        // Check if user exists in database. Users that dont exist get added automatically to database as regular users.
+                        var user = await userManager.FindByEmailAsync(ctx.Principal.Identity.Name) ?? await userManager.FindByNameAsync(ctx.Principal.Identity.Name);
+
+                        IList<Claim> claimsToAdd = new List<Claim>();
+                        if (user == null)
                         {
-                            Email = ctx.Principal.Identity.Name,
-                            UserName = name.Value,
-                            FirstName = givenName.Value,
-                            LastName = surname.Value
-                        };
+                            var name = ctx.Principal.Claims.First(_ => _.Type.Equals(ClaimTypes.Name));
+                            var givenName = ctx.Principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.GivenName));
+                            var surname = ctx.Principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.Surname));
+                            if (name == null || givenName == null || surname == null) throw new Exception($"User {ctx.Principal.Identity.Name ?? "Unknown"} is missing one or more name claims.");
+                            user = new ApplicationUser
+                            {
+                                Email = ctx.Principal.Identity.Name,
+                                UserName = name.Value,
+                                FirstName = givenName.Value,
+                                LastName = surname.Value
+                            };
 
-                        var userResult = await userManager.CreateAsync(user);
-                        if (!userResult.Succeeded) throw new Exception("Failed to create user: " + ctx.Principal.Identity.Name);
+                            var userResult = await userManager.CreateAsync(user);
+                            if (!userResult.Succeeded) throw new Exception("Failed to create user: " + ctx.Principal.Identity.Name);
 
-                        claimsToAdd = new List<Claim> { new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission) };
+                            claimsToAdd = new List<Claim> { new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission) };
 
-                        var result = await userManager.AddClaimsAsync(user, claimsToAdd);
-                        if (!result.Succeeded) throw new Exception("Failed to add claims for user: " + ctx.Principal.Identity.Name);
+                            var result = await userManager.AddClaimsAsync(user, claimsToAdd);
+                            if (!result.Succeeded) throw new Exception("Failed to add claims for user: " + ctx.Principal.Identity.Name);
+                        }
+                        // Append the claims retrieved from database to user logged in with Open ID.
+                        if (!claimsToAdd.Any()) claimsToAdd = await userManager.GetClaimsAsync(user);
+                        var appIdentity = new ClaimsIdentity(claimsToAdd);
+                        ctx.Principal.AddIdentity(appIdentity);
                     }
-                    // Append the claims retrieved from database to user logged in with Open ID.
-                    if (!claimsToAdd.Any()) claimsToAdd = await userManager.GetClaimsAsync(user);
-                    var appIdentity = new ClaimsIdentity(claimsToAdd);
-                    ctx.Principal.AddIdentity(appIdentity);
                 };
             }).AddCookie();
         }
 
-        public static async Task SeedAsync(IServiceProvider provider)
+        public static async Task SeedIdentityUser(IServiceProvider provider)
+        {
+            var mngr = provider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var userEmail = "stemih11@gmail.com";
+            var user = await mngr.FindByEmailAsync(userEmail);
+            if (user == null)
+            {
+                var newUser = new ApplicationUser
+                {
+                    Email = userEmail,
+                    UserName = userEmail,
+                    FirstName = "Ste",
+                    LastName = "Mih"
+                };
+
+                var claims = new List<Claim>
+                {
+                    new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission),
+                    new Claim(PermissionTypes.TodoAreaPermission, "1")
+                };
+
+                await mngr.CreateAsync(newUser);
+                await mngr.AddClaimsAsync(newUser, claims);
+            }
+        }
+
+        public static async Task SeedIdentityAdmin(IServiceProvider provider)
         {
             var email = "stefan.mihailovic@if.se";
             var firstName = "Stefan";
@@ -171,6 +247,7 @@ namespace TodoTasks.DataAccess.Auth
 
                 var claims = new List<Claim>
                 {
+                    new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission),
                     new Claim(AuthConstants.PermissionType, AuthConstants.UserAdminPermission),
                     new Claim(PermissionTypes.TodoAreaPermission, "1"),
                     new Claim(PermissionTypes.TodoAreaPermission, "2"),
@@ -178,28 +255,6 @@ namespace TodoTasks.DataAccess.Auth
 
                 await mngr.CreateAsync(newAdmin);
                 await mngr.AddClaimsAsync(newAdmin, claims);
-            }
-
-            var userEmail = "stemih11@gmail.com";
-            var user = await mngr.FindByEmailAsync(userEmail);
-            if(user == null)
-            {
-                var newUser = new ApplicationUser
-                {
-                    Email = userEmail,
-                    UserName = userEmail,
-                    FirstName = "Ste",
-                    LastName = "Mih"
-                };
-
-                var claims = new List<Claim>
-                {
-                    new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission),
-                    new Claim(PermissionTypes.TodoAreaPermission, "1")
-                };
-
-                await mngr.CreateAsync(newUser);
-                await mngr.AddClaimsAsync(newUser, claims);
             }
         }
     }

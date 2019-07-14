@@ -1,0 +1,16 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "roleAssignmentName": {
+      "value": "stefan.mihailovic@if.se"
+    },
+    "principalId": {
+      "value": "b96fbf92-20a7-4740-94d6-24f8032fbe6b"
+    },
+    "roleDefinitionID": {
+      "value": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+    },
+    "resourceGroupName": { "value": "TodoTasks" }
+  }
+}

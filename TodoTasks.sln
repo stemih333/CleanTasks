@@ -37,6 +37,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.4 Infrastructure", "1.4 I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.IdentityServer4", "TodoTasks.IdentityServer4\TodoTasks.IdentityServer4.csproj", "{36AE3691-E47F-447B-827E-44E91741DE2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.1 Deployment", "5.1 Deployment", "{DA1203A8-EBB0-4843-B749-06B46FA058BD}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "TodoTasks.AzureDeployment", "TodoTasks.AzureDeployment\TodoTasks.AzureDeployment.deployproj", "{D215C934-AF7A-433D-B9ED-CDB172BD9881}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +87,10 @@ Global
 		{36AE3691-E47F-447B-827E-44E91741DE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36AE3691-E47F-447B-827E-44E91741DE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36AE3691-E47F-447B-827E-44E91741DE2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D215C934-AF7A-433D-B9ED-CDB172BD9881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D215C934-AF7A-433D-B9ED-CDB172BD9881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D215C934-AF7A-433D-B9ED-CDB172BD9881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D215C934-AF7A-433D-B9ED-CDB172BD9881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +106,7 @@ Global
 		{2B8038BD-870D-4E86-9B5C-B7AE600B659D} = {5E7641EF-E4E9-4583-BA15-90BD43EC6FD8}
 		{FB827951-6CEC-48EA-94B5-26364E6A441F} = {25B6421B-2FE7-47EA-9B07-4EAB1B4AFA8D}
 		{36AE3691-E47F-447B-827E-44E91741DE2B} = {AB7994ED-F2DA-446E-B1FE-0626ED7B2939}
+		{D215C934-AF7A-433D-B9ED-CDB172BD9881} = {DA1203A8-EBB0-4843-B749-06B46FA058BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C870DE0B-7EC7-4CB7-A26F-3996349DC2D9}

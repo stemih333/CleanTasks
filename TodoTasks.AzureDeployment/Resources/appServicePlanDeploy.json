@@ -1,0 +1,51 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.1",
+  "parameters": {
+    "todoTasksPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skuName": {
+      "type": "string"
+    },
+    "skuTier": {
+      "type": "string"
+    },
+    "skuFamily": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('todoTasksPlanName')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2016-09-01",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "[parameters('skuTier')]",
+        "size": "[parameters('skuName')]",
+        "family": "[parameters('skuFamily')]",
+        "capacity": 0
+      },
+      "kind": "app",
+      "properties": {
+        "name": "[parameters('todoTasksPlanName')]",
+        "perSiteScaling": false,
+        "reserved": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      },
+      "tags": {
+        "displayName": "TodoTasksPlan"
+      }
+    }
+  ],
+  "outputs": {
+    "planName": {
+      "type": "string",
+      "value": "[parameters('todoTasksPlanName')]"
+    }
+  }
+}

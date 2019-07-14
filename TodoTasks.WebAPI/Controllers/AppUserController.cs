@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoTasks.Application.AppUser.Commands;
 using TodoTasks.Application.AppUser.Queries;
+using TodoTasks.DataAccess.Auth;
 using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.WebAPI.Controllers
@@ -17,14 +19,14 @@ namespace TodoTasks.WebAPI.Controllers
         public async Task<PermissionUser> GetPermissionUser([FromQuery]string username)
             => await Mediator.Send(new GetPermissionUserQuery { Username = username });
 
-        [HttpPut("area")]
+        [HttpPut("area"), Authorize(Policy = Policies.Admin)]
         public async Task AddAreaPermission([FromBody]SetAreaPermissionCommand command) => await Mediator.Send(command);
 
 
-        [HttpPut]
+        [HttpPut, Authorize(Policy = Policies.Admin)]
         public async Task AddUserPermission([FromBody]SetUserPermissionCommand command) => await Mediator.Send(command);
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Policy = Policies.Admin)]
         public async Task DeleteAreaPermission([FromQuery]RemoveAreaPermissionCommand command) => await Mediator.Send(command);
 
     }

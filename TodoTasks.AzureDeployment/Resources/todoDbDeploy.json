@@ -1,0 +1,92 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "todo-db-serverAdminLogin": {
+      "type": "string",
+    },
+    "todo-db-serverAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "environment": { "type": "string" },
+    "todoDbCollation": {
+      "type": "string",
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "todoDbEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "todoDbRequestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ]
+    }
+  },
+  "variables": {
+    "todo-db-serverName": "[concat('todo-db-server', '-', toLower(parameters('environment')))]",
+    "todo-db-name": "[concat('todo-db', '-', toLower(parameters('environment')))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('todo-db-serverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "todo-db-server"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('todo-db-serverAdminLogin')]",
+        "administratorLoginPassword": "[parameters('todo-db-serverAdminLoginPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('todo-db-serverName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[variables('todo-db-name')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('todo-db-serverName'))]"
+          ],
+          "tags": {
+            "displayName": "todoDb"
+          },
+          "properties": {
+            "collation": "[parameters('todoDbCollation')]",
+            "edition": "[parameters('todoDbEdition')]",
+            "maxSizeBytes": "2147483648",
+            "requestedServiceObjectiveName": "[parameters('todoDbRequestedServiceObjectiveName')]"
+          }
+        }
+      ]
+    }
+  ]
+}

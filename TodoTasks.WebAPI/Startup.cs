@@ -27,18 +27,20 @@ namespace TodoTasks.WebAPI
         {
             ApplicationStartup.ConfigureServices(services);
             FileSaver.FileSaver.ConfigureServices(services);
-            AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
+            AuthStartup.ConfigureJwtApiServices(services, Configuration);
+            AuthStartup.ConfigureAuthorizationServices(services);
 
-            // AuthStartup.ConfigureIdentity(services, Configuration.GetConnectionString("TodoDbContext"));
-            AuthStartup.ConfigureJwtApi(services, Configuration);
+            var connectionString = Configuration.GetConnectionString("TodoDbContext");
 
             if(Environment.IsDevelopment())
-            {
+            {              
                 DataAccessStartup.ConfigureDevServices(services);
+                AuthStartup.ConfigureDevIdentityServices(services);
             }
             else
             {
-                DataAccessStartup.ConfigureServices(services, Configuration.GetConnectionString("TodoDbContext"));
+                DataAccessStartup.ConfigureServices(services, connectionString);
+                AuthStartup.ConfigureIdentityServices(services, connectionString);
             }
 
             SerilogLogging.ConfigureServices(services, Configuration);
@@ -66,6 +68,7 @@ namespace TodoTasks.WebAPI
             {
                 app.UseHsts();
             }
+
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

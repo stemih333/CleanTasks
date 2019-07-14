@@ -14,7 +14,7 @@ using TodoTasks.Domain.Entities;
 
 namespace TodoTasks.RazorGUI.Pages
 {
-    [Authorize(Policy = Policies.All), ValidArea]
+    [Authorize(Policy = Policies.User), ValidArea]
     public class WorkspaceModel : TasksBaseModel
     {
         public bool IsAdmin { get; set; }

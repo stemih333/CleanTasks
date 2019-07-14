@@ -10,7 +10,7 @@ using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {
-    [Authorize(Policy = Policies.All)]
+    [Authorize(Policy = Policies.User)]
     public class AddCommentModel : PageModel
     {
         [BindProperty, Required, HiddenInput]

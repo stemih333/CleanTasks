@@ -30,6 +30,11 @@ namespace TodoTasks.WebAPI.Filters
                 httpError.AuthErrors = ((AuthDbOperationException)context.Exception).Errors;
             }
 
+            if (exceptionType == typeof(AuthException))
+            {
+                httpError.StatusCode = HttpStatusCode.Forbidden;
+            }
+
             if (exceptionType == typeof(NotFoundException))
             {
                 httpError.StatusCode = HttpStatusCode.NotFound;
