@@ -1,0 +1,18 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultName": {
+      "value": "TodoTasksKeyVault"
+    },
+    "tenantId": {
+      "value": "de7e7a67-ae61-49d2-97a7-526c910ad675"
+    },
+    "objectId": {
+      "value": "b96fbf92-20a7-4740-94d6-24f8032fbe6b"
+    },
+    "enabledForTemplateDeployment": {
+      "value": true
+    }
+  }
+}

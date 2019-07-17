@@ -73,18 +73,14 @@ namespace TodoTasks.DataAccess.Auth
 
         public static void ConfigureJwtApiServices(IServiceCollection services, IConfiguration configuration)
         {
-            var config = new AuthSettings();
-            configuration.Bind("AuthSettings", config);
-            services.AddSingleton(config);
-
             services.AddAuthentication(opts => opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opts =>
                 {
-                    opts.Authority = string.IsNullOrEmpty(config.TenantId) ? config.Instance : new Uri(new Uri(config.Instance), config.TenantId).ToString();
-                    opts.Audience = config.ClientId;
+                    opts.Authority = string.IsNullOrEmpty(configuration["TenantId"]) ? configuration["Instance"] : new Uri(new Uri(configuration["Instance"]), configuration["TenantId"]).ToString();
+                    opts.Audience = configuration["ClientId"];
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config.ClientSecret))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["ClientSecret"]))
                     };
 
                     opts.Events = new JwtBearerEvents
@@ -114,10 +110,6 @@ namespace TodoTasks.DataAccess.Auth
 
         public static void ConfigureOpenIdServices(IServiceCollection services, IConfiguration configuration)
         {
-            var config = new AuthSettings();
-            configuration.Bind("AuthSettings", config);
-            services.AddSingleton(config);
-
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -132,17 +124,17 @@ namespace TodoTasks.DataAccess.Auth
             })
             .AddOpenIdConnect(options =>
             {
-                options.Authority = $"{config.Instance}{config.Domain}";
-                options.ClientId = config.ClientId;
-                options.ClientSecret = config.ClientSecret;
-                options.ResponseType = config.Type;
-                options.CallbackPath = config.CallbackPath;
-                options.SignedOutRedirectUri = config.RedirectUrl;
-                options.Resource = config.ClientId;             
+                options.Authority = $"{configuration["Instance"]}{configuration["Domain"]}";
+                options.ClientId = configuration["ClientId"];
+                options.ClientSecret = configuration["ClientSecret"];
+                options.ResponseType = configuration["Type"];
+                options.CallbackPath = configuration["CallbackPath"];
+                options.SignedOutRedirectUri = configuration["RedirectUrl"];
+                options.Resource = configuration["ClientId"];             
                 options.SaveTokens = true;
 
                 // IdentityServer4 specific settings
-                var type = config.AuthType?.Equals("IdentityServer4");
+                var type = configuration["AuthType"]?.Equals("IdentityServer4");
                 if (type.HasValue && type.Value)
                 {
                     options.GetClaimsFromUserInfoEndpoint = true;

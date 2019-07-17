@@ -23,20 +23,25 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <Content Include="azuredeploy.json" />
-    <Content Include="azuredeploy.parameters.json" />
+    <None Include="Deploy-TodoTasksSecurityResourceGroup.ps1" />
+    <None Include="Deploy-TodoTasksResourceGroup.ps1" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="Deploy-AzureResourceGroup.ps1" />
-    <None Include="Resources\roleAssignmentsDeploy.json" />
-    <None Include="Resources\roleAssignmentsDeploy.parameters.json" />
-    <None Include="Resources\appServicePlanDeploy.json" />
-    <None Include="Resources\appServicePlanDeploy.parameters.json" />
-    <None Include="Resources\todoDbDeploy.json" />
-    <None Include="Resources\todoDbDeploy.parameters.json" />
-    <None Include="Resources\webAppDeploy.json" />
-    <None Include="Resources\webAppDeploy.parameters.json" />
+    <None Include="resources\security\keyVaultDeploy.json" />
+    <None Include="resources\security\keyVaultDeploy.parameters.json" />
+    <None Include="resources\security\roleAssignmentsDeploy.json" />
+    <None Include="resources\security\roleAssignmentsDeploy.parameters.json" />
+    <None Include="resources\web\appServicePlanDeploy.json" />
+    <None Include="resources\web\appServicePlanDeploy.parameters.json" />
+    <None Include="resources\storage\todoDbDeploy.json" />
+    <None Include="resources\storage\todoDbDeploy.parameters.json" />
+    <None Include="resources\web\webAppDeploy.json" />
+    <None Include="resources\web\webAppDeploy.parameters.json" />
+    <None Include="todoTasksSecurityDeploy.json" />
+    <None Include="todoTasksSecurityDeploy.parameters.json" />
+    <None Include="todoTasksDeploy.json" />
+    <None Include="todoTasksDeploy.parameters.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>

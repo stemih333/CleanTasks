@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "alwaysOn": {
+      "value": false
+    },
+    "connectionString": { "value": "Server=tcp:todo-db-server-development.database.windows.net,1433;Initial Catalog=todo-db-development;Persist Security Info=False;User ID=mihste;Password=Sommaren1984!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" },
+    "currentStack": {
+      "value": "dotnetcore"
+    },
+    "environment": { "value": "Staging" },
+    "hostingEnvironment": {
+      "value": ""
+    },
+    "todoTasksAPIName": { "value": "TodoTasksAPI" },
+    "todoTasksGUIName": { "value": "TodoTasksGUI" },
+    "todoTasksPlanName": { "value": "TodoTasksPlan" }
+  }
+}

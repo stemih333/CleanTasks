@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages
 {
@@ -13,6 +15,7 @@ namespace TodoTasks.RazorGUI.Pages
             if(User.Identity.IsAuthenticated && User is ClaimsPrincipal)
             {
                 Username = User.Identity.Name;
+              
             }
         }
     }

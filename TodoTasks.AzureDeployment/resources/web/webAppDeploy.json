@@ -1,0 +1,117 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "alwaysOn": {
+      "type": "bool"
+    },
+    "connectionString": {
+      "type": "string"
+    },
+    "currentStack": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "todoTasksAPIName": {
+      "type": "string"
+    },
+    "todoTasksGUIName": {
+      "type": "string"
+    },
+    "todoTasksPlanName": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "apiName": "[concat(parameters('todoTasksAPIName'), '-', parameters('environment'))]",
+    "guiName": "[concat(parameters('todoTasksGUIName'), '-', parameters('environment'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-02-01",
+      "name": "[variables('apiName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "tags": { "displayName": "API App" },
+
+      "properties": {
+        "name": "[variables('apiName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "[parameters('environment')]"
+            }
+          ],
+          "connectionStrings": [
+            {
+              "name": "TodoDbContext",
+              "connectionString": "[parameters('connectionString')]"
+            }
+          ],
+          "alwaysOn": "[parameters('alwaysOn')]",
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "[resourceGroup().location]"
+            }
+          ]
+        },
+        "serverFarmId": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('todoTasksPlanName'))]",
+        "hostingEnvironment": "[parameters('hostingEnvironment')]",
+        "clientAffinityEnabled": true
+      }
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[variables('guiName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "tags": { "displayName": "GUI App" },
+
+      "properties": {
+        "name": "[variables('guiName')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "[parameters('environment')]"
+            },
+            {
+              "name": "ApiUrl",
+              "value": "[concat('https://', reference(concat('Microsoft.Web/sites/', variables('apiName'))).hostNameSslStates[0].name)]"
+            },
+            {
+              "name": "RedirectUrl",
+              "value": "[concat('https://', variables('guiName'), '.azurewebsites.net')]"
+            }
+          ],
+          "connectionStrings": [
+            {
+              "name": "TodoDbContext",
+              "connectionString": "[parameters('connectionString')]"
+            }
+          ],
+          "alwaysOn": "[parameters('alwaysOn')]",
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "[resourceGroup().location]"
+            }
+          ]
+        },
+        "serverFarmId": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('todoTasksPlanName'))]",
+        "hostingEnvironment": "[parameters('hostingEnvironment')]",
+        "clientAffinityEnabled": true
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
