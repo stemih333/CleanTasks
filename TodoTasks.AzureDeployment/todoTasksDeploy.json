@@ -2,11 +2,214 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "alwaysOn": {
+      "type": "bool"
+    },
+    "blobContainerName": {
+      "type": "string"
+    },
+    "currentStack": {
+      "type": "string"
+    },
+    "dbDeployLink": {
+      "type": "string"
+    },
+    "dbName": {
+      "type": "string"
+    },
+    "dbServerName": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "keyVaultName": {
+      "type": "string"
+    },
+    "planSku": {
+      "type": "object"
+    },
+    "principalId": {
+      "type": "string"
+    },
+    "roleAssignmentName": {
+      "type": "string"
+    },
+    "roleAssignmentsDeploy": {
+      "type": "string"
+    },
+    "roleDefinitionID": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "storageAccountsResourceGroupName": {
+      "type": "string"
+    },
+    "todoDbServerAdminLogin": {
+      "type": "string"
+    },
+    "todoDbServerAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "todoTasksAPIName": {
+      "type": "string"
+    },
+    "todoTasksGUIName": {
+      "type": "string"
+    },
+    "todoTasksPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "webDeployLink": {
+      "type": "string"
+    }
   },
   "variables": {
+    "accountSasFunctionValues": {
+      "signedServices": "b",
+      "signedPermission": "r",
+      "signedResourceTypes": "o",
+      "signedExpiry": "2050-01-01T00:00:00Z"
+    },
+    "serviceSasFunctionValues": {
+      "canonicalizedResource": "[concat('/blob/', parameters('storageAccountName'), '/', parameters('blobContainerName'))]",
+      "signedResource": "c",
+      "signedPermission": "r",
+      "signedExpiry": "2050-01-01T00:00:00Z"
+    }
   },
   "resources": [
-  ],
-  "outputs": {
-  }
+    {      
+      "apiVersion": "2017-05-10",
+      "name": "storageOutputs",
+      "type": "Microsoft.Resources/deployments",
+      "properties":{
+        "mode": "Incremental",
+        "template": {     
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",    
+          "contentVersion": "1.0.0.0",
+          "resources": [],
+          "outputs": {
+            "accountSas": {
+              "type": "string",
+              "value": "[listAccountSas(resourceId(parameters('storageAccountsResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-02-01', variables('accountSasFunctionValues')).accountSasToken]"
+            },
+            "serviceSas": {
+              "type": "string",
+              "value": "[listServiceSas(resourceId(parameters('storageAccountsResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2018-02-01', variables('serviceSasFunctionValues')).serviceSasToken]"
+            },
+            "blobUri": {
+              "type": "string",
+              "value": "[reference(resourceId(parameters('storageAccountsResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2016-01-01').primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    },
+    {      
+      "apiVersion": "2017-05-10",
+      "name": "roleAssignments",
+      "type": "Microsoft.Resources/deployments",
+      "properties":{
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(reference('storageOutputs').outputs.blobUri.value, parameters('blobContainerName'), '/', parameters('roleAssignmentsDeploy'), '?', reference('storageOutputs').outputs.serviceSas.value)]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "roleAssignmentName": {
+            "value": "[parameters('roleAssignmentName')]"
+          },
+          "principalId": {
+            "value": "[parameters('principalId')]"
+          },
+          "roleDefinitionID": {
+            "value": "[parameters('roleDefinitionID')]"
+          }
+        }
+      }
+    },
+    {      
+      "apiVersion": "2017-05-10",
+      "name": "dbDeploy",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "parameters": {
+          "dbName": {
+            "value": "[parameters('dbName')]"
+          },
+          "dbServerName": {
+            "value": "[parameters('dbServerName')]"
+          },
+          "todoDbServerAdminLogin": {
+            "value": "[parameters('todoDbServerAdminLogin')]"
+          },
+          "todoDbServerAdminLoginPassword": {
+            "value": "[parameters('todoDbServerAdminLoginPassword')]"
+          }
+        },
+        "templateLink": {
+          "uri": "[concat(reference('storageOutputs').outputs.blobUri.value, parameters('blobContainerName'), '/', parameters('dbDeployLink'), '?', reference('storageOutputs').outputs.serviceSas.value)]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
+    {      
+      "apiVersion": "2017-05-10",
+      "name": "webDeploy",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'dbDeploy')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "parameters": {
+          "todoTasksPlanName": {
+            "value": "[parameters('todoTasksPlanName')]"
+          },
+          "planSku": {
+            "value": "[parameters('planSku')]"
+          },
+          "alwaysOn": {
+            "value": "[parameters('alwaysOn')]"
+          },
+          "currentStack": {
+            "value": "[parameters('currentStack')]"
+          },
+          "environment": {
+            "value": "[parameters('environment')]"
+          },
+          "hostingEnvironment": {
+            "value": "[parameters('hostingEnvironment')]"
+          },
+          "todoTasksAPIName": {
+            "value": "[parameters('todoTasksAPIName')]"
+          },
+          "todoTasksGUIName": {
+            "value": "[parameters('todoTasksGUIName')]"
+          },
+          "dbName": {
+            "value": "[parameters('dbName')]"
+          },
+          "dbServerName": {
+            "value": "[parameters('dbServerName')]"
+          },
+          "dbServerPassword": {
+            "value": "[parameters('todoDbServerAdminLoginPassword')]"
+          }
+        },
+        "templateLink": {
+          "uri": "[concat(reference('storageOutputs').outputs.blobUri.value, parameters('blobContainerName'), '/', parameters('webDeployLink'), '?', reference('storageOutputs').outputs.serviceSas.value)]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+  ]
 }

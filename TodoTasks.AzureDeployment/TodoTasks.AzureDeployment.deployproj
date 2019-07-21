@@ -38,8 +38,6 @@
     <None Include="resources\storage\todoDbDeploy.parameters.json" />
     <None Include="resources\web\webAppDeploy.json" />
     <None Include="resources\web\webAppDeploy.parameters.json" />
-    <None Include="todoTasksSecurityDeploy.json" />
-    <None Include="todoTasksSecurityDeploy.parameters.json" />
     <None Include="todoTasksDeploy.json" />
     <None Include="todoTasksDeploy.parameters.json" />
   </ItemGroup>

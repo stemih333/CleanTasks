@@ -1,0 +1,58 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {   
+    "storageAccountsName": {
+      "defaultValue": "todotasksstorage",
+      "type": "string"
+    },
+    "blobServiceName": {
+      "defaultValue": "default",
+      "type": "string"
+    },
+    "blobContainerName": {
+      "defaultValue": "todotasksblobcontainer",
+      "type": "string"
+    }  
+  },
+  "variables": {
+    "blobServiceFullName": "[concat(parameters('storageAccountsName'), '/' , parameters('blobServiceName'))]",
+    "blobContainerFullName": "[concat(variables('blobServiceFullName'), '/' , parameters('blobContainerName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "name": "[parameters('storageAccountsName')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "BlobStorage",
+      "properties": {         
+        "accessTier": "Cool"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2019-04-01",
+      "name": "[variables('blobServiceFullName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountsName'))]"
+      ]      
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2019-04-01",
+      "name": "[variables('blobContainerFullName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountsName'), parameters('blobServiceName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountsName'))]"
+      ],
+      "properties": {
+        "publicAccess": "None"
+      }
+    }  
+  ]
+}

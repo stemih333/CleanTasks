@@ -2,21 +2,17 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "todo-db-serverAdminLogin": {
+    "todoDbServerAdminLogin": {
       "value": "mihste"
     },
-    "todo-db-serverAdminLoginPassword": {
+    "todoDbServerAdminLoginPassword": {
       "value": "Sommaren1984!"
     },
-    "environment": { "value": "Development" },
-    "todoDbCollation": {
-      "value": "SQL_Latin1_General_CP1_CI_AS"
+    "dbName": {
+      "value": "todo-db-staging"
     },
-    "todoDbEdition": {
-      "value": "Basic"     
-    },
-    "todoDbRequestedServiceObjectiveName": {
-      "value": "Basic"    
+    "dbServerName": {
+      "value": "todo-db-server-staging"
     }
   }
 }

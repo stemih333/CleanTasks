@@ -2,5 +2,79 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "storageAccountsResourceGroupName": {
+      "value": "TodoTasksSecurity"
+    },
+    "storageAccountName": {
+      "value": "todotasksstorage"
+    },
+    "blobContainerName": {
+      "value": "todotasksblobcontainer"
+    },
+    "webDeployLink": {
+      "value": "webAppDeploy.json"
+    },
+    "dbDeployLink": {
+      "value": "todoDbDeploy.json"
+    },
+    "roleAssignmentsDeploy": {
+      "value": "roleAssignmentsDeploy.json"
+    },
+    "keyVaultName": {
+      "value": "TodoTasksKeyVault"
+    },
+    "roleAssignmentName": {
+      "value": "stefan.mihailovic@if.se"
+    },
+    "principalId": {
+      "value": "b96fbf92-20a7-4740-94d6-24f8032fbe6b"
+    },
+    "roleDefinitionID": {
+      "value": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+    },
+    "dbName": {
+      "value": "todo-db-staging"
+    },
+    "dbServerName": {
+      "value": "todo-db-server-staging"
+    },
+    "todoDbServerAdminLogin": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/5dad48fd-4946-48dc-aec1-61ca92a5622d/resourcegroups/TodoTasksSecurity/providers/Microsoft.KeyVault/vaults/TodoTasksKeyVault"
+        },
+        "secretName": "dbUserNameSecret"
+      }
+    },
+    "todoDbServerAdminLoginPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/5dad48fd-4946-48dc-aec1-61ca92a5622d/resourcegroups/TodoTasksSecurity/providers/Microsoft.KeyVault/vaults/TodoTasksKeyVault"
+        },
+        "secretName": "dbPasswordSecret"
+      }
+    },
+    "todoTasksPlanName": { "value": "TodoTasksPlan" },
+    "planSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 0
+      }
+    },
+    "alwaysOn": {
+      "value": false
+    },
+    "currentStack": {
+      "value": "dotnetcore"
+    },
+    "environment": { "value": "Staging" },
+    "hostingEnvironment": {
+      "value": ""
+    },
+    "todoTasksAPIName": { "value": "TodoTasksAPI-Staging" },
+    "todoTasksGUIName": { "value": "TodoTasksGUI-Staging" }
   }
 }

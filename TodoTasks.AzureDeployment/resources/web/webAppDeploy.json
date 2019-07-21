@@ -2,11 +2,15 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "todoTasksPlanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "planSku": {
+      "type": "object"
+    },
     "alwaysOn": {
       "type": "bool"
-    },
-    "connectionString": {
-      "type": "string"
     },
     "currentStack": {
       "type": "string"
@@ -23,25 +27,51 @@
     "todoTasksGUIName": {
       "type": "string"
     },
-    "todoTasksPlanName": {
-      "type": "string",
-      "minLength": 1
+    "dbName": {
+      "type": "string"
+    },
+    "dbServerName": {
+      "type": "string"
+    },
+    "dbServerPassword": {
+      "type": "securestring"
     }
   },
   "variables": {
-    "apiName": "[concat(parameters('todoTasksAPIName'), '-', parameters('environment'))]",
-    "guiName": "[concat(parameters('todoTasksGUIName'), '-', parameters('environment'))]"
+    "dbServerResource": "[resourceId('Microsoft.Sql/servers', parameters('dbServerName'))]",
+    "guiName": "[parameters('todoTasksGUIName')]"
   },
   "resources": [
     {
+      "name": "[parameters('todoTasksPlanName')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2016-09-01",
+      "sku": "[parameters('planSku')]",
+      "kind": "app",
+      "properties": {
+        "name": "[parameters('todoTasksPlanName')]",
+        "perSiteScaling": false,
+        "reserved": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      },
+      "tags": {
+        "displayName": "TodoTasksPlan"
+      }
+    },
+    {
       "apiVersion": "2018-02-01",
-      "name": "[variables('apiName')]",
+      "name": "[parameters('todoTasksAPIName')]",
       "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('todoTasksPlanName'))]"
+      ],
       "tags": { "displayName": "API App" },
-
       "properties": {
-        "name": "[variables('apiName')]",
+
+        "name": "[parameters('todoTasksAPIName')]",
         "siteConfig": {
           "appSettings": [
             {
@@ -52,7 +82,7 @@
           "connectionStrings": [
             {
               "name": "TodoDbContext",
-              "connectionString": "[parameters('connectionString')]"
+              "connectionString": "[concat('Server=tcp:', reference(variables('dbServerResource'), '2015-05-01-preview').fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbName'), ';Persist Security Info=False;User ID=', reference(variables('dbServerResource'), '2015-05-01-preview').administratorLogin, ';Password=', parameters('dbServerPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
             }
           ],
           "alwaysOn": "[parameters('alwaysOn')]",
@@ -70,13 +100,15 @@
     },
     {
       "apiVersion": "2018-11-01",
-      "name": "[variables('guiName')]",
+      "name": "[parameters('todoTasksGUIName')]",
       "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
       "tags": { "displayName": "GUI App" },
-
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('todoTasksPlanName'))]"
+      ],
       "properties": {
-        "name": "[variables('guiName')]",
+        "name": "[parameters('todoTasksGUIName')]",
         "siteConfig": {
           "appSettings": [
             {
@@ -85,17 +117,17 @@
             },
             {
               "name": "ApiUrl",
-              "value": "[concat('https://', reference(concat('Microsoft.Web/sites/', variables('apiName'))).hostNameSslStates[0].name)]"
+              "value": "[concat('https://', reference(concat('Microsoft.Web/sites/', parameters('todoTasksAPIName'))).hostNameSslStates[0].name)]"
             },
             {
               "name": "RedirectUrl",
-              "value": "[concat('https://', variables('guiName'), '.azurewebsites.net')]"
+              "value": "[concat('https://', parameters('todoTasksGUIName'), '.azurewebsites.net')]"
             }
           ],
           "connectionStrings": [
             {
               "name": "TodoDbContext",
-              "connectionString": "[parameters('connectionString')]"
+              "connectionString": "[concat('Server=tcp:', reference(variables('dbServerResource'), '2015-05-01-preview').fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('dbName'), ';Persist Security Info=False;User ID=', reference(variables('dbServerResource'), '2015-05-01-preview').administratorLogin, ';Password=', parameters('dbServerPassword'), ';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
             }
           ],
           "alwaysOn": "[parameters('alwaysOn')]",
@@ -106,12 +138,11 @@
             }
           ]
         },
+
         "serverFarmId": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('todoTasksPlanName'))]",
         "hostingEnvironment": "[parameters('hostingEnvironment')]",
         "clientAffinityEnabled": true
       }
     }
-  ],
-  "outputs": {
-  }
+  ]
 }

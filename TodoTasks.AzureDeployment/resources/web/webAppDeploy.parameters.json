@@ -2,10 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "todoTasksPlanName": { "value": "TodoTasksPlan" },
+    "planSku": {
+      "value": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 0
+      }
+    },
     "alwaysOn": {
       "value": false
     },
-    "connectionString": { "value": "Server=tcp:todo-db-server-development.database.windows.net,1433;Initial Catalog=todo-db-development;Persist Security Info=False;User ID=mihste;Password=Sommaren1984!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" },
     "currentStack": {
       "value": "dotnetcore"
     },
@@ -13,8 +22,16 @@
     "hostingEnvironment": {
       "value": ""
     },
-    "todoTasksAPIName": { "value": "TodoTasksAPI" },
-    "todoTasksGUIName": { "value": "TodoTasksGUI" },
-    "todoTasksPlanName": { "value": "TodoTasksPlan" }
+    "todoTasksAPIName": { "value": "TodoTasksAPI-Staging" },
+    "todoTasksGUIName": { "value": "TodoTasksGUI-Staging" },
+    "dbName": {
+      "value": "todo-db-staging"
+    },
+    "dbServerName": {
+      "value": "todo-db-server-staging"
+    },
+    "dbServerPassword": {
+      "value": "Sommaren1984!"
+    }
   }
 }

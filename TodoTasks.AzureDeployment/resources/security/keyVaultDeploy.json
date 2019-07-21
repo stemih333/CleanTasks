@@ -23,21 +23,6 @@
       "type": "string",
       "defaultValue": "Standard"
     },
-    "enabledForDeployment": {
-      "type": "bool",
-      "defaultValue": false
-    },
-    "enabledForTemplateDeployment": {
-      "type": "bool",
-      "defaultValue": false
-    },
-    "enableVaultForVolumeEncryption": {
-      "type": "bool",
-      "defaultValue": false
-    },
-    "connectionStringSecret": {
-      "type": "securestring"
-    },
     "dbUserNameSecret": {
       "type": "securestring"
     },
@@ -57,9 +42,9 @@
         "displayName": "KeyVault"
       },
       "properties": {
-        "enabledForDeployment": "[parameters('enabledForDeployment')]",
-        "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-        "enabledForVolumeEncryption": "[parameters('enableVaultForVolumeEncryption')]",
+        "enabledForDeployment": true,
+        "enabledForTemplateDeployment": true,
+        "enabledForVolumeEncryption": false,
         "tenantId": "[parameters('tenantId')]",
         "accessPolicies": [
           {
@@ -88,19 +73,7 @@
           "dependsOn": [
             "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
           ]
-        },
-        {
-          "type": "secrets",
-          "name": "connectionStringSecret",
-          "apiVersion": "2015-06-01",
-          "tags": { "displayName": "connectionString" },
-          "properties": {
-            "value": "[parameters('connectionStringSecret')]"
-          },
-          "dependsOn": [
-            "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
-          ]
-        },
+        },      
         {
           "type": "secrets",
           "name": "dbPasswordSecret",
@@ -115,7 +88,5 @@
         }
       ]
     }
-  ],
-  "outputs": {
-  }
+  ]
 }
