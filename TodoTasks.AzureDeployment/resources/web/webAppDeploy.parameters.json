@@ -32,6 +32,15 @@
     },
     "dbServerPassword": {
       "value": "Sommaren1984!"
+    },
+    "storageKey": {
+      "value": "F27tKIxSeayRCrn8QXUoKZiOXcDqROgCpqeywy12W9PsHfKGRh0Fsp45mLSzAltMl9xFpAHJtlBDwRXOMjwUnQ=="
+    },
+    "storageAccountName": {
+      "value": "todotasksstoragestaging"
+    },
+    "storageContainerName": {
+      "value": "todotasksblobcontainer"
     }
   }
 }

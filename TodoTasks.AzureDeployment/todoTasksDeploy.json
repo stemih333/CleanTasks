@@ -225,8 +225,14 @@
           "dbServerPassword": {
             "value": "[parameters('todoDbServerAdminLoginPassword')]"
           },
-          "storageConnectionString": {
-            "value": "[reference('storageDeploy').outputs.storageConnection.value]"
+          "storageKey": {
+            "value": "[reference('storageDeploy').outputs.storageKey.value]"
+          },
+          "storageAccountName": {
+            "value": "[reference('storageDeploy').outputs.storageFullName.value]"
+          },
+          "storageContainerName": {
+            "value": "[parameters('blobContainerName')]"
           }
         },
         "templateLink": {

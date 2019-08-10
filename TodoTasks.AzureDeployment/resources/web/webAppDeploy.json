@@ -36,7 +36,13 @@
     "dbServerPassword": {
       "type": "securestring"
     },
-    "storageConnectionString": {
+    "storageKey": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "storageContainerName": {
       "type": "string"
     }
   },
@@ -82,8 +88,16 @@
               "value": "[parameters('environment')]"
             },
             {
-              "name": "FilePath",
-              "value": "[parameters('storageConnectionString')]"
+              "name": "StorageAccountName",
+              "value": "[parameters('storageAccountName')]"
+            },
+            {
+              "name": "StorageKey",
+              "value": "[parameters('storageKey')]"
+            },
+            {
+              "name": "StorageContainerName",
+              "value": "[parameters('storageContainerName')]"
             }
           ],
           "connectionStrings": [

@@ -14,7 +14,6 @@ using TodoTasks.OpenIdConnectAuth;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System.Security.Claims;
 using TodoTasks.Common.Extensions;
-using TodoTasks.FileSaver;
 using TodoTasks.Application;
 
 namespace TodoTasks.RazorGUI
