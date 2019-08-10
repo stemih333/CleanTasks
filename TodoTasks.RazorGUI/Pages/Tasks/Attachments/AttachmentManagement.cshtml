@@ -43,6 +43,8 @@
                                 </td>
                                 <td style="width: 1%">
                                     <a asp-page="DownloadAttachment" asp-route-attachmentId="@item.AttachmentId" asp-route-todoId="@Model.TodoId"><span class="oi oi-data-transfer-download"></span></a>
+                                    @*<a href="@item.FilePath"><span class="oi oi-data-transfer-download"></span></a>*@
+
                                 </td>
                             </tr>
                         }

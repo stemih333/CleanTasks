@@ -10,3 +10,4 @@ az group create -n $resourceGroupName -l $location
 #az sql db show-connection-string -s "todo-db-server-Development" -n "todo-db-Development" -c ado.net --auth-type=SqlPassword
 az group deployment create --template-file TodoTasksDeploy.json --resource-group $resourceGroupName --parameters TodoTasksDeploy.parameters.json
 #az group deployment create --template-file test.json --resource-group $resourceGroupName --parameters test.parameters.json
+#az group deployment create --template-file resources\storage\storageDeploy.json --resource-group $resourceGroupName --parameters environment=staging

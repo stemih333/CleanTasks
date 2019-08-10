@@ -32,8 +32,7 @@
     <None Include="resources\security\keyVaultDeploy.parameters.json" />
     <None Include="resources\security\roleAssignmentsDeploy.json" />
     <None Include="resources\security\roleAssignmentsDeploy.parameters.json" />
-    <None Include="resources\web\appServicePlanDeploy.json" />
-    <None Include="resources\web\appServicePlanDeploy.parameters.json" />
+    <None Include="resources\storage\storageDeploy.json" />
     <None Include="resources\storage\todoDbDeploy.json" />
     <None Include="resources\storage\todoDbDeploy.parameters.json" />
     <None Include="resources\web\webAppDeploy.json" />

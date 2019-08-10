@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TodoTasks.DataAccess.Auth;
 using TodoTasks.Domain.Entities;
 using System.Linq;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {

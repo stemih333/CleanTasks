@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TodoTasks.Application.Attachment.Commands;
@@ -13,7 +13,23 @@ namespace TodoTasks.WebAPI.Controllers
     {
         [HttpPut]
         public async Task<int> Put([FromForm]AttachmentInputModel model)
-        => await Mediator.Send(GetCommand(model));
+        {
+            if (model.File == null) throw new ArgumentNullException("No file has been sent to server.");
+            using (var stream = model.File.OpenReadStream())
+            {
+                return await Mediator.Send(
+                new CreateAttachmentCommand
+                {
+                    FileStream = stream,
+                    FileName = model.File.FileName,
+                    UserId = model.UserId,
+                    FileSize = model.File.Length,
+                    FileType = model.File.ContentType,
+                    Description = model.Description,
+                    TodoId = model.TodoId
+                });
+            }
+        }
 
         [HttpGet("{todoId:int?}")]
         public async Task<IEnumerable<AttachmentDto>> Get(int? todoId)
@@ -26,23 +42,5 @@ namespace TodoTasks.WebAPI.Controllers
         [HttpDelete("{attachmentId:int?}")]
         public async Task Delete(int? attachmentId)
         => await Mediator.Send(new DeleteAttachmentCommand { AttachmentId = attachmentId });
-
-        private CreateAttachmentCommand GetCommand(AttachmentInputModel model)
-        {
-            if (model.File == null) return new CreateAttachmentCommand();
-            using (var reader = new BinaryReader(model.File.OpenReadStream()))
-            {
-                return new CreateAttachmentCommand
-                {                  
-                    FileBytes = reader.ReadBytes((int)model.File.Length),
-                    FileName = model.File.FileName,
-                    UserId = model.UserId,
-                    FileSize = model.File.Length,
-                    FileType = model.File.ContentType,
-                    Description = model.Description,
-                    TodoId = model.TodoId
-                };
-            }
-        }
     }
 }

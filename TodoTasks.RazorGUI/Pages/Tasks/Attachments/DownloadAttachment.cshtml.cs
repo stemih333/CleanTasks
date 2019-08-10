@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth.Auth;
 using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
@@ -35,7 +37,14 @@ namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
 
             var file = await _todoClient.GetAttachment(AttachmentId);
 
-            return File(file.FileBytes, file.Type, file.Name);
+            using (var client = new HttpClient()) {
+                var stream = await client.GetStreamAsync(file.FilePath);
+
+                return new FileStreamResult(stream, file.Type)
+                {
+                    FileDownloadName = file.Name
+                };
+            }
         }
     }
 }

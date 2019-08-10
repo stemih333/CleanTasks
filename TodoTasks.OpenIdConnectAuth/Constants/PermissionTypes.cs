@@ -1,4 +1,4 @@
-﻿namespace TodoTasks.DataAccess.Auth
+﻿namespace TodoTasks.OpenIdConnectAuth.Auth
 {
     public static class PermissionTypes
     {

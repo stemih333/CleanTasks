@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {

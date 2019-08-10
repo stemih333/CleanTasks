@@ -23,17 +23,16 @@ namespace TodoTasks.WebAPI
                     Log.Information("Seeding Todo test data.");
                     TestData.Init(services);
                     Log.Information("Seeding Identity user.");
-                    AuthStartup.SeedIdentityUser(services).Wait();
                 }
                 else
                 {
                     Log.Information("Running Identity migrations.");
-                    AuthStartup.RunIdentityMigrations(services);
+                    IdentityDbStartup.RunIdentityMigrations(services);
                     Log.Information("Running TodoDb migrations.");
                     DataAccessStartup.RunTodoDbMigrations(services);
                 }
                 Log.Information("Seeding Identity admin.");
-                AuthStartup.SeedIdentityAdmin(services).Wait();
+                IdentityDbStartup.SeedIdentityAdmin(services).Wait();
             }
 
             host.Run();

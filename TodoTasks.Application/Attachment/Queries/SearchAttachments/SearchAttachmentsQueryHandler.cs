@@ -31,7 +31,7 @@ namespace TodoTasks.Application.Attachment.Queries
                     TodoId = _.TodoId,
                     AttachmentId = _.AttachmentId,
                     AddedDate = _.Created,
-                    FilePath = _.FilePath
+                    FilePath = _.SavedFileName
                 }).ToList();
 
             return await Task.FromResult(attachments);

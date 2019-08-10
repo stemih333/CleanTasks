@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodoTasks.Application.AppUser.Commands;
 using TodoTasks.Application.AppUser.Queries;
-using TodoTasks.DataAccess.Auth;
 using TodoTasks.Domain.Entities;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.WebAPI.Controllers
 {

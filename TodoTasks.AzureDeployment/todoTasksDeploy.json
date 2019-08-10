@@ -68,6 +68,9 @@
     },
     "webDeployLink": {
       "type": "string"
+    },
+    "storageDeployLink": {
+      "type": "string"
     }
   },
   "variables": {
@@ -161,12 +164,30 @@
         }
       }
     },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "storageDeploy",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "parameters": {        
+          "environment": {
+            "value": "[parameters('environment')]"
+          }
+        },
+        "templateLink": {
+          "uri": "[concat(reference('storageOutputs').outputs.blobUri.value, parameters('blobContainerName'), '/', parameters('storageDeployLink'), '?', reference('storageOutputs').outputs.serviceSas.value)]",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    },
     {      
       "apiVersion": "2017-05-10",
       "name": "webDeploy",
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'dbDeploy')]"
+        "[resourceId('Microsoft.Resources/deployments', 'dbDeploy')]",
+        "[resourceId('Microsoft.Resources/deployments', 'storageDeploy')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -203,6 +224,9 @@
           },
           "dbServerPassword": {
             "value": "[parameters('todoDbServerAdminLoginPassword')]"
+          },
+          "storageConnectionString": {
+            "value": "[reference('storageDeploy').outputs.storageConnection.value]"
           }
         },
         "templateLink": {

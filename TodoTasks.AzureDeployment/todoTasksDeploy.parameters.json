@@ -17,6 +17,9 @@
     "dbDeployLink": {
       "value": "todoDbDeploy.json"
     },
+    "storageDeployLink": {
+      "value": "storageDeploy.json"
+    },
     "roleAssignmentsDeploy": {
       "value": "roleAssignmentsDeploy.json"
     },

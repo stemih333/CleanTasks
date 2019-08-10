@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.WebAPI.Controllers
 {

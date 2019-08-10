@@ -19,7 +19,7 @@ namespace TodoTasks.Application.TodoArea.Queries
         }
 
         public Task<List<TodoAreaDto>> Handle(TodoAreaQuery request, CancellationToken cancellationToken)
-        {           
+        {
             var areas = _todoDbContext.TodoAreas
                 .Include(_ => _.Todos)
                 .Where(_ => request.UserAreas.Contains(_.TodoAreaId))
@@ -28,8 +28,7 @@ namespace TodoTasks.Application.TodoArea.Queries
                     Name = _.Name,
                     TodoAreaId = _.TodoAreaId,
                     TodoCount = _.Todos.Count()
-                })
-                .ToList();
+                }).ToList();
 
             return Task.FromResult(areas);          
         }

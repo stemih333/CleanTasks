@@ -35,6 +35,9 @@
     },
     "dbServerPassword": {
       "type": "securestring"
+    },
+    "storageConnectionString": {
+      "type": "string"
     }
   },
   "variables": {
@@ -77,6 +80,10 @@
             {
               "name": "ASPNETCORE_ENVIRONMENT",
               "value": "[parameters('environment')]"
+            },
+            {
+              "name": "FilePath",
+              "value": "[parameters('storageConnectionString')]"
             }
           ],
           "connectionStrings": [

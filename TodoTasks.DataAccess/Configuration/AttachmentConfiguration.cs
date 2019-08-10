@@ -17,7 +17,7 @@ namespace TodoTasks.DataAccess.Configuration
                 .IsRequired()
                 .HasMaxLength(300);
 
-            builder.Property(_ => _.FilePath)
+            builder.Property(_ => _.SavedFileName)
                 .IsRequired()
                 .HasMaxLength(300);
 

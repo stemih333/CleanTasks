@@ -18,8 +18,7 @@ namespace TodoTasks.RazorGUI
 
                 if (env.IsDevelopment())
                 {
-                    AuthStartup.SeedIdentityUser(services).Wait();
-                    AuthStartup.SeedIdentityAdmin(services).Wait();
+                    IdentityDbStartup.SeedIdentityAdmin(services).Wait();
                 }
             }
 

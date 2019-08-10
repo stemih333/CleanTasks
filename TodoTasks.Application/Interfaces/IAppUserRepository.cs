@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TodoTasks.Domain.Entities;
 
@@ -13,5 +14,7 @@ namespace TodoTasks.Application.Interfaces
         Task<IEnumerable<Domain.Entities.AppUser>> GetUsersByPermissionType(string permissionType);
         Task<PermissionUser> GetUser(string username);
         Task<IEnumerable<Domain.Entities.AppUser>> SearchUsersByClaim(string claimType, string claimValue);
+        Task<ClaimsIdentity> GetUserAsClaimsIdentity(string username);
+        Task CreateUserFromClaimsPrincipal(ClaimsPrincipal principal);
     }
 }

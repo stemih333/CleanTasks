@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Linq;
 using TodoTasks.Domain.Entities;
-using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {

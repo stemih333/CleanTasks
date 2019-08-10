@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TodoTasks.DataAccess.Auth;
 using TodoTasks.Domain.Entities;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages
 {

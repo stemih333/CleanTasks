@@ -10,6 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http.Headers;
 using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Security.Claims;
+using TodoTasks.Common.Extensions;
+using TodoTasks.FileSaver;
+using TodoTasks.Application;
 
 namespace TodoTasks.RazorGUI
 {
@@ -26,55 +32,67 @@ namespace TodoTasks.RazorGUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ApplicationStartup.ConfigureServices(services);
+
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
                 options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
                 options.Cookie.IsEssential = true;
             });
+            services.AddTransient<IAppSessionHandler, AppSessionHandler>();
+            services.AddHttpContextAccessor();
 
-            var connectionString = Configuration.GetConnectionString("TodoDbContext");
 
+            //Environment specific setup
             if (Environment.IsDevelopment())
             {
-                AuthStartup.ConfigureDevIdentityServices(services);
+                //Dev disable all authentication
+                SetupDevSecurity(services);
+                services.AddMvc(opts =>
+                    {
+                        opts.Filters.Add(new AllowAnonymousFilter());
+                    })
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+                services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>((c) =>
+                {                  
+                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
+                });
+
+                services.AddHttpClient<ITodoApiClient, TodoApiClient>((c) =>
+                {                    
+                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
+                });
             }
             else
             {
-                AuthStartup.ConfigureIdentityServices(services, connectionString);
+                SetupSecurity(services);
+                services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+                // HttpClient setup
+                services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>(async (c) =>
+                {
+                    var serviceProvider = services.BuildServiceProvider();
+                    var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                    var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
+                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                });
+
+                services.AddHttpClient<ITodoApiClient, TodoApiClient>(async (c) =>
+                {
+                    var serviceProvider = services.BuildServiceProvider();
+                    var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+                    var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
+                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                });
             }
-
-            AuthStartup.ConfigureOpenIdServices(services, Configuration);
-            AuthStartup.ConfigureAuthorizationServices(services);
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddTransient<IAppSessionHandler, AppSessionHandler>();
-
-            services.AddHttpContextAccessor();
-
-            services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>(async (c) =>
-            {
-                var serviceProvider = services.BuildServiceProvider();
-                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-                
-                c.BaseAddress = new Uri(Configuration["ApiUrl"]);
-                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            });
-
-            services.AddHttpClient<ITodoApiClient, TodoApiClient>(async (c) =>
-            {
-                var serviceProvider = services.BuildServiceProvider();
-                var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-                var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-                
-                c.BaseAddress = new Uri(Configuration["ApiUrl"]);
-                c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            });
+            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -83,6 +101,16 @@ namespace TodoTasks.RazorGUI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+
+                app.Use(async (context, next) =>
+                {
+                    var identity = new DevIdentity(Users.AdminClaims);
+                    identity.AddClaim(new Claim(ClaimTypes.Name, Users.Admin.UserName));
+                    context.User = new ClaimsPrincipal(identity);
+                    
+                    await next();
+                });
+
             }
             else
             {
@@ -99,7 +127,20 @@ namespace TodoTasks.RazorGUI
 
             app.UseMvc();
         }
-    }
 
-    
+        private void SetupDevSecurity(IServiceCollection services)
+        {
+            IdentityDbStartup.ConfigureDevIdentityServices(services);
+            OpenIdConnectStartup.ConfigureAuthorizationServices(services);
+        }
+
+        private void SetupSecurity(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetConnectionString("TodoDbContext");
+
+            IdentityDbStartup.ConfigureIdentityServices(services, connectionString);
+            OpenIdConnectStartup.ConfigureOpenIdServices(services, Configuration, Environment.IsLocalTest());
+            OpenIdConnectStartup.ConfigureAuthorizationServices(services);
+        }
+    } 
 }

@@ -12,8 +12,8 @@ using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TodoTasks.DataAccess.Auth;
 using TodoTasks.Domain.Entities;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {

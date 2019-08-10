@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TodoTasks.Application.Attachment.Commands;
-using TodoTasks.DataAccess.Auth;
+using TodoTasks.OpenIdConnectAuth.Auth;
 using TodoTasks.RazorGUI.Interfaces;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
@@ -38,12 +38,12 @@ namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
         {
             if (!ModelState.IsValid)
                 return Page();
-            
-            using (var reader = new BinaryReader(UploadedFile.OpenReadStream()))
+
+            using(var stream = UploadedFile.OpenReadStream())
             {
                 var command = new CreateAttachmentCommand
                 {
-                    FileBytes = reader.ReadBytes((int)UploadedFile.Length),
+                    FileStream = stream,
                     FileName = UploadedFile.FileName,
                     UserId = User.Identity.Name,
                     FileSize = UploadedFile.Length,
@@ -56,6 +56,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks.Attachments
 
                 if (result == 0) throw new Exception("Failed to insert file.");
             }
+            
 
             return RedirectToPage("AttachmentManagement", new { TodoId });
         }

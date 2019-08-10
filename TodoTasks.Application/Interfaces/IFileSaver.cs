@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace TodoTasks.Application.Interfaces
 {
     public interface IFileSaver
     {
-        Task SaveFile(string path, byte[] fileBytes);
-        Task DeleteFile(string path);
+        Task SaveFile(string filename, Stream stream);
+        Task DeleteFile(string filename);
+        Task<string> GetFilePath(string filename);
     }
 }

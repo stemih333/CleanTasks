@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
-using TodoTasks.DataAccess.Auth;
 
 namespace TodoTasks.RazorGUI.Pages
 {

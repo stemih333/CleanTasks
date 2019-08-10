@@ -10,10 +10,10 @@ using TodoTasks.RazorGUI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using TodoTasks.DataAccess.Auth;
 using System.Collections.Generic;
 using TodoTasks.Domain.Entities;
 using System.Linq;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.RazorGUI.Pages.Tasks
 {

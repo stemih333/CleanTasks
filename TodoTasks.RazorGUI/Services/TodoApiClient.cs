@@ -26,12 +26,16 @@ namespace TodoTasks.RazorGUI.Services {
         {
             using (var multiContent = new MultipartFormDataContent())
             {
-                multiContent.Add(new ByteArrayContent(command.FileBytes) {
-                    Headers = {
+                multiContent.Add(new StreamContent(command.FileStream) { Headers = {
                         ContentLength = command.FileSize,
                         ContentType = new MediaTypeHeaderValue(command.FileType)
-                    }
-                }, "File", command.FileName);
+                    } },"File", command.FileName);
+                //multiContent.Add(new ByteArrayContent(command.FileBytes) {
+                //    Headers = {
+                //        ContentLength = command.FileSize,
+                //        ContentType = new MediaTypeHeaderValue(command.FileType)
+                //    }
+                //}, "File", command.FileName);
                 if (!string.IsNullOrEmpty(command.Description)) multiContent.Add(new StringContent(command.Description), "Description");
                 multiContent.Add(new StringContent(command.UserId), "UserId");
                 multiContent.Add(new StringContent(command.TodoId.ToString()), "TodoId");

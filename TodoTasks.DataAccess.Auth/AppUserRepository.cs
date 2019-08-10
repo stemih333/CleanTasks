@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TodoTasks.Application.Exceptions;
 using TodoTasks.Application.Interfaces;
 using TodoTasks.Domain.Entities;
+using TodoTasks.OpenIdConnectAuth.Auth;
 
 namespace TodoTasks.DataAccess.Auth
 {
@@ -25,6 +26,43 @@ namespace TodoTasks.DataAccess.Auth
 
         public async Task<IEnumerable<AppUser>> SearchUsersByClaim(string claimType, string claimValue)
             => (await _userManager.GetUsersForClaimAsync(new Claim(claimType, claimValue)))?.Select(GetAppUser);
+
+        public async Task<ClaimsIdentity> GetUserAsClaimsIdentity(string username)
+        {
+            var user = await _userManager.FindByEmailAsync(username) ?? await _userManager.FindByNameAsync(username);
+
+            if (user == null) return null;
+            IList<Claim> claimsToAdd = new List<Claim>();
+
+            // Append the claims retrieved from database to user logged in with Open ID.
+            if (!claimsToAdd.Any()) claimsToAdd = await _userManager.GetClaimsAsync(user);
+
+            return new ClaimsIdentity(claimsToAdd);
+        }
+
+        public async Task CreateUserFromClaimsPrincipal(ClaimsPrincipal principal)
+        {
+            var name = principal.Claims.First(_ => _.Type.Equals(ClaimTypes.Name));
+            var givenName = principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.GivenName));
+            var surname = principal.Claims.FirstOrDefault(_ => _.Type.Equals(ClaimTypes.Surname));
+            if (name == null || givenName == null || surname == null) throw new AuthException($"User {principal.Identity.Name ?? "Unknown"} is missing one or more name claims.");
+
+            var user = new ApplicationUser
+            {
+                Email = principal.Identity.Name,
+                UserName = name.Value,
+                FirstName = givenName.Value,
+                LastName = surname.Value
+            };
+
+            var userResult = await _userManager.CreateAsync(user);
+            if (!userResult.Succeeded) throw new AuthDbOperationException("Failed to create new user: " + principal.Identity.Name);
+
+            var claimsToAdd = new List<Claim> { new Claim(AuthConstants.PermissionType, AuthConstants.UserPermission) };
+
+            var result = await _userManager.AddClaimsAsync(user, claimsToAdd);
+            if (!result.Succeeded) throw new AuthDbOperationException("Failed to add claims for new user: " + principal.Identity.Name);
+        }
 
         public async Task<PermissionUser> GetUser(string username)
         {

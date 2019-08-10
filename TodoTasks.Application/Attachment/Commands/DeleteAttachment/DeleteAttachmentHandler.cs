@@ -27,7 +27,7 @@ namespace TodoTasks.Application.Attachment.Commands
 
             await _todoDbContext.SaveChangesAsync();
 
-            await _fileSaver.DeleteFile(file.FilePath);
+            await _fileSaver.DeleteFile(file.SavedFileName);
 
             return await Unit.Task;
         }
