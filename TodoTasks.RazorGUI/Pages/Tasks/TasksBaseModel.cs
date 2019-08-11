@@ -13,13 +13,13 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         protected const string UsersKey = "UsersCollection";
         protected const string ReferenceDataKey = "ReferenceData";
         protected readonly IAuthorizationService AuthService;
-        protected readonly ITodoAreaApiClient TodoAreaClient;
+        protected readonly ITodoApiClient TodoApiClient;
         protected readonly IAppSessionHandler AppSessionHandler;
 
-        public TasksBaseModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler)
+        public TasksBaseModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler)
         {
             AuthService = authService;
-            TodoAreaClient = client;
+            TodoApiClient = client;
             AppSessionHandler = appSessionHandler;
         }   
         
@@ -28,7 +28,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             var refData = AppSessionHandler.GetData<ReferenceDataDto>(ReferenceDataKey);
             if (refData == null)
             {
-                refData = await TodoAreaClient.GetReferenceData();
+                refData = await TodoApiClient.GetReferenceData();
                 if (refData == null) throw new NullReferenceException("Failed to retrieve reference data from Todo API.");
             }
 

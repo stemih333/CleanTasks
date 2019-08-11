@@ -6,6 +6,6 @@ namespace TodoTasks.Application.TodoArea.Queries
 {
     public class TodoAreaQuery : IRequest<List<TodoAreaDto>>
     {
-        public IEnumerable<int> UserAreas { get; set; }
+        public List<int?> UserAreas { get; set; }
     }
 }

@@ -22,15 +22,16 @@ namespace TodoTasks.Application.TodoArea.Queries
         {
             var areas = _todoDbContext.TodoAreas
                 .Include(_ => _.Todos)
-                .Where(_ => request.UserAreas.Contains(_.TodoAreaId))
                 .Select(_ => new TodoAreaDto
                 {
                     Name = _.Name,
                     TodoAreaId = _.TodoAreaId,
                     TodoCount = _.Todos.Count()
-                }).ToList();
+                });
 
-            return Task.FromResult(areas);          
+            if (request.UserAreas != null) areas = areas.Where(_ => request.UserAreas.Contains(_.TodoAreaId));
+
+            return Task.FromResult(areas.ToList());          
         }
     }
 }

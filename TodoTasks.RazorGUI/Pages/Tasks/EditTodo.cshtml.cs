@@ -56,12 +56,10 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         public SelectList TodoStatusesSelect { get; set; }
         public bool DisabledCloseReason { get; set; }
 
-        private readonly ITodoApiClient _todoClient;
         private const string TodoKey = "TodoKey";
 
-        public EditTodoModel(ITodoApiClient todoClient, IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public EditTodoModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         {
-            _todoClient = todoClient;
         }
 
         public async Task OnGet([Required]int? id)
@@ -83,7 +81,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
                 return Page();
             }
 
-            await _todoClient.EditTodoTask(new EditTodoCommand
+            await TodoApiClient.EditTodoTask(new EditTodoCommand
             {
                 AssignedTo = AssignedTo,
                 CloseReasonId = CloseReasonId,
@@ -105,8 +103,8 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             var users = AppSessionHandler.GetData<List<AppUser>>(UsersKey);
             if (users == null)
             {
-                var user = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
-                var admins = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+                var user = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+                var admins = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
                 var allUsers = user.Concat(admins);
                 AppSessionHandler.SetData(UsersKey, user.Concat(admins));
                 users = allUsers.ToList();
@@ -119,7 +117,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
 
         private async Task<SelectList> GetUsersSelect(List<AppUser> users)
         {
-            var userPermissions = (await _todoClient.SearchUsers(PermissionTypes.TodoAreaPermission, TodoAreaId.Value.ToString()))?.Select(_ => _.UserName).ToList();
+            var userPermissions = (await TodoApiClient.SearchUsers(PermissionTypes.TodoAreaPermission, TodoAreaId.Value.ToString()))?.Select(_ => _.UserName).ToList();
             if (userPermissions == null) throw new NullReferenceException("Could not retireve permissions from API.");
 
             return new SelectList(users.Where(_ => userPermissions.Contains(_.UserName)), "UserName", "UserName");
@@ -127,7 +125,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
 
         private async Task<TodoDto> GetTodo()
         {
-            var result = await _todoClient.SearchTodos(new TodoSearchQuery { TodoId = TodoId, PageSize = 1, CurrentPage = 1 });
+            var result = await TodoApiClient.SearchTodos(new TodoSearchQuery { TodoId = TodoId, PageSize = 1, CurrentPage = 1 });
             if (result == null) throw new NullReferenceException("Failed to find todo task with ID: " + TodoId);
             var todo = result.Todos?.FirstOrDefault();
             if (todo == null) throw new NullReferenceException("Failed to find todo task with ID: " + TodoId);

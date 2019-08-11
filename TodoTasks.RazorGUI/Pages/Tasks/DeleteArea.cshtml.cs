@@ -21,7 +21,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public int? Id { get; set; }
 
-        public DeleteAreaModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public DeleteAreaModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         { }
 
         public void OnGet()
@@ -47,7 +47,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         {
             if(ModelState.IsValid)
             {
-                await TodoAreaClient.DeleteTodoArea(Id.Value);
+                await TodoApiClient.DeleteTodoArea(Id.Value);
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area deleted successfully.";

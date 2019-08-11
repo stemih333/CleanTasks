@@ -8,7 +8,7 @@ using TodoTasks.Application.Interfaces;
 
 namespace TodoTasks.Application.Attachment.Queries
 {
-    public class GetSingleAttachmentHandler : IRequestHandler<GetSingleAttachmentQuery, BinaryAttachmentDto>
+    public class GetSingleAttachmentHandler : IRequestHandler<GetSingleAttachmentQuery, AttachmentDto>
     {
         private readonly ITodoDbContext _todoDbContext;
         private readonly IFileSaver _fileSaver;
@@ -19,12 +19,12 @@ namespace TodoTasks.Application.Attachment.Queries
             _fileSaver = fileSaver;
         }
 
-        public async Task<BinaryAttachmentDto> Handle(GetSingleAttachmentQuery request, CancellationToken cancellationToken)
+        public async Task<AttachmentDto> Handle(GetSingleAttachmentQuery request, CancellationToken cancellationToken)
         {
             var file = _todoDbContext.Attachments.FirstOrDefault(_ => _.AttachmentId == request.AttachmentId);
             if (file == null) throw new NotFoundException("Could not find Attachment with id: " + request.AttachmentId);
 
-            return new BinaryAttachmentDto
+            return new AttachmentDto
             {
                 AddedDate = file.Created,
                 AttachmentId = file.AttachmentId,

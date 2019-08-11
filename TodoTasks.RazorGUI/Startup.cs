@@ -55,11 +55,6 @@ namespace TodoTasks.RazorGUI
                     })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-                services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>((c) =>
-                {                  
-                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
-                });
-
                 services.AddHttpClient<ITodoApiClient, TodoApiClient>((c) =>
                 {                    
                     c.BaseAddress = new Uri(Configuration["ApiUrl"]);
@@ -71,16 +66,6 @@ namespace TodoTasks.RazorGUI
                 services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
                 // HttpClient setup
-                services.AddHttpClient<ITodoAreaApiClient, TodoAreaApiClient>(async (c) =>
-                {
-                    var serviceProvider = services.BuildServiceProvider();
-                    var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-                    var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-
-                    c.BaseAddress = new Uri(Configuration["ApiUrl"]);
-                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                });
-
                 services.AddHttpClient<ITodoApiClient, TodoApiClient>(async (c) =>
                 {
                     var serviceProvider = services.BuildServiceProvider();

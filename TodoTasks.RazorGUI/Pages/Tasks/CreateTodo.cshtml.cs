@@ -36,11 +36,8 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         public SelectList Users { get; set; }
         public SelectList TodoTypes { get; set; }
 
-        private readonly ITodoApiClient _todoClient;
-
-        public CreateTodoModel(ITodoApiClient todoClient, IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public CreateTodoModel(ITodoApiClient todoClient, IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         {
-            _todoClient = todoClient;
         }
 
         public async Task OnGet([Required]int? id)
@@ -74,7 +71,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
                 Notify = Notify
             };
 
-            var newTodoId = await _todoClient.CreateTodoTask(model);
+            var newTodoId = await TodoApiClient.CreateTodoTask(model);
             TempData[ViewDataKeys.SuccessMessage] = $"Todo task added successfully.";
             return RedirectToPage("/Tasks/EditTodo", new { Id = newTodoId });
         }
@@ -84,15 +81,15 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
             var users = AppSessionHandler.GetData<List<AppUser>>(UsersKey);
             if (users == null)
             {
-                var user = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
-                var admins = await _todoClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+                var user = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+                var admins = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
                 var allUsers = user.Concat(admins);
                 AppSessionHandler.SetData(UsersKey, user.Concat(admins));
                 users = allUsers.ToList();
             }
 
             if (users == null) throw new NullReferenceException("Could not retireve users from user API.");
-            var userPermissions = (await _todoClient.SearchUsers(PermissionTypes.TodoAreaPermission, CurrentArea.Value.ToString()))?.Select(_ => _.UserName).ToList();
+            var userPermissions = (await TodoApiClient.SearchUsers(PermissionTypes.TodoAreaPermission, CurrentArea.Value.ToString()))?.Select(_ => _.UserName).ToList();
             if (userPermissions == null) throw new NullReferenceException("Could not retireve permissions from API.");
 
             return new SelectList(users.Where(_ => userPermissions.Contains(_.UserName)), "UserName", "UserName");

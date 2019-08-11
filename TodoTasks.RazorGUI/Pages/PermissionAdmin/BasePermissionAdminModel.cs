@@ -5,13 +5,13 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
     public class BasePermissionAdminModel : PageModel
     {
-        protected readonly ITodoAreaApiClient TodoAreaApiClient;
+        protected readonly ITodoApiClient TodoApiClient;
         protected const string AllUserKey = "AllUserKey";
         protected const string AreaPermissionKey = "AreaPermissionKey";
 
-        public BasePermissionAdminModel(ITodoAreaApiClient todoAreaApiClient)
+        public BasePermissionAdminModel(ITodoApiClient todoApiClient)
         {
-            TodoAreaApiClient = todoAreaApiClient;
+            TodoApiClient = todoApiClient;
         }
     }
 }

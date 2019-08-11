@@ -36,7 +36,7 @@ namespace TodoTasks.WebAPI.Controllers
         => await Mediator.Send(new SearchAttachmentsQuery { TodoId = todoId });
 
         [HttpGet("single/{attachmentId:int?}")]
-        public async Task<BinaryAttachmentDto> GetSingle(int? attachmentId)
+        public async Task<AttachmentDto> GetSingle(int? attachmentId)
         => await Mediator.Send(new GetSingleAttachmentQuery { AttachmentId = attachmentId });
 
         [HttpDelete("{attachmentId:int?}")]

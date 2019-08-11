@@ -18,10 +18,10 @@ namespace TodoTasks.RazorGUI.Pages
     public class WorkspaceModel : TasksBaseModel
     {
         public bool IsAdmin { get; set; }
-        public List<TodoAreaDto> Areas { get; set; }
+        public IEnumerable<TodoAreaDto> Areas { get; set; }
         
         public string CurrentAreaName { get; set; }
-        public List<TodoDto> Todos { get; set; }
+        public IEnumerable<TodoDto> Todos { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public TodoFilterSearchQuery SearchModel { get; set; }
@@ -34,11 +34,8 @@ namespace TodoTasks.RazorGUI.Pages
 
         public List<AppUser> Users { get; set; }
 
-        private readonly ITodoApiClient _todoApiClient;
-
-        public WorkspaceModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler, ITodoApiClient todoApiClient) 
+        public WorkspaceModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) 
             : base(authService, client, appSessionHandler) {
-            _todoApiClient = todoApiClient;
         }
        
         public async Task OnGet()
@@ -53,15 +50,15 @@ namespace TodoTasks.RazorGUI.Pages
                 if (!SearchModel.CurrentPage.HasValue) SearchModel.CurrentPage = 1;
                 if (!SearchModel.PageSize.HasValue) SearchModel.PageSize = 25;
                 SearchModel.TodoAreaId = Id;
-                var result = await _todoApiClient.FilterTodos(SearchModel);
+                var result = await TodoApiClient.FilterTodos(SearchModel);
                 if (result != null)
                 {
                     Todos = result.Todos;
                     Users = AppSessionHandler.GetData<List<AppUser>>(UsersKey);
                     if(Users == null)
                     {
-                        var admins = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
-                        var appUsers = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+                        var admins = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+                        var appUsers = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
                         Users = admins.Concat(appUsers).ToList();                     
                         AppSessionHandler.SetData(UsersKey, Users);
                     }
@@ -71,11 +68,11 @@ namespace TodoTasks.RazorGUI.Pages
             }
         }
 
-        private async Task<List<TodoAreaDto>> GetAreasByPermission()
+        private async Task<IEnumerable<TodoAreaDto>> GetAreasByPermission()
         {
-            var user = await _todoApiClient.GetPermissionUser(User.Identity.Name);
+            var user = await TodoApiClient.GetPermissionUser(User.Identity.Name);
             if (user == null) return null;
-            var areas = await TodoAreaClient.GetTodoAreas(user.Permissions.Where(_ => _.PermissionName.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => _.PermissionValue));
+            var areas = await TodoApiClient.GetTodoAreas(user.Permissions.Where(_ => _.PermissionName.Equals(PermissionTypes.TodoAreaPermission)).Select(_ => _.PermissionValue));
             return areas;
         }
     }

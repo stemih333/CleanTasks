@@ -15,7 +15,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         public int? AreaId { get; set; }
         [BindProperty(SupportsGet = true), Required, HiddenInput]
         public string AreaName { get; set; }
-        public ConfirmAddModel(ITodoAreaApiClient todoAreaApiClient) : base(todoAreaApiClient)
+        public ConfirmAddModel(ITodoApiClient todoApiClient) : base(todoApiClient)
         {}
 
         public void OnGet()
@@ -27,7 +27,7 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         {
             if (!ModelState.IsValid) throw new InvalidModelStateException(ModelState, "Failed to add new area permission.");
 
-            await TodoAreaApiClient.CreateAreaPermission(AreaId, UserName);
+            await TodoApiClient.CreateAreaPermission(AreaId, UserName);
 
             return RedirectToPage("/PermissionAdmin/Details", new { UserName });
         }

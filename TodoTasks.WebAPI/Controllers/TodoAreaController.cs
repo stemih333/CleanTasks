@@ -12,23 +12,9 @@ namespace TodoTasks.WebAPI.Controllers
 {
     public class TodoAreaController : TodoControllerBase
     {
-        private readonly ILogger<TodoAreaController> _log;
-
-        public TodoAreaController(ILogger<TodoAreaController> log)
-        {
-            _log = log;
-        }
-
         [HttpGet, ValidateViewModel]
-        public async Task<ActionResult<List<TodoAreaDto>>> Get([FromQuery]List<int> allowedAreas)
-        {
-            var areas = await Mediator.Send(new TodoAreaQuery { UserAreas = allowedAreas });
-            _log.LogInformation("Retrieved areas");
-            return Ok(areas);
-        }
-
-        [HttpGet("all")]
-        public async Task<List<TodoAreaDto>> GetAll() => await Mediator.Send(new TodoAreaAllQuery());
+        public async Task<ActionResult<List<TodoAreaDto>>> Get([FromQuery]List<int?> allowedAreas)
+        => await Mediator.Send(new TodoAreaQuery { UserAreas = allowedAreas });
 
         [HttpPut, ValidateViewModel]
         public async Task<int> Put([FromBody] IdValueInputModel model)
@@ -39,7 +25,6 @@ namespace TodoTasks.WebAPI.Controllers
         => await Mediator.Send(new UpdateTodoAreaCommand { Name = model.Value, TodoAreaId = model.Id, UserId = model.Username });
 
         [HttpDelete("{id}")]
-        public async Task Delete(int? id)
-        => await Mediator.Send(new DeleteTodoAreaCommand { TodoAreaId = id });
+        public async Task Delete(int? id) => await Mediator.Send(new DeleteTodoAreaCommand { TodoAreaId = id });
     }
 }

@@ -13,7 +13,7 @@ namespace TodoTasks.RazorGUI.Attributes
 
         public void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
-            var client = context.HttpContext.RequestServices.GetService<ITodoAreaApiClient>();
+            var client = context.HttpContext.RequestServices.GetService<ITodoApiClient>();
 
             if (client != null)
             {

@@ -39,7 +39,7 @@ namespace TodoTasks.FileSaver
             var policy = new SharedAccessBlobPolicy()
             {
                 Permissions = SharedAccessBlobPermissions.Read,
-                SharedAccessExpiryTime = DateTime.UtcNow.AddHours(12),
+                SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(1),
             };
             var headers = new SharedAccessBlobHeaders()
             {

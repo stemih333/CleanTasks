@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using TodoTasks.Application.Attachment.Commands;
 using System.Net.Http.Headers;
 using TodoTasks.Domain.Entities;
+using System.Text;
+using TodoTasks.Application.ReferenceData.Models;
+using TodoTasks.Application.TodoArea.Models;
 
 namespace TodoTasks.RazorGUI.Services {
     public class TodoApiClient : ITodoApiClient {
@@ -30,143 +33,242 @@ namespace TodoTasks.RazorGUI.Services {
                         ContentLength = command.FileSize,
                         ContentType = new MediaTypeHeaderValue(command.FileType)
                     } },"File", command.FileName);
-                //multiContent.Add(new ByteArrayContent(command.FileBytes) {
-                //    Headers = {
-                //        ContentLength = command.FileSize,
-                //        ContentType = new MediaTypeHeaderValue(command.FileType)
-                //    }
-                //}, "File", command.FileName);
+
                 if (!string.IsNullOrEmpty(command.Description)) multiContent.Add(new StringContent(command.Description), "Description");
                 multiContent.Add(new StringContent(command.UserId), "UserId");
                 multiContent.Add(new StringContent(command.TodoId.ToString()), "TodoId");
 
-                var result = await _client.PutAsync("api/attachment", multiContent);
+                using (var result = await _client.PutAsync("api/attachment", multiContent))
+                {
+                    result.EnsureSuccessStatusCode();
 
-                result.EnsureSuccessStatusCode();
-
-                return await result.Content.ReadAsAsync<int>();
+                    return await result.Content.ReadAsAsync<int>();
+                }
             }           
         }
 
         public async Task<int> CreateTodoComment(CreateTodoCommentCommand command)
         {
-            var result = await _client.PutAsJsonAsync("api/todocomment", command);
+            using (var result = await _client.PutAsJsonAsync("api/todocomment", command))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<int>();
+                return await result.Content.ReadAsAsync<int>();
+            }
         }
 
         public async Task<int> CreateTodoTag(CreateTodoTagCommand command)
         {
-            var result = await _client.PutAsJsonAsync("api/todotag", command);
+            using (var result = await _client.PutAsJsonAsync("api/todotag", command))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<int>();
+                return await result.Content.ReadAsAsync<int>();
+            }
         }
 
         public async Task<int> CreateTodoTask(CreateTodoCommand model) {
-            var result = await _client.PutAsJsonAsync("api/todo", model);
+            using (var result = await _client.PutAsJsonAsync("api/todo", model))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<int>();
+                return await result.Content.ReadAsAsync<int>();
+            }
         }
 
         public async Task DeleteAttachment(int? attachmentId)
         {
-            var result = await _client.DeleteAsync("api/attachment/" + attachmentId.Value);
-
-            result.EnsureSuccessStatusCode();
+            using (var result = await _client.DeleteAsync("api/attachment/" + attachmentId.Value))
+            {
+                result.EnsureSuccessStatusCode();
+            }
         }
 
         public async Task DeleteTodoComment(int? command)
         {
-            var result = await _client.DeleteAsync("api/todocomment/" + command.Value);
-
-            result.EnsureSuccessStatusCode();
+            using (var result = await _client.DeleteAsync("api/todocomment/" + command.Value))
+            {
+                result.EnsureSuccessStatusCode();
+            }
         }
 
         public async Task DeleteTodoTag(int? command)
         {
-            var result = await _client.DeleteAsync("api/todotag/" + command.Value);
-
-            result.EnsureSuccessStatusCode();
+            using (var result = await _client.DeleteAsync("api/todotag/" + command.Value))
+            {
+                result.EnsureSuccessStatusCode();
+            }              
         }
 
         public async Task<int> EditTodoComment(CreateTodoCommentCommand command)
         {
-            var result = await _client.PostAsJsonAsync("api/todocomment", command);
+            using (var result = await _client.PostAsJsonAsync("api/todocomment", command))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<int>();
+                return await result.Content.ReadAsAsync<int>();
+            }
         }
 
         public async Task<int> EditTodoTask(EditTodoCommand model)
         {
-            var result = await _client.PostAsJsonAsync("api/todo", model);
+            using (var result = await _client.PostAsJsonAsync("api/todo", model))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<int>();
+                return await result.Content.ReadAsAsync<int>();
+            }
         }
 
         public async Task<PagedTodoResultDto> FilterTodos(TodoFilterSearchQuery model)
         {
             var url = CreateUrl("api/todo/filter", model);
-            var result = await _client.GetAsync(url);
+            using (var result = await _client.GetAsync(url))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<PagedTodoResultDto>();
+                return await result.Content.ReadAsAsync<PagedTodoResultDto>();
+            }
         }
 
-        public async Task<BinaryAttachmentDto> GetAttachment(int? attachmentId)
+        public async Task<AttachmentDto> GetAttachment(int? attachmentId)
         {
-            var result = await _client.GetAsync("api/attachment/single/" + attachmentId);
+            using (var result = await _client.GetAsync("api/attachment/single/" + attachmentId))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<BinaryAttachmentDto>();
+                return await result.Content.ReadAsAsync<AttachmentDto>();
+            }
         }
 
         public async Task<IEnumerable<AttachmentDto>> GetAttachments(int? todoId)
         {
-            var result = await _client.GetAsync("api/attachment/" + todoId);
+            using (var result = await _client.GetAsync("api/attachment/" + todoId))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<IEnumerable<AttachmentDto>>();
+                return await result.Content.ReadAsAsync<IEnumerable<AttachmentDto>>();
+            }
         }
 
         public async Task<PagedTodoResultDto> SearchTodos(TodoSearchQuery model)
         {
             var url = CreateUrl("api/todo", model);
-            var result = await _client.GetAsync(url);
+            using (var result = await _client.GetAsync(url))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<PagedTodoResultDto>();
+                return await result.Content.ReadAsAsync<PagedTodoResultDto>();
+            }
         }
 
         public async Task<IEnumerable<AppUser>> SearchUsers(string claimType, string claimValue)
         {
-            var result = await _client.GetAsync($"api/appuser/users?claimtype={claimType}&claimvalue={claimValue}");
+            using (var result = await _client.GetAsync($"api/appuser/users?claimtype={claimType}&claimvalue={claimValue}"))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
-
-            return await result.Content.ReadAsAsync<IEnumerable<AppUser>>();
+                return await result.Content.ReadAsAsync<IEnumerable<AppUser>>();
+            }
         }
 
         public async Task<PermissionUser> GetPermissionUser(string username)
         {
-            var result = await _client.GetAsync("api/appuser/userpermission?username=" + username);
+            using (var result = await _client.GetAsync("api/appuser/userpermission?username=" + username))
+            {
+                result.EnsureSuccessStatusCode();
 
-            result.EnsureSuccessStatusCode();
+                return await result.Content.ReadAsAsync<PermissionUser>();
+            }
 
-            return await result.Content.ReadAsAsync<PermissionUser>();
+        }
+
+        public async Task<IEnumerable<TodoAreaDto>> GetAllTodoAreas()
+        {
+            using (var client = await _client.GetAsync("api/todoarea/all"))
+            {
+                client.EnsureSuccessStatusCode();
+
+                return await client.Content.ReadAsAsync<IEnumerable<TodoAreaDto>>();
+            }
+        }
+
+        public async Task<IEnumerable<TodoAreaDto>> GetTodoAreas(IEnumerable<string> allowedAreas)
+        {
+            var queryString = allowedAreas.Any() ? TodoAreasQueryString(allowedAreas.ToList()) : "";
+            using (var client = await _client.GetAsync("api/todoarea" + queryString))
+            {
+                client.EnsureSuccessStatusCode();
+                
+                return await client.Content.ReadAsAsync<IEnumerable<TodoAreaDto>>();
+            }
+        }
+
+        public async Task CreateTodoArea(string areaName, string userName)
+        {
+            using (var client = await _client.PutAsJsonAsync("api/todoarea", new { Value = areaName, UserName = userName }))
+            {
+                client.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task DeleteTodoArea(int areaId)
+        {
+            using (var client = await _client.DeleteAsync("api/todoarea/" + areaId))
+            {
+                client.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task EditTodoArea(string areaName, int areaId, string userName)
+        {
+            using (var client = await _client.PostAsJsonAsync("api/todoarea", new { Value = areaName, Id = areaId, UserName = userName }))
+            {
+                client.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task<ReferenceDataDto> GetReferenceData()
+        {
+            using (var client = await _client.GetAsync("api/referencedata"))
+            {
+                client.EnsureSuccessStatusCode();
+
+                return await client.Content.ReadAsAsync<ReferenceDataDto>();
+            }
+        }
+
+        public async Task CreateAreaPermission(int? areaId, string username)
+        {
+            using (var client = await _client.PutAsJsonAsync("api/appuser/area", new { Permission = areaId, UserName = username }))
+            {
+                client.EnsureSuccessStatusCode();
+            }
+        }
+
+        public async Task DeleteAreaPermission(int? areaId, string username)
+        {
+            using (var client = await _client.DeleteAsync($"api/appuser?permission={areaId.Value.ToString()}&username={username}"))
+            {
+                client.EnsureSuccessStatusCode();
+            }
+        }
+        public async Task<bool> AreaExist(string id)
+        {
+            var areas = await GetTodoAreas(new List<string> { id });
+            return areas != null && areas.Any();
+        }
+
+        private string TodoAreasQueryString(List<string> allowedAreas)
+        {
+            var builder = new StringBuilder("?");
+            for (var i = 0; i < allowedAreas.Count; i++)
+            {
+                builder.Append($"allowedAreas[{i}]={allowedAreas[i]}");
+                if ((i + 1) < allowedAreas.Count) builder.Append("&");
+            }
+
+            return builder.ToString();
         }
 
         private string CreateUrl<T>(string path, T model)

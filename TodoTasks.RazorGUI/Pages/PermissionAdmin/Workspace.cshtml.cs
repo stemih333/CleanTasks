@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TodoTasks.Domain.Entities;
 using System.Linq;
 using TodoTasks.OpenIdConnectAuth.Auth;
+using TodoTasks.Application.Comparers;
 
 namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
 {
@@ -24,18 +25,15 @@ namespace TodoTasks.RazorGUI.Pages.PermissionAdmin
         public string CurrentSort { get; set; } = "";
 
         public IEnumerable<AppUser> Users { get; set; }
-
-        public ITodoApiClient _todoApiClient { get; set; }
-        public WorkspaceModel(ITodoAreaApiClient todoAreaApiClient, ITodoApiClient apiClient) : base(todoAreaApiClient)
+        public WorkspaceModel(ITodoApiClient apiClient) : base(apiClient)
         {
-            _todoApiClient = apiClient;
         }
 
         public async Task OnGet()
         {           
-            var admins = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
-            var appUsers = await _todoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
-            Users = admins.Concat(appUsers).ToList();
+            var admins = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserAdminPermission);
+            var appUsers = await TodoApiClient.SearchUsers(AuthConstants.PermissionType, AuthConstants.UserPermission);
+            Users = admins.Union(appUsers, new AppUserComparer()).ToList();
             
             if (!string.IsNullOrEmpty(Sort))
             {

@@ -3,7 +3,7 @@ using TodoTasks.Application.Attachment.Models;
 
 namespace TodoTasks.Application.Attachment.Queries
 {
-    public class GetSingleAttachmentQuery : IRequest<BinaryAttachmentDto>
+    public class GetSingleAttachmentQuery : IRequest<AttachmentDto>
     {
         public int? AttachmentId { get; set; }
     }

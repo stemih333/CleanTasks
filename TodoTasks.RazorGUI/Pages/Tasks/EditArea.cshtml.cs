@@ -21,14 +21,14 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         public string NewAreaName { get; set; }
         public string OldAreaName { get; set; }
 
-        public EditModel(IAuthorizationService authService, ITodoAreaApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
+        public EditModel(IAuthorizationService authService, ITodoApiClient client, IAppSessionHandler appSessionHandler) : base(authService, client, appSessionHandler)
         { }
 
         public async Task OnGet([Required]int? id)
         {
             if (!ModelState.IsValid) throw new ArgumentNullException("Could not edit Todo Area. Id value is missing.");
 
-            var areas = await TodoAreaClient.GetTodoAreas(new List<string> { id.Value.ToString() });
+            var areas = await TodoApiClient.GetTodoAreas(new List<string> { id.Value.ToString() });
 
             if(areas == null || !areas.Any()) throw new NullReferenceException($"Could not find any areas with ID {id.Value}.");
 
@@ -42,7 +42,7 @@ namespace TodoTasks.RazorGUI.Pages.Tasks
         {
             if (ModelState.IsValid)
             {
-                await TodoAreaClient.EditTodoArea(NewAreaName, CurrentAreaId.Value, User.Identity.Name);
+                await TodoApiClient.EditTodoArea(NewAreaName, CurrentAreaId.Value, User.Identity.Name);
 
                 AppSessionHandler.DeleteData(AreasKey);
                 TempData[ViewDataKeys.SuccessMessage] = $"Area name changed successfully.";

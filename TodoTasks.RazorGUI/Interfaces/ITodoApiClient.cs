@@ -8,6 +8,8 @@ using TodoTasks.Application.Attachment.Models;
 using System.Collections.Generic;
 using TodoTasks.Application.Attachment.Commands;
 using TodoTasks.Domain.Entities;
+using TodoTasks.Application.TodoArea.Models;
+using TodoTasks.Application.ReferenceData.Models;
 
 namespace TodoTasks.RazorGUI.Interfaces
 {
@@ -25,8 +27,16 @@ namespace TodoTasks.RazorGUI.Interfaces
         Task<int> EditTodoTask(EditTodoCommand model);
         Task<int> CreateAttachment(CreateAttachmentCommand command);
         Task<IEnumerable<AttachmentDto>> GetAttachments(int? todoId);
-        Task<BinaryAttachmentDto> GetAttachment(int? attachmentId);
+        Task<AttachmentDto> GetAttachment(int? attachmentId);
         Task<IEnumerable<AppUser>> SearchUsers(string claimType, string claimValue);
         Task<PermissionUser> GetPermissionUser(string username);
+        Task<IEnumerable<TodoAreaDto>> GetTodoAreas(IEnumerable<string> allowedAreas);
+        Task CreateTodoArea(string areaName, string userName);
+        Task EditTodoArea(string areaName, int areaId, string userName);
+        Task DeleteTodoArea(int areaId);
+        Task<bool> AreaExist(string id);
+        Task<ReferenceDataDto> GetReferenceData();
+        Task CreateAreaPermission(int? areaId, string username);
+        Task DeleteAreaPermission(int? areaId, string username);
     }
 }
