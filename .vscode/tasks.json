@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
+                "${workspaceFolder}/TodoTasks.RazorGUI/TodoTasks.RazorGUI.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
+                "${workspaceFolder}/TodoTasks.RazorGUI/TodoTasks.RazorGUI.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/CleanTasks.RazorGUI/CleanTasks.RazorGUI.csproj"
+                "${workspaceFolder}/TodoTasks.RazorGUI/TodoTasks.RazorGUI.csproj"
             ],
             "problemMatcher": "$tsc"
         }

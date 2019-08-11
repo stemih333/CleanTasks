@@ -10,14 +10,15 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/CleanTasks.RazorGUI/bin/Debug/netcoreapp2.2/CleanTasks.RazorGUI.dll",
+            "program": "${workspaceFolder}/TodoTasks.RazorGUI/bin/Debug/netcoreapp2.2/TodoTasks.RazorGUI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/CleanTasks.RazorGUI",
+            "cwd": "${workspaceFolder}/TodoTasks.RazorGUI",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true
             },
             "env": {
+                "ASPNETCORE_URLS": "http://localhost:5001;https://localhost:5002",
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
@@ -30,14 +31,15 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/CleanTasks.WebAPI/bin/Debug/netcoreapp2.2/CleanTasks.WebAPI.dll",
+            "program": "${workspaceFolder}/TodoTasks.WebAPI/bin/Debug/netcoreapp2.2/TodoTasks.WebAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/CleanTasks.WebAPI",
+            "cwd": "${workspaceFolder}/TodoTasks.WebAPI",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": false
             },
             "env": {
+                "ASPNETCORE_URLS": "http://localhost:5003;https://localhost:5004",
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }
         },
