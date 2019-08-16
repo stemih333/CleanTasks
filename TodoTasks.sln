@@ -45,6 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.5 Security", "1.5 Securit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoTasks.OpenIdConnectAuth", "TodoTasks.OpenIdConnectAuth\TodoTasks.OpenIdConnectAuth.csproj", "{8C699F49-9084-4A33-8E44-0CAE1CFC6270}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTasksReactGUI", "TodoTasksReactGUI\TodoTasksReactGUI.csproj", "{D3DE1CF5-278C-430F-B0EA-C42632C7352B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{8C699F49-9084-4A33-8E44-0CAE1CFC6270}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C699F49-9084-4A33-8E44-0CAE1CFC6270}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C699F49-9084-4A33-8E44-0CAE1CFC6270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3DE1CF5-278C-430F-B0EA-C42632C7352B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3DE1CF5-278C-430F-B0EA-C42632C7352B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3DE1CF5-278C-430F-B0EA-C42632C7352B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3DE1CF5-278C-430F-B0EA-C42632C7352B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{36AE3691-E47F-447B-827E-44E91741DE2B} = {AB7994ED-F2DA-446E-B1FE-0626ED7B2939}
 		{D215C934-AF7A-433D-B9ED-CDB172BD9881} = {DA1203A8-EBB0-4843-B749-06B46FA058BD}
 		{8C699F49-9084-4A33-8E44-0CAE1CFC6270} = {3A344BFC-E62C-40B8-8B88-93F9A3B4874F}
+		{D3DE1CF5-278C-430F-B0EA-C42632C7352B} = {B17FECF9-3990-4DC3-BF9A-5757F8C947C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C870DE0B-7EC7-4CB7-A26F-3996349DC2D9}
