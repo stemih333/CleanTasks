@@ -3,10 +3,11 @@ import {
     Collapse,
     Navbar,
     NavbarToggler,
+    NavbarBrand,
     Nav,
-    NavItem
+    NavItem,
+    NavLink
 } from 'reactstrap';
-import { Link, NavLink as LinkNav } from 'react-router-dom';
 
 export default class AppNavbar extends React.Component {
     constructor(props) {
@@ -26,15 +27,15 @@ export default class AppNavbar extends React.Component {
     render() {
         return (
             <Navbar color="light" light expand="md">
-                <Link to="/" className="navbar-brand">Todo Tasks</Link>
+                <NavbarBrand href="/">Todo Tasks</NavbarBrand>
                 <NavbarToggler onClick={this.toggle.bind(this)} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav navbar>
                         <NavItem >
-                            <LinkNav to="/tasks" className="nav-link">Tasks</LinkNav>
+                            <NavLink href="/tasks">Tasks</NavLink>
                         </NavItem>
                         <NavItem >
-                            <LinkNav to="/permissions" className="nav-link">Permissions</LinkNav>
+                            <NavLink href="/permissions">Permissions</NavLink>
                         </NavItem>
                     </Nav>
                     

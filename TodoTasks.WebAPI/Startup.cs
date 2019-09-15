@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using System.Security.Claims;
 using TodoTasks.Common.Extensions;
 using TodoTasks.FileSaver;
+using System.IO;
 
 namespace TodoTasks.WebAPI
 {
@@ -81,8 +82,7 @@ namespace TodoTasks.WebAPI
 
                     await next();
                 });
-
-                app.UseStaticFiles(LocalFileSaver.GetStaticFileOptions());
+                app.UseStaticFiles(LocalFileSaver.GetStaticFileOptions(Environment));
             }
             if (env.IsProduction())
             {

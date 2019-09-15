@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
@@ -9,9 +10,15 @@ namespace TodoTasks.FileSaver
 {
     public class LocalFileSaver : IFileSaver
     {
+        private readonly string _filePath;
+        public LocalFileSaver(IHostingEnvironment env)
+        {
+            _filePath = Path.Combine(env.ContentRootPath, "Files");
+        }
+
         public async Task SaveFile(string filename, Stream stream)
         {
-            var fullPath = Path.Combine("C:\\Files", filename);
+            var fullPath = Path.Combine(_filePath, filename);
             using(var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
             {
                 await stream.CopyToAsync(fileStream);
@@ -22,7 +29,8 @@ namespace TodoTasks.FileSaver
 
         public Task DeleteFile(string filename)
         {
-            File.Delete(Path.Combine("C:\\Files", filename));
+            var path = Path.Combine(_filePath, filename);
+            File.Delete(path);
             return Task.CompletedTask;
         }
 
@@ -31,9 +39,9 @@ namespace TodoTasks.FileSaver
             services.AddTransient<IFileSaver, LocalFileSaver>();
         }
 
-        public static StaticFileOptions GetStaticFileOptions() => new StaticFileOptions
+        public static StaticFileOptions GetStaticFileOptions(IHostingEnvironment env) => new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine("C:\\Files")),
+            FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Files")),
             ServeUnknownFileTypes = true, RequestPath = "/attachments"
         };
     }
